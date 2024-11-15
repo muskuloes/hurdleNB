@@ -1,4 +1,4 @@
-#' log(1-exp(-exp(x)))
+#' log(1-exp(-exp(x))).
 #'
 #' @param x
 #'
@@ -16,12 +16,12 @@ l1ee <- function(x) {
   l
 }
 
-#' log(1 - (1 + a*exp(x))^(-1/a))
+#' log(1 - (1 + a*exp(x))^(-1/a)).
 #'
 #' @param x
 #' @param a
 #'
-#' @return Carfully compute log(1 - (1 + a*exp(x))^(-1/a))
+#' @return Carfully compute log(1 - (1 + a*exp(x))^(-1/a)).
 l11aea <- function(x, th0) {
   a <- exp(th0)
   ind <- x < -log(.Machine$double.xmax)
@@ -36,16 +36,16 @@ l11aea <- function(x, th0) {
   l
 }
 
-#' A helper function returning stable beta, tau, and log(1+a*exp(g))
+#' A helper function returning stable beta, tau, and log(1+a*exp(g)).
 #'
 #' @param g
 #' @param a
 #' @param what
 #'
 #' @return A list containing:
-#          b -- beta, tau -- tau, lg -- log(1+a*eg)
-#'         ind -- indices of y_i for which g_i is very small
-#'         ii -- indices of y_i for which g_i is very large
+#          b -- beta, tau -- tau, lg -- log(1+a*eg).
+#'         ind -- indices of y_i for which g_i is very small.
+#'         ii -- indices of y_i for which g_i is very large.
 btlg <- function(g, a, what = c("b", "tau")) {
   ind <- g < log(.Machine$double.eps)
   ii <- g > log(.Machine$double.xmax) / 2
@@ -99,9 +99,9 @@ btlg <- function(g, a, what = c("b", "tau")) {
 #' Log-likelihood derivates w.r.t. eta.
 #'
 #' @param eta
-#' @param deriv: <= 1 - return first and second derivatives
-#'               == 2 - return first, second and third derivatives
-#'               >= 3 - return first, second, third and fourth derivatives
+#' @param deriv: <= 1 - first and second derivatives.
+#'               == 2 - first, second and third derivatives.
+#'               >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. eta.
 lde <- function(eta, deriv = 4) {
@@ -148,9 +148,9 @@ lde <- function(eta, deriv = 4) {
 #' Log-likelihood derivates w.r.t. g.
 #'
 #' @param g
-#' @param deriv: <= 1 - return first and second derivatives
-#'               == 2 - return first, second and third derivatives
-#'               >= 3 - return first, second, third and fourth derivatives
+#' @param deriv: <= 1 - first and second derivatives.
+#'               == 2 - first, second and third derivatives.
+#'               >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. g.
 ldg <- function(g, y, a, deriv = 4) {
@@ -243,10 +243,10 @@ ldth0 <- function(g, y, th0) {
 #' @param g
 #' @param eta
 #' @param th0
-#' @param deriv: 0 - eval
-#' @param deriv: 1 - gradient and Hessian
-#' @param deriv: 2 - third derivatives
-#' @param deriv: 4 - fourth derivatives
+#' @param deriv: 0 - eval.
+#'               1 - gradient and Hessian.
+#'               2 - third derivatives.
+#'               4 - fourth derivatives.
 #'
 #' @return ZINB log-likelihood and its derivatives.
 zinbll <- function(y, g, eta, th0, deriv = 0) {
