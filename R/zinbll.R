@@ -249,6 +249,7 @@ ldth0 <- function(g, y, th0) {
 #'               4 - fourth derivatives.
 #'
 #' @return ZINB log-likelihood and its derivatives.
+#' @export
 zinbll <- function(y, g, eta, th0, deriv = 0) {
   a <- exp(th0)
   zind <- y == 0
