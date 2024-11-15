@@ -160,13 +160,14 @@ ldg <- function(g, y, a, deriv = 4) {
   ind <- d$ind
   ii <- d$ii
 
-  # firstau derivatauive
+  # first derivative
   l1 <- y - y * a * b - b * tau
   l1[ind] <- y[ind] - 1
   l1[ii] <- -1 / a
+
   # second derivatauive
-  l2 <- y * a^2 * b^2 - y * a * b + a * b^2 * tau - tau * b + b^2 * tau^2 -
-    b^2 * tau
+  l2 <- y * (a^2) * (b^2) - y * a * b + a * (b^2) * tau - tau * b +
+    (b^2) * (tau^2) - (b^2) * tau
   l2[ind] <- 0
   l2[ii] <- 0
 
@@ -236,16 +237,18 @@ ldth0 <- function(g, y, th0) {
 #' Evaluate zero-inflated NB log-likelihood
 #' and its derivatives w.r.t. g (gamma) and eta, with
 #' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
-#' p is probability of potential presence. mu is the NB mean
+#' p is probability of potential presence. mu is the NB mean.
 #'
 #' @param y
 #' @param g
 #' @param eta
-#' @param a
-#' @param deriv
+#' @param th0
+#' @param deriv: 0 - eval
+#' @param deriv: 1 - gradient and Hessian
+#' @param deriv: 2 - third derivatives
+#' @param deriv: 4 - fourth derivatives
 #'
-#' @return
-#' @export
+#' @return ZINB log-likelihood and its derivatives.
 zinbll <- function(y, g, eta, th0, deriv = 0) {
   a <- exp(th0)
   zind <- y == 0
@@ -258,16 +261,46 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     lgamma(y + 1 / a) - lgamma(y + 1) - lgamma(1 / a)
   q <- 1 - exp(-et)
 
+  n <- length(y)
+
+  l1 <- El2 <- l2 <- l3 <- l4 <- NULL
+
   # get first and second derivatives
   if (deriv > 0) {
-    4 + 4
+    # order l_g, l_e
+    l1 <- matrix(0, n, 2)
+    le <- lde(eta, deriv)
+    lg <- ldg(g, y, a, deriv)
+    l1[!zind, 1] <- lg$l1[!zind] # l_gamma, y>0
+    l1[zind, 2] <- l[zind] # l_eta, y==0
+    l1[!zind, 2] <- le$l1[!zind] # l_eta, y>0
+
+    El2 <- l2 <- matrix(0, n, 3)
+
+    # order l_gg, l_eg, l_ee
+    l2[!zind, 1] <- lg$l2[!zind] # l_gg, y>0
+    l2[zind, 3] <- l[zind] # l_ee, y==0
+    l2[!zind, 3] <- le$l2[!zind] # l_ee, y>0
+    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
+      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[l_gg]
+    El2[, 3] <- -(1 - q) * et + q * le$l2 # E[l_ee]
   }
   # get third derivates
   if (deriv > 1) {
-    5 + 4
+    # order l_ggg, l_gge, l_gee, l_eee
+    l3 <- matrix(0, n, 4)
+    l3[!zind, 1] <- lg$l3[!zind]
+    l3[!zind, 4] <- le$l3[!zind]
+    l3[zind, 4] <- l[zind]
   }
   # get fourth derivates
   if (deriv > 3) {
-    0
+    # order l_gggg, l_ggge, l_ggee, l_geee, l_eeee
+    l4 <- matrix(0, n, 5)
+    l4[!zind, 1] <- lg$l4[!zind]
+    l4[!zind, 5] <- le$l4[!zind]
+    l4[zind, 5] <- l[zind]
   }
+
+  list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
 }
