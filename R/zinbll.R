@@ -1,6 +1,6 @@
 #' log(1-exp(-exp(x))).
 #'
-#' @param x
+#' @param x - A numeric vector.
 #'
 #' @return  Carefully computed log(1-exp(-exp(x)))
 l1ee <- function(x) {
@@ -18,10 +18,10 @@ l1ee <- function(x) {
 
 #' log(1 - (1 + a*exp(x))^(-1/a)).
 #'
-#' @param x
-#' @param a
+#' @param x   - A numeric vector.
+#' @param th0 - θ₀, a numeric.
 #'
-#' @return Carfully compute log(1 - (1 + a*exp(x))^(-1/a)).
+#' @return Carfully compute log(1 - (1 + exp(th0)*exp(x))^(-1/(exp(th0)))).
 l11aea <- function(x, th0) {
   a <- exp(th0)
   ind <- x < -log(.Machine$double.xmax)
@@ -38,9 +38,9 @@ l11aea <- function(x, th0) {
 
 #' A helper function returning stable beta, tau, and log(1+a*exp(g)).
 #'
-#' @param g
-#' @param a
-#' @param what
+#' @param g    - 𝛄, a numeric vector.
+#' @param a    - α, a numeric.
+#' @param what - A character vector specifying what to return.
 #'
 #' @return A list containing:
 #          b -- beta, tau -- tau, lg -- log(1+a*eg).
@@ -96,12 +96,12 @@ btlg <- function(g, a, what = c("b", "tau")) {
   list(b = b, tau = tau, lg = lg, ind = ind, ii = ii)
 }
 
-#' Log-likelihood derivates w.r.t. eta.
+#' Log-likelihood derivates w.r.t. 𝛈.
 #'
-#' @param eta
-#' @param deriv: <= 1 - first and second derivatives.
-#'               == 2 - first, second and third derivatives.
-#'               >= 3 - first, second, third and fourth derivatives.
+#' @param eta   - 𝛈, a numeric vector.
+#' @param deriv - <= 1 - first and second derivatives.
+#'                == 2 - first, second and third derivatives.
+#'                >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. eta.
 lde <- function(eta, deriv = 4) {
@@ -145,12 +145,12 @@ lde <- function(eta, deriv = 4) {
   list(l1 = l1, l2 = l2, l3 = l3, l4 = l4)
 }
 
-#' Log-likelihood derivates w.r.t. g.
+#' Log-likelihood derivates w.r.t. 𝛄.
 #'
-#' @param g
-#' @param deriv: <= 1 - first and second derivatives.
-#'               == 2 - first, second and third derivatives.
-#'               >= 3 - first, second, third and fourth derivatives.
+#' @param g     - 𝛄, a numeric vector.
+#' @param deriv - <= 1 - first and second derivatives.
+#'                == 2 - first, second and third derivatives.
+#'                >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. g.
 ldg <- function(g, y, a, deriv = 4) {
@@ -198,14 +198,14 @@ ldg <- function(g, y, a, deriv = 4) {
   list(l1 = l1, l2 = l2, l3 = l3, l4 = l4)
 }
 
-#' Log-likelihood derivatives w.r.t. a.
+#' Log-likelihood derivatives w.r.t. θ₀.
 #'
-#' @param g
-#' @param y
-#' @param a
+#' @param g   - 𝛄, a numeric vector
+#' @param y   - 𝐲, a numeric vector
+#' @param th0 - θ₀, a numeric
 #'
 #' @return A list of the first and second derivatives of the
-#          log-likelihood w.r.t. a.
+#          log-likelihood w.r.t. θ₀.
 ldth0 <- function(g, y, th0) {
   a <- exp(th0)
   d <- btlg(g, a, all = TRUE)
@@ -239,14 +239,14 @@ ldth0 <- function(g, y, th0) {
 #' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
 #' p is probability of potential presence. mu is the NB mean.
 #'
-#' @param y
-#' @param g
-#' @param eta
-#' @param th0
-#' @param deriv: 0 - eval.
-#'               1 - gradient and Hessian.
-#'               2 - third derivatives.
-#'               4 - fourth derivatives.
+#' @param y     - 𝐲, a numeric vector
+#' @param g     - 𝛄, a numeric vector
+#' @param eta   - 𝛈, a numeric vector
+#' @param th0   - θ₀, a numeric
+#' @param deriv - 0 - eval.
+#'                1 - gradient and Hessian.
+#'                2 - third derivatives.
+#'                4 - fourth derivatives.
 #'
 #' @return ZINB log-likelihood and its derivatives.
 #' @export
