@@ -10,10 +10,28 @@ p is probability of potential presence. mu is the NB mean.}
 zinbll(y, g, eta, th0, deriv = 0)
 }
 \arguments{
-\item{deriv:}{0 - eval.
+\item{y}{\itemize{
+\item 𝐲, a numeric vector
+}}
+
+\item{g}{\itemize{
+\item 𝛄, a numeric vector
+}}
+
+\item{eta}{\itemize{
+\item 𝛈, a numeric vector
+}}
+
+\item{th0}{\itemize{
+\item θ₀, a numeric
+}}
+
+\item{deriv}{\itemize{
+\item 0 - eval.
 1 - gradient and Hessian.
 2 - third derivatives.
-4 - fourth derivatives.}
+4 - fourth derivatives.
+}}
 }
 \value{
 ZINB log-likelihood and its derivatives.

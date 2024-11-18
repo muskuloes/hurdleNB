@@ -2,18 +2,24 @@
 % Please edit documentation in R/zinbll.R
 \name{lde}
 \alias{lde}
-\title{Log-likelihood derivates w.r.t. eta.}
+\title{Log-likelihood derivates w.r.t. 𝛈.}
 \usage{
 lde(eta, deriv = 4)
 }
 \arguments{
-\item{deriv:}{<= 1 - first and second derivatives.
+\item{eta}{\itemize{
+\item 𝛈, a numeric vector.
+}}
+
+\item{deriv}{\itemize{
+\item <= 1 - first and second derivatives.
 == 2 - first, second and third derivatives.
->= 3 - first, second, third and fourth derivatives.}
+>= 3 - first, second, third and fourth derivatives.
+}}
 }
 \value{
 A list of derivatives of the log-likelihood w.r.t. eta.
 }
 \description{
-Log-likelihood derivates w.r.t. eta.
+Log-likelihood derivates w.r.t. 𝛈.
 }

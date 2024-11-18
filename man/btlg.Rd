@@ -2,18 +2,28 @@
 % Please edit documentation in R/zinbll.R
 \name{btlg}
 \alias{btlg}
-\title{A helper function returning stable beta, tau, and log(1+a*exp(g)).}
+\title{A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).}
 \usage{
 btlg(g, a, what = c("b", "tau"))
 }
 \arguments{
-\item{what}{}
+\item{g}{\itemize{
+\item 𝛄, a numeric vector.
+}}
+
+\item{a}{\itemize{
+\item α, a numeric.
+}}
+
+\item{what}{\itemize{
+\item A character vector specifying what to return.
+}}
 }
 \value{
 A list containing:
-ind -- indices of y_i for which g_i is very small.
-ii -- indices of y_i for which g_i is very large.
+ind -- indices of yᵢ for which γᵢ is very small.
+ii -- indices of yᵢ for which γᵢ is very large.
 }
 \description{
-A helper function returning stable beta, tau, and log(1+a*exp(g)).
+A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).
 }

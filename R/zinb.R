@@ -312,7 +312,7 @@ ziNB <- function(theta = NULL, link = "identity", b = 0) {
     et <- exp(eta)
     q <- 1 - exp(-et)
     fv <- lambda <- exp(gamma)
-    d <- zinb::btlg(g, theta[3], what = c("b", "tau"))
+    d <- btlg(g, theta[3], what = c("b", "tau"))
     mu <- d$tau * lambda
     # the above should handle limiting behaviour of g already,
     # but just in case we have the lines below.

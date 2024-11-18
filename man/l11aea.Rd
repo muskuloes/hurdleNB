@@ -7,10 +7,16 @@
 l11aea(x, th0)
 }
 \arguments{
-\item{a}{}
+\item{x}{\itemize{
+\item A numeric vector.
+}}
+
+\item{th0}{\itemize{
+\item θ₀, a numeric.
+}}
 }
 \value{
-Carfully compute log(1 - (1 + a*exp(x))^(-1/a)).
+Carfully compute log(1 - (1 + exp(th0)*exp(x))^(-1/(exp(th0)))).
 }
 \description{
 log(1 - (1 + a*exp(x))^(-1/a)).

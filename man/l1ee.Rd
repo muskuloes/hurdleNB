@@ -7,7 +7,9 @@
 l1ee(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{\itemize{
+\item A numeric vector.
+}}
 }
 \value{
 Carefully computed log(1-exp(-exp(x)))

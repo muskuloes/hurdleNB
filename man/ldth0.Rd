@@ -2,16 +2,26 @@
 % Please edit documentation in R/zinbll.R
 \name{ldth0}
 \alias{ldth0}
-\title{Log-likelihood derivatives w.r.t. a.}
+\title{Log-likelihood derivatives w.r.t. θ₀.}
 \usage{
 ldth0(g, y, th0)
 }
 \arguments{
-\item{a}{}
+\item{g}{\itemize{
+\item 𝛄, a numeric vector
+}}
+
+\item{y}{\itemize{
+\item 𝐲, a numeric vector
+}}
+
+\item{th0}{\itemize{
+\item θ₀, a numeric
+}}
 }
 \value{
 A list of the first and second derivatives of the
 }
 \description{
-Log-likelihood derivatives w.r.t. a.
+Log-likelihood derivatives w.r.t. θ₀.
 }

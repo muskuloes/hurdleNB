@@ -148,13 +148,15 @@ lde <- function(eta, deriv = 4) {
 #' Log-likelihood derivates w.r.t. 𝛄.
 #'
 #' @param g     - 𝛄, a numeric vector.
+#' @param y     - 𝐲, a numeric vector.
+#' @param a     - α, a numeric.
 #' @param deriv - <= 1 - first and second derivatives.
 #'                == 2 - first, second and third derivatives.
 #'                >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. g.
 ldg <- function(g, y, a, deriv = 4) {
-  d <- btlg(g, a, all = TRUE)
+  d <- btlg(g, a, c("b", "tau"))
   b <- d$b
   tau <- d$tau
   ind <- d$ind
@@ -208,7 +210,7 @@ ldg <- function(g, y, a, deriv = 4) {
 #          log-likelihood w.r.t. θ₀.
 ldth0 <- function(g, y, th0) {
   a <- exp(th0)
-  d <- btlg(g, a, all = TRUE)
+  d <- btlg(g, a, c("b", "tau"))
   b <- d$b
   tau <- d$tau
   lg <- d$lg
@@ -256,7 +258,10 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   l <- et <- exp(eta)
   yp <- y[!zind]
   l[zind] <- -et[zind]
-  lg <- btlg(g, a, what = c("lg"))$lg
+  d <- btlg(g, a, what = c("b", "tau", "lg"))
+  b <- d$b
+  tau <- d$tau
+  lg <- d$lg
   l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
     yp * lg[!zind] - l11aea(g[!zind], th0) +
     lgamma(y + 1 / a) - lgamma(y + 1) - lgamma(1 / a)
