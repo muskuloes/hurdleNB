@@ -36,16 +36,16 @@ l11aea <- function(x, th0) {
   l
 }
 
-#' A helper function returning stable beta, tau, and log(1+a*exp(g)).
+#' A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).
 #'
 #' @param g    - 𝛄, a numeric vector.
 #' @param a    - α, a numeric.
 #' @param what - A character vector specifying what to return.
 #'
 #' @return A list containing:
-#          b -- beta, tau -- tau, lg -- log(1+a*eg).
-#'         ind -- indices of y_i for which g_i is very small.
-#'         ii -- indices of y_i for which g_i is very large.
+#          b -- 𝛃, tau -- 𝛕, lg -- log(1+αeᵞ).
+#'         ind -- indices of yᵢ for which γᵢ is very small.
+#'         ii -- indices of yᵢ for which γᵢ is very large.
 btlg <- function(g, a, what = c("b", "tau")) {
   ind <- g < log(.Machine$double.eps)
   ii <- g > log(.Machine$double.xmax) / 2
