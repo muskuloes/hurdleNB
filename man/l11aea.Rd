@@ -2,7 +2,7 @@
 % Please edit documentation in R/zinbll.R
 \name{l11aea}
 \alias{l11aea}
-\title{log(1 - (1 + a*exp(x))^(-1/a)).}
+\title{log(1 - (1 + αeˣ)^(-1/ α)).}
 \usage{
 l11aea(x, th0)
 }
@@ -16,8 +16,8 @@ l11aea(x, th0)
 }}
 }
 \value{
-Carfully compute log(1 - (1 + exp(th0)*exp(x))^(-1/(exp(th0)))).
+Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
 }
 \description{
-log(1 - (1 + a*exp(x))^(-1/a)).
+log(1 - (1 + αeˣ)^(-1/ α)).
 }

@@ -16,12 +16,12 @@ l1ee <- function(x) {
   l
 }
 
-#' log(1 - (1 + a*exp(x))^(-1/a)).
+#' log(1 - (1 + αeˣ)^(-1/ α)).
 #'
 #' @param x   - A numeric vector.
 #' @param th0 - θ₀, a numeric.
 #'
-#' @return Carfully compute log(1 - (1 + exp(th0)*exp(x))^(-1/(exp(th0)))).
+#' @return Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
 l11aea <- function(x, th0) {
   a <- exp(th0)
   ind <- x < -log(.Machine$double.xmax)
