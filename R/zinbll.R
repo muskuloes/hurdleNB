@@ -16,7 +16,7 @@ l1ee <- function(x) {
   l
 }
 
-#' log(1 - (1 + αeˣ)^(-1/ α)).
+#' log(1 - (1 + αeˣ)^(-1/α)).
 #'
 #' @param x   - A numeric vector.
 #' @param th0 - θ₀, a numeric.
@@ -273,27 +273,27 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
 
   # get first and second derivatives
   if (deriv > 0) {
-    # order l_g, l_e
+    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈
     l1 <- matrix(0, n, 2)
     le <- lde(eta, deriv)
     lg <- ldg(g, y, a, deriv)
-    l1[!zind, 1] <- lg$l1[!zind] # l_gamma, y>0
-    l1[zind, 2] <- l[zind] # l_eta, y==0
-    l1[!zind, 2] <- le$l1[!zind] # l_eta, y>0
+    l1[!zind, 1] <- lg$l1[!zind] # ∂ℓ/∂𝛄, y>0
+    l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
+    l1[!zind, 2] <- le$l1[!zind] # ∂ℓ/∂𝛈, y>0
 
     El2 <- l2 <- matrix(0, n, 3)
 
-    # order l_gg, l_eg, l_ee
-    l2[!zind, 1] <- lg$l2[!zind] # l_gg, y>0
-    l2[zind, 3] <- l[zind] # l_ee, y==0
-    l2[!zind, 3] <- le$l2[!zind] # l_ee, y>0
+    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈²
+    l2[!zind, 1] <- lg$l2[!zind] # ∂²ℓ/∂𝛄², y>0
+    l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
+    l2[!zind, 3] <- le$l2[!zind] # ∂²ℓ/∂𝛈², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
-      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[l_gg]
-    El2[, 3] <- -(1 - q) * et + q * le$l2 # E[l_ee]
+      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[∂²ℓ/∂𝛄²]
+    El2[, 3] <- -(1 - q) * et + q * le$l2 # E[∂²ℓ/∂𝛈²]
   }
   # get third derivates
   if (deriv > 1) {
-    # order l_ggg, l_gge, l_gee, l_eee
+    # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³
     l3 <- matrix(0, n, 4)
     l3[!zind, 1] <- lg$l3[!zind]
     l3[!zind, 4] <- le$l3[!zind]
@@ -301,7 +301,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   }
   # get fourth derivates
   if (deriv > 3) {
-    # order l_gggg, l_ggge, l_ggee, l_geee, l_eeee
+    # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴
     l4 <- matrix(0, n, 5)
     l4[!zind, 1] <- lg$l4[!zind]
     l4[!zind, 5] <- le$l4[!zind]
