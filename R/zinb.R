@@ -198,7 +198,7 @@ ziNB <- function(theta = NULL, link = "identity", b = 0) {
       ind <- p > runif(n)
       y[!ind] <- 0
 
-      # generate from zero-truncated NB, given y>0
+      # generate from zero-truncated NB, given y > 0
       a <- exp(theta[3])
       prob <- 1 / (1 + a * exp(g))
       y[ind] <- actuar::rztnbinom(sum(ind), (1 / a), prob[ind])
