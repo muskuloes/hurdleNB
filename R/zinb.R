@@ -59,7 +59,7 @@
 #'                              analytic solution exists.
 #'            scale           - < 0 to estimate. Ignored if NULL.
 #' @export
-ziNB <- function(theta = NULL, link = "identity", b = 0) {
+zinb <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
     linktemp <- deparse(linktemp)
@@ -78,7 +78,7 @@ ziNB <- function(theta = NULL, link = "identity", b = 0) {
     n_theta <- 0
   }
 
-  env <- new.env(parent = environment(ziNB))
+  env <- new.env(parent = environment(zinb))
 
   if (b < 0) {
     b <- 0
@@ -153,10 +153,10 @@ ziNB <- function(theta = NULL, link = "identity", b = 0) {
       stop("negative values not allowed for the zero-inflated NB family")
     }
     if (all.equal(y, round(y)) != TRUE) {
-      stop("Non-integer response variables are not allowed with ziNB")
+      stop("Non-integer response variables are not allowed with zinb")
     }
     if ((min(y) == 0 && max(y) == 1)) {
-      stop("using ziNB for binary data makes no sense")
+      stop("using zinb for binary data makes no sense")
     }
 
     mustart <- log(y + (y == 0) / 5)

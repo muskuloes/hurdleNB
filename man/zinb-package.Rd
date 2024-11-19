@@ -2,7 +2,6 @@
 % Please edit documentation in R/zinb-package.R
 \docType{package}
 \name{zinb-package}
-\alias{zinb}
 \alias{zinb-package}
 \title{zinb: Zero-Inflated Negative Binomial for mgcv}
 \description{
