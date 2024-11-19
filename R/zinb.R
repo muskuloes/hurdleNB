@@ -170,6 +170,8 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     if (level > 1) {
       0
     }
+
+    oo
   }
 
   aic <- function(y, g, theta = NULL, wt, dev) {
@@ -178,6 +180,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     }
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
+
     sum(-2 * wt * zinbll(y, g, eta, theta[3], 0))
   }
 
@@ -315,6 +318,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       }
       res <- as.numeric(s * sqrt(pmax(res, 0)))
     }
+
     res
   }
 
@@ -374,6 +378,8 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 
       fv[[2]] <- abs(dq_dg * mu + dmu_dg * q) * se
       names(fv) <- c("fit", "se.fit")
+
+      return(fv)
     }
   }
 
