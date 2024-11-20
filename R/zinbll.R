@@ -177,22 +177,26 @@ ldg <- function(g, y, a, deriv = 4) {
 
   if (deriv > 1) {
     # third derivative
-    l3 <- -2 * y * a^3 * b^3 + 3 * y * a^2 * b^2 - 2 * a^2 * b^3 * tau -
-      y * a * b + 3 * a * b^2 * tau - 3 * a * b^3 * tau^2 + 3 * a * b^3 * tau -
-      b * tau + 3 * b^2 * tau^2 - 3 * b^2 * tau - 2 * b^3^tau^3 +
-      3 * b^3 * tau^2 - b^3 * tau^2
+    l3 <- -2 * y * (a^3) * (b^3) + 3 * y * (a^2) * (b^2) -
+      2 * (a^2) * (b^3) * tau - y * a * b + 3 * a * (b^2) * tau -
+      3 * a * (b^3) * (tau^2) + 3 * a * (b^3) * tau - b * tau +
+      3 * (b^2) * (tau^2) - 3 * (b^2) * tau - 2 * (b^3) * (tau^3) +
+      3 * (b^3) * (tau^2) - (b^3) * tau
     l3[ind] <- 0
     l3[ii] <- 0
   }
   if (deriv > 2) {
     # fourth derivative
-    l4 <- 6 * y * a * 4 * b^4 - 12 * y * a^3 * b^3 + 6 * a^2 * b^4 * tau +
-      7 * y * a^2 * b^2 - 12 * a^2 * b^3 * tau + 11 * a^2 * b^4 * tau^2 -
-      11 * a^2 * b^4 * tau - y * a * b + 7 * a * b^2 * tau -
-      18 * a * b^3 * tau^2 + 18 * a * b^3 * tau + 12 * a * b^4 * tau^3 -
-      18 * a * b^4 * tau^2 + 6 * a * b^4 * tau - b * tau + 7 * b^2 * tau^2 -
-      7 * b^2 * tau - 12 * b^3 * tau^3 + 18 * b^3 * tau^2 - 6 * b^3 * tau +
-      6 * b^4 * tau^4 - 12 * b^4 * tau^3 + 7 * b^4 * tau^2 - b^4 * tau
+    l4 <- 6 * y * (a^4) * (b^4) - 12 * y * (a^3) * (b^3) +
+      6 * (a^3) * (b^4) * tau + 7 * y * (a^2) * (b^2) -
+      12 * (a^2) * (b^3) * tau + 11 * (a^2) * (b^4) * (tau^2) -
+      11 * (a^2) * (b^4) * tau - y * a * b + 7 * a * b^2 * tau -
+      18 * a * (b^3) * (tau^2) + 18 * a * (b^3) * tau +
+      12 * a * (b^4) * (tau^3) - 18 * a * (b^4) * (tau^2) +
+      6 * a * (b^4) * tau - b * tau + 7 * (b^2) * (tau^2) - 7 * (b^2) * tau -
+      12 * (b^3) * (tau^3) + 18 * (b^3) * (tau^2) - 6 * (b^3) * tau +
+      6 * (b^4) * (tau^4) - 12 * (b^4) * (tau^3) + 7 * (b^4) * (tau^2) -
+      (b^4) * tau
     l4[ind] <- 0
     l4[ii] <- 0
   }

@@ -2,11 +2,12 @@
 #'
 #' @param g     - 𝝲, a numeric vector.
 #' @param theta - 𝛉, a numeric vector.
-#' @param deriv - A numeric, indicating whether to return deriv w.r.t. θ₁ & θ₂.
+#' @param deriv - A numeric, indicating whether to return deriv
+#'                w.r.t. θ₀, θ₁ & θ₂.
 #' @param b     - A numeric.
 #'
 #' @return A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
-#'         w.r.t. 𝝲, θ₁ & θ₂.
+#'         w.r.t. 𝝲, θ₀, θ₁ & θ₂.
 lind <- function(g, theta, deriv = 0, b = 0) {
   theta[2] <- exp(theta[2])
   r <- list(eta = theta[1] + (b + theta[2]) * g)
@@ -15,13 +16,13 @@ lind <- function(g, theta, deriv = 0, b = 0) {
 
   if (deriv) {
     n <- length(g)
-    r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 2)
+    r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 3)
     r$eta_th[, 1] <- 1 # d𝛈/dθ₁
     r$eta_th[, 2] <- theta[2] * g # d𝛈/dθ₂
     r$eta_gth[, 2] <- theta[2] # d²𝛈/d𝛄dθ₂
     r$eta_gggg <- r$eta_ggg <- 0 # d⁴𝛈/d𝛄⁴, d³𝛈/d𝛄³
-    # order dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂
-    r$eta_ggth2 <- r$eta_gth2 <- r$eta_th2 <- matrix(0, n, 3)
+    # order dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂, dθ₁dθ₀, dθ₂dθ₀, dθ₀dθ₀,
+    r$eta_ggth2 <- r$eta_gth2 <- r$eta_th2 <- matrix(0, n, 6)
     r$eta_th2[, 3] <- theta[2] * g
     r$eta_gth2[, 3] <- theta[2]
   }
