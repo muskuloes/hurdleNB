@@ -240,6 +240,89 @@ ldth0 <- function(g, y, th0) {
   list(l1 = l1, l2 = l2)
 }
 
+#' Mixed derivatives of l w.r.t. 𝛄 and θ₀.
+#'
+#' @param g   - 𝛄, a numeric vector.
+#' @param y   - 𝐲, a numeric vector.
+#' @param th0 - θ₀, a numeric.
+#'
+#' @return A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
+ldgth0 <- function(g, y, th0) {
+  r <- list()
+
+  a <- exp(th0)
+  d <- btlg(g, a, c("b", "tau"))
+  b <- d$b
+  tau <- d$tau
+  lg <- d$lg
+  w <- (lg / a) - b
+  ind <- d$ind
+  ii <- d$ii
+
+  # ∂²ℓ/∂𝛄∂θ₀
+  r$l_gth0 <- -y * b * a + y * (b^2) * (a^2) - b * (tau^2) * w + b * tau * w +
+    a * (b^2) * tau
+  r$l_gth0[ind] <- 0
+  r$l_gth0[ii] <- 0
+
+  # ∂³ℓ/∂𝛄²∂θ₀
+  r$l_ggth0 <- -y * b * a + 3 * y * (b^2) * (a^2) - 2 * y * (b^3) * (a^3) -
+    b * (tau^2) * w + b * tau * w + 2 * (b^2) * (tau^3) * w +
+    (b^2) * (tau^2) * w * a - 3 * (b^2) * (tau^2) * w - (b^2) * tau * w * a +
+    (b^2) * tau * w + 2 * (b^2) * tau * a - 2 * (b^3) * (tau^2) * a -
+    2 * (b^3) * tau * (a^2) + 2 * (b^3) * (tau) * a
+  r$l_ggth0[ind] <- 0
+  r$l_ggth0[ii] <- 1 / a
+
+  # ∂³ℓ/∂𝛄∂θ₀²
+  r$l_gth0th0 <- -y * b * a + 3 * y * (b^2) * (a^2) - 2 * y * (b^2) * (a^3) -
+    2 * b * (tau^3) * (w^2) + 3 * b * (tau^2) * (w^2) -
+    b * (tau^2) * ((b^2) * a - w) - b * tau * (w^2) +
+    b * tau * ((b^2) * a - w) + 2 * (b^2) * (tau^2) * w * a -
+    2 * (b^2) * tau * w * a + (b^2) * tau * a - 2 * (b^3) * tau * (a^2)
+  r$l_gth0th0[ind] <- 0
+  r$l_gth0th0[ii] <- 0
+
+  # ∂⁴ℓ/∂𝛄²∂θ₀²
+  r$l_ggth0th0 <- -y * b * a + 7 * y * (b^2) * (a^2) - 12 * y * (b^3) * (a^3) +
+    6 * y * (b^4) * (a^4) - 2 * b * (tau^2) * (w^2) + 3 * b * (tau^2) * (w^2) -
+    b * (tau^2) * ((b^2) * a - w) - b * tau * (w^2) +
+    b * tau * ((b^2) * a - w) + 6 * (b^2) * (tau^4) * (w^2) +
+    2 * (b^2) * (tau^3) * (w^2) * a - 12 * (b^2) * (tau^3) * (w^2) +
+    2 * (b^2) * (tau^3) * ((b^2) * a - w) - 3 * (b^2) * (tau^2) * (w^2) * a +
+    7 * (b^2) * (tau^2) * (w^2) + 4 * (b^2) * (tau^2) * w * a +
+    (b^2) * (tau^2) * a * ((b^2) * a - w) -
+    3 * (b^2) * (tau^2) * ((b^2) * a - w) + (b^2) * tau * (w^2) * a -
+    (b^2) * tau * (w^2) - 4 * (b^2) * tau * w * a -
+    (b^2) * tau * a * ((b^2) * a - w) - (b^2) * tau * ((b^2) * a - w) +
+    2 * (b^2) * tau * a - 8 * (b^3) * (tau^3) * w * a -
+    4 * (b^3) * (tau^2) * w * (a^2) + 12 * (b^3) * (tau^2) * w * a -
+    2 * (b^3) * (tau^2) * a + 4 * (b^3) * tau * w * (a^2) -
+    4 * (b^3) * tau * w * a - 8 * (b^3) * tau * (a^2) + 2 * (b^3) * tau * a +
+    6 * (b^4) * (tau^2) * (a^2) + 6 * (b^4) * tau * (a^3) -
+    6 * (b^4) * tau * (a^2)
+  r$l_ggth0th0[ind] <- 0
+  r$l_ggth0th0[ii] <- 0
+
+  # ∂⁴ℓ/∂𝛄³∂θ₀
+  r$l_gggth0 <- -y * b * a + 7 * y * (b^2) * (a^2) - 12 * y(b^3) * (a^3) +
+    6 * y * (b^4) * (a^4) - b * (tau^2) * 2 + b * tau * w +
+    6 * (b^2) * (tau^3) * w + 3 * (b^2) * (tau^2) * w * a -
+    9 * (b^2) * (tau^2) * w - 3 * (b^2) * tau * w * a + 3 * (b^2) * tau * w +
+    4 * (b^2) * tau * a - 6 * (b^3) * (tau^4) * w -
+    6 * (b^3) * (tau^2) * w * a + 12 * (b^3) * (tau^3) * w -
+    2 * (b^3) * (tau^3) * w * (a^2) + 9 * (b^3) * (tau^2) * w * a -
+    7 * (b^3) * (tau^2) * w - 9 * (b^3) * (tau^2) * a +
+    2 * (b^3) * tau * w * (a^2) - 3 * (b^3) * tau * w * a + (b^3) * tau * w -
+    10 * (b^3) * tau * (a^2) + 9 * (b^3) * tau * a + 6 * (b^4) * (tau^3) * a +
+    9 * (b^4) * (tau^2) * (a^2) - 9 * (b^4) * (tau^2) * a +
+    6 * (b^4) * tau * (a^3) - 9 * (b^4) * tau * (a^2) + 3 * (b^2) * tau * a
+  r$l_gggth0[ind] <- 0
+  r$l_gggth0[ii] <- 0
+
+  r
+}
+
 #' Evaluate zero-inflated NB log-likelihood
 #' and its derivatives w.r.t. g (gamma) and eta, with
 #' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
@@ -277,20 +360,26 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
 
   # get first and second derivatives
   if (deriv > 0) {
-    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈
-    l1 <- matrix(0, n, 2)
+    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀
+    l1 <- matrix(0, n, 3)
     le <- lde(eta, deriv)
     lg <- ldg(g, y, a, deriv)
+    lth0 <- ldth0(g, y, th0)
     l1[!zind, 1] <- lg$l1[!zind] # ∂ℓ/∂𝛄, y>0
     l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
     l1[!zind, 2] <- le$l1[!zind] # ∂ℓ/∂𝛈, y>0
+    l1[!zind, 3] <- lth0$l1[!zind] # ∂ℓ/∂θ₀, y>0
 
-    El2 <- l2 <- matrix(0, n, 3)
+    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛈∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀²
+    l2 <- matrix(0, n, 6)
 
-    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈²
+    # order E[∂²ℓ/∂𝛄²], E[∂²ℓ/∂𝛈∂𝛄], E[∂²ℓ/∂𝛈²]
+    El2 <- matrix(0, n, 3)
+
     l2[!zind, 1] <- lg$l2[!zind] # ∂²ℓ/∂𝛄², y>0
     l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
     l2[!zind, 3] <- le$l2[!zind] # ∂²ℓ/∂𝛈², y>0
+    l2[!zind, 6] <- lth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
       a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[∂²ℓ/∂𝛄²]
     El2[, 3] <- -(1 - q) * et + q * le$l2 # E[∂²ℓ/∂𝛈²]
