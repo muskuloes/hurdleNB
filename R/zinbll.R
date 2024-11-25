@@ -384,7 +384,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 5] <- l_th0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
       a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[∂²ℓ/∂𝛄²]
-    El2[, 3] <- -(1 - q) * et + q * le$l2 # E[∂²ℓ/∂𝛈²]
+    El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
   }
 
   # third derivates.

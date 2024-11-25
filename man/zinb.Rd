@@ -21,7 +21,7 @@ zinb(theta = NULL, link = "identity", b = 0)
 }}
 }
 \value{
-An S3 object of type c("extended family", "family") consisting of:
+An S3 object of type c("extended.family", "family") consisting of:
 family          - name of family character string.
 link            - name of link character string.
 linkfun         - the link function.

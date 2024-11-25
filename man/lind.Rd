@@ -16,7 +16,8 @@ lind(g, theta, deriv = 0, b = 0)
 }}
 
 \item{deriv}{\itemize{
-\item A numeric, indicating whether to return deriv w.r.t. θ₁ & θ₂.
+\item A numeric, indicating whether to return deriv
+w.r.t. θ₁ & θ₂.
 }}
 
 \item{b}{\itemize{
