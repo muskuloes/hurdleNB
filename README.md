@@ -1,8 +1,11 @@
 # zinb
-Zero-Inflated NB following [Wood et al. 2016](https://www.tandfonline.com/doi/full/10.1080/01621459.2016.1180986)
+Zero-Inflated NB family for [`mgcv`](https://cran.r-project.org/web/packages/mgcv/index.html).
 
 ```r
+# using pak
 # install.packages("pak")
 pak::pkg_install("muskuloes/zinb")
+# using remotes
+# install.packages("remotes")
+remotes::install_github("muskuloes/zinb")
 ```
-
