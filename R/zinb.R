@@ -1,3 +1,29 @@
+#' generate zero-inflated NB random variables.
+#'
+#' @param g     - 𝝲, a numeric vector.
+#' @param theta - 𝛉, a numeric vector.
+#' @param b     - A numeric.
+#'
+#' @return zero-inflated negative binomial random variables.
+#' @export
+rzinb <- function(g, theta = c(-2, .3, 2), b = 0) {
+  y <- g
+  n <- length(y)
+  lambda <- exp(g)
+
+  eta <- theta[1] + (b + exp(theta[2])) * g
+  p <- 1 - exp(-exp(eta))
+  ind <- p > runif(n)
+  y[!ind] <- 0
+
+  # generate from zero-truncated NB, given y > 0
+  a <- exp(theta[3])
+  prob <- 1 / (1 + a * lambda)
+  y[ind] <- actuar::rztnbinom(sum(ind), (1 / a), prob[ind])
+
+  y
+}
+
 #' 𝛈 = θ₁ + (b + exp(θ₂))𝝲.
 #'
 #' @param g     - 𝝲, a numeric vector.
@@ -313,27 +339,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   }
 
   rd <- function(g, wt, scale) {
-    rzip <- function(g, theta) {
-      y <- g
-      n <- length(y)
-      lambda <- exp(g)
-      mlam <- max(c(lambda[is.finite(lambda)], .Machine$double.eps^.2))
-      lambda[!is.finite(lambda)] <- mlam
-      b <- get(".b")
-      eta <- theta[1] + (b + exp(theta[2])) * g
-      p <- 1 - exp(-exp(eta))
-      ind <- p > runif(n)
-      y[!ind] <- 0
-
-      # generate from zero-truncated NB, given y > 0
-      a <- exp(theta[3])
-      prob <- 1 / (1 + a * exp(g))
-      y[ind] <- actuar::rztnbinom(sum(ind), (1 / a), prob[ind])
-
-      y
-    }
-
-    rzip(g, get(".Theta"))
+    rzinb(g, get(".Theta"), get(".b"))
   }
 
   saturated_ll <- function(y, family, wt = rep(1, length(y))) {
