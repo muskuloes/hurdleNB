@@ -125,7 +125,7 @@ lde <- function(eta, deriv = 4) {
   # third derivative
   if (deriv > 1) {
     ii <- eta > log(.Machine$double.xmax) / 2
-    l3 <- l1 * (-et + (1 - et)^2 - 3(1 - et) * l1 + 2 * l1^2)
+    l3 <- l1 * (-et + (1 - et)^2 - 3 * (1 - et) * l1 + 2 * l1^2)
     l3[ind] <- l1[ind] * (-3 * eti + eti^2 - 3 * (-eti + b - eti * b) +
       2 * b * (2 + b))
     l3[ii] <- 0
@@ -284,7 +284,7 @@ ldgth0 <- function(g, y, th0) {
   r$l_gth0th0[ii] <- 0
 
   # ∂⁴ℓ/∂𝛄³∂θ₀
-  r$l_gggth0 <- -y * b * a + 7 * y * (b^2) * (a^2) - 12 * y(b^3) * (a^3) +
+  r$l_gggth0 <- -y * b * a + 7 * y * (b^2) * (a^2) - 12 * y * (b^3) * (a^3) +
     6 * y * (b^4) * (a^4) - b * (tau^2) * 2 + b * tau * w +
     6 * (b^2) * (tau^3) * w + 3 * (b^2) * (tau^2) * w * a -
     9 * (b^2) * (tau^2) * w - 3 * (b^2) * tau * w * a + 3 * (b^2) * tau * w +
@@ -351,7 +351,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   lg <- d$lg
   l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
     yp * lg[!zind] - l11aea(g[!zind], th0) +
-    lgamma(y + 1 / a) - lgamma(y + 1) - lgamma(1 / a)
+    lgamma(yp + 1 / a) - lgamma(yp + 1) - lgamma(1 / a)
   q <- 1 - exp(-et)
 
   n <- length(y)
@@ -383,7 +383,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 4] <- l_gth0$l_gth0[!zind] # ∂²ℓ/∂𝛈², y>0
     l2[!zind, 5] <- l_th0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
-      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2)(tau)) # E[∂²ℓ/∂𝛄²]
+      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2) * (tau)) # E[∂²ℓ/∂𝛄²]
     El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
   }
 
@@ -406,8 +406,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l4[!zind, 1] <- l_g$l4[!zind]
     l4[!zind, 5] <- l_e$l4[!zind]
     l4[zind, 5] <- l[zind]
-    l4[zind, 6] <- l_gth0$l_gggth0[!zind]
-    l4[zind, 5] <- l_gth0$l_ggth0th0[!zind]
+    l4[!zind, 6] <- l_gth0$l_gggth0[!zind]
+    l4[!zind, 5] <- l_gth0$l_ggth0th0[!zind]
   }
 
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)

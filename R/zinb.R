@@ -133,15 +133,14 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   if (!is.null(theta)) {
     # fixed theta supplied
     ini_theta <- c(theta[1], theta[2], theta[3])
-    n_theta <- 0
+    n_theta <- 0 # no thetas to estimate
   }
 
   env <- new.env(parent = environment(zinb))
 
-  if (b < 0) {
-    b <- 0
-    assign(".b", b, envir = env)
-  }
+  if (b < 0) b <- 0
+
+  assign(".b", b, envir = env)
   assign(".Theta", ini_theta, envir = env)
 
   get_theta <- function(trans = FALSE) {
@@ -149,6 +148,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     if (trans) {
       th[2] <- get(".b") + exp(th[2])
     }
+
     th
   }
 
@@ -161,7 +161,6 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   }
 
   dev_resids <- function(y, g, wt, theta = NULL) {
-    # CAUTION wt parameter not used at all
     if (is.null(theta)) {
       theta <- get(".Theta")
     }
@@ -198,7 +197,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       # dθ₀.
       oo$Dth[, 3] <- -2 * wt * z$l1[, 3]
 
-      oo$Dmuth[, 1:2] <- -2 * wt * (z$l2[, 3] * lin$eta_th * lin$eth_g +
+      oo$Dmuth[, 1:2] <- -2 * wt * (z$l2[, 3] * lin$eta_th * lin$eta_g +
         z$l1[, 2] * lin$eta_gth)
       # dθ₀.
       oo$Dmuth[, 3] <- -2 * wt * z$l2[, 4]
@@ -261,7 +260,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       eta_ggthth[, 2] <- lin$eta_th[, 1] * lin$eta_ggth[, 2] +
         lin$eta_th[, 2] * lin$eta_ggth[, 1]
       eta_ggthth[, 3] <- 2 * lin$eta_th[, 2] * lin$eta_ggth[, 2]
-      oo$Dmu2th2[, 1:3] <- -2 * wt * (z$l4[, 5] * lin$eta_thth * (lin$eta_g^2) +
+      oo$Dmu2th2[, 1:3] <- -2 * wt * (z$l4[, 5] * eta_thth * (lin$eta_g^2) +
         z$l3[, 4] * (lin$eta_th2 * (lin$eta_g^2) +
           2 * eta_gthth * lin$eta_g + eta_thth * lin$eta_gg) +
         z$l2[, 3] * (eta_gthgth + 2 * lin$eta_g * lin$eta_gth2 + eta_ggthth +
@@ -288,10 +287,9 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
 
-    sum(-2 * wt * zinbll(y, g, eta, theta[3], 0))
+    sum(-2 * wt * zinbll(y, g, eta, theta[3], 0)$l)
   }
 
-  # CAUTION not sure about this
   ls <- function(y, wt, theta, scale) {
     list(
       ls = 0,
@@ -315,15 +313,15 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     mustart <- log(y + (y == 0) / 5)
   })
 
-  postproc <- function(family, y, prior_weights, fitted, linear_predictors,
+  postproc <- function(family, y, prior.weights, fitted, linear.predictors,
                        offset, intercept) {
     posr <- list()
     posr$family <- paste("Zero-Inflated Negative Binomial(",
       paste(round(family$getTheta(TRUE), 3), collapse = ","), ")",
       sep = ""
     )
-    lf <- family$saturated.ll(y, family, prior_weights)
-    l2 <- family$dev.resids(y, linear_predictors, prior_weights)
+    lf <- family$saturated.ll(y, family, prior.weights)
+    l2 <- family$dev.resids(y, linear.predictors, prior.weights)
     posr$deviance <- sum(l2 - lf)
 
     fnull <- function(g, family, y, wt) {
@@ -332,7 +330,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     meany <- mean(y)
     posr$null.deviance <- optimize(fnull,
       interval = c(meany / 5, meany * 3),
-      family = family, y = y, wt = prior_weights
+      family = family, y = y, wt = prior.weights
     )$objective - sum(lf)
 
     posr
@@ -358,20 +356,20 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     while (keep_on) {
       step <- -r$Dmu / r$Dmu2
       step[!ucov] <- 0
-      mu1 <- mu + step
-      l1 <- family$dev.resids(y, mu1, wt, theta)
+      g1 <- g + step
+      l1 <- family$dev.resids(y, g1, wt, theta)
       ind <- l1 > l & ucov
       kk <- 0
 
       while (step(ind) > 0 && k < 50) {
         step[ind] <- step[ind] / 2
-        mu1 <- mu + step
-        l1 <- family$dev.resids(y, mu1, wt, theta)
+        g1 <- g + step
+        l1 <- family$dev.resids(y, g1, wt, theta)
         ind <- l1 > l & ucov
         kk <- kk + 1
       }
 
-      mu <- mu1
+      g <- g1
       l <- l1
 
       ucov <- abs(r$Dmu) > lmax * 1e-7
@@ -473,7 +471,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 
   environment(aic) <- environment(Dd) <- environment(dev_resids) <-
     environment(get_theta) <- environment(predict) <- environment(put_theta) <-
-    environment(rd) <- environment(saturated_ll)
+    environment(rd) <- environment(saturated_ll) <- env
 
   structure(list(
     family = "zero-inflated negative binomial", link = linktemp,
