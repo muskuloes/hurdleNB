@@ -273,8 +273,9 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       oo$Dmu2th2[, 6] <- -2 * wt * z$l4[, 7]
 
       oo$Dmu4 <- -2 * wt * (z$l4[, 1] + z$l4[, 5] * (lin$eta_g^4) +
-        6 * z$l3[, 4] * (lin$eta_g^2) * lin$eta_gg + z$l2[, 3] * (3 * (lin$eta_gg^2) +
-          4 * lin$eta_g * lin$eta_ggg) + z$l1[, 2] * lin$eta_gggg)
+        6 * z$l3[, 4] * (lin$eta_g^2) * lin$eta_gg +
+        z$l2[, 3] * (3 * (lin$eta_gg^2) + 4 * lin$eta_g * lin$eta_ggg) +
+        z$l1[, 2] * lin$eta_gggg)
     }
 
     oo
@@ -361,7 +362,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       ind <- l1 > l & ucov
       kk <- 0
 
-      while (step(ind) > 0 && k < 50) {
+      while (sum(ind) > 0 && k < 50) {
         step[ind] <- step[ind] / 2
         g1 <- g + step
         l1 <- family$dev.resids(y, g1, wt, theta)
@@ -372,11 +373,10 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       g <- g1
       l <- l1
 
+      r <- family$Dd(y, g, theta, wt)
       ucov <- abs(r$Dmu) > lmax * 1e-7
       k <- k + 1
-      if (all(!ucov) || k == 100) {
-        keep_on <- FALSE
-      }
+      if (all(!ucov) || k == 100) keep_on <- FALSE
     }
     l1 <- rep(0, length(pind))
     l1[pind] <- l
@@ -398,9 +398,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       res <- res - object$family$saturated.ll(y, object$family, wts)
       fv <- mgcv::predict.gam(object(object, type = "response"))
       s <- attr(res, "sign")
-      if (is.null(s)) {
-        s <- sign(y - fv)
-      }
+      if (is.null(s)) s <- sign(y - fv)
       res <- as.numeric(s * sqrt(pmax(res, 0)))
     }
 
