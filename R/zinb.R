@@ -455,8 +455,8 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       return(fv)
     } else {
       dq_dg <- exp(-et) * et * (b + exp(theta[2]))
-      dmu_dg <- lambda * (d$b * d$tau - d$b * d$tau^2 + d$tau)
-      dmu_dg[d$ind] <- d$b
+      dmu_dg <- lambda * (d$k * d$tau - d$k * d$tau^2 + d$tau)
+      dmu_dg[d$ind] <- d$k
       dmu_dg[d$ii] <- lambda
 
       fv[[2]] <- abs(dq_dg * mu + dmu_dg * q) * se

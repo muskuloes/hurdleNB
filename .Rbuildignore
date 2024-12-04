@@ -1,4 +1,5 @@
 ^LICENSE\.md$
+^.lintr$
 ^notes$
 ^\.virtual\_documents$
 ^\.ipynb\_checkpoints$

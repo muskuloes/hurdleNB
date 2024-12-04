@@ -4,7 +4,7 @@
 \alias{btlg}
 \title{A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).}
 \usage{
-btlg(g, a, what = c("b", "tau"))
+btlg(g, a, what = c("k", "tau"))
 }
 \arguments{
 \item{g}{\itemize{
