@@ -366,7 +366,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
     l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
     l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
-    l2[!zind, 4] <- l_gth0$l_gth0[!zind] # ∂²ℓ/∂𝛈², y>0
+    l2[!zind, 4] <- l_gth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
     l2[!zind, 5] <- l_th0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
       a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
@@ -393,7 +393,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l4[!zind, 5] <- l_e$l4[!zind]
     l4[zind, 5] <- l[zind]
     l4[!zind, 6] <- l_gth0$l_gggth0[!zind]
-    l4[!zind, 5] <- l_gth0$l_ggth0th0[!zind]
+    l4[!zind, 7] <- l_gth0$l_ggth0th0[!zind]
   }
 
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)

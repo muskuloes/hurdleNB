@@ -185,11 +185,11 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     n <- length(y)
     if (is.null(wt)) wt <- rep(1, n)
     oo$Dmu <- -2 * wt * (z$l1[, 1] + z$l1[, 2] * lin$eta_g)
-    oo$Dmu2 <- -2 * wt * (z$l2[, 1] + 2 * z$l2[, 2] * lin$eta_g +
-      z$l2[, 3] * (lin$eta_g^2) + z$l1[, 2] * lin$eta_gg)
-    oo$EDmu2 <- -2 * wt * (z$El2[, 1] + 2 * z$El2[, 2] * lin$eta_g +
-      z$El2[, 3] * (lin$eta_g^2))
+    oo$Dmu2 <- -2 * wt * (z$l2[, 1] + z$l2[, 3] * (lin$eta_g^2) +
+      z$l1[, 2] * lin$eta_gg)
+    oo$EDmu2 <- -2 * wt * (z$El2[, 1] + z$El2[, 3] * (lin$eta_g^2))
 
+    # quasi-Newton
     if (level > 0) {
       oo$Dth <- oo$Dmuth <- oo$Dmu2th <- matrix(0, n, 3)
 
@@ -211,12 +211,16 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       oo$Dmu3 <- -2 * wt * (z$l3[, 1] + z$l3[, 4] * (lin$eta_g^3) +
         3 * z$l2[, 3] * lin$eta_g * lin$eta_gg + z$l1[, 2] * lin$eta_ggg)
     }
+
+    # full Newton
     if (level > 1) {
       eta_thth <- matrix(0, n, 3)
       eta_thth[, 1] <- lin$eta_th[, 1]^2
       eta_thth[, 2] <- lin$eta_th[, 1] * lin$eta_th[, 2]
       eta_thth[, 3] <- lin$eta_th[, 2]^2
+
       oo$Dmu2th2 <- oo$Dmuth2 <- oo$Dth2 <- matrix(0, n, 6)
+
       oo$Dth2[, 1:3] <- -2 * wt * (z$l2[, 3] * eta_thth +
         z$l1[, 2] * lin$eta_th2)
       # dθ₁dθ₀.
@@ -264,7 +268,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
         z$l3[, 4] * (lin$eta_th2 * (lin$eta_g^2) +
           2 * eta_gthth * lin$eta_g + eta_thth * lin$eta_gg) +
         z$l2[, 3] * (eta_gthgth + 2 * lin$eta_g * lin$eta_gth2 + eta_ggthth +
-          lin$eta_th2 * lin$eta_gg) + z$l1[, 1] * lin$eta_ggth2)
+          lin$eta_th2 * lin$eta_gg) + z$l1[, 2] * lin$eta_ggth2)
       # dθ₁dθ₀.
       oo$Dmu2th2[, 4] <- 0
       # dθ₂dθ₀.
