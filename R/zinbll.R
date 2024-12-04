@@ -227,7 +227,7 @@ ldth0 <- function(g, y, th0) {
   # second derivative
   l2 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y + tau^2 * w^2 - tau * w^2 -
     tau * w + (1 / a) * (digamma(y + 1 / a) - digamma(1 / a)) +
-    (1 / (a^2)) * (psigamma(y + 1 / a) - psigamma(1 / a, 2))
+    (1 / (a^2)) * (psigamma(y + 1 / a, 1) - psigamma(1 / a, 1))
   l2[ind] <- (1 / a) * (digamma(y[ind] + 1 / a) - digamma(1 / a)) +
     (1 / (a^2)) * (psigamma(y[ind] + (1 / a), 1) - psigamma(1 / a, 1))
   l2[ii] <- (1 / a) * (2 - th0 - g[ii] - digamma(y[ii] + 1 / a) -
