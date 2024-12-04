@@ -331,8 +331,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   l <- et <- exp(eta)
   yp <- y[!zind]
   l[zind] <- -et[zind]
-  d <- btlg(g, a, what = c("b", "tau", "lg"))
-  b <- d$b
+  d <- btlg(g, a, what = c("k", "tau", "lg"))
+  k <- d$k
   tau <- d$tau
   lg <- d$lg
   l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
@@ -368,8 +368,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
     l2[!zind, 4] <- l_gth0$l_gth0[!zind] # ∂²ℓ/∂𝛈², y>0
     l2[!zind, 5] <- l_th0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
-    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * b^2 - a * b) +
-      a * (b^2) * tau - tau * b + (b^2) * (tau^2) - (b^2) * (tau)) # E[∂²ℓ/∂𝛄²]
+    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
+      a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
     El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
   }
 
