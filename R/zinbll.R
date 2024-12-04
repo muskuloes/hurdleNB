@@ -55,7 +55,7 @@ btlg <- function(g, a, what = c("k", "tau")) {
 
   k_f <- function() {
     k <- eg / (1 + a * eg)
-    k[ind] <- eg
+    k[ind] <- eg[ind]
     k[ii] <- 1 / a
 
     k
@@ -65,8 +65,8 @@ btlg <- function(g, a, what = c("k", "tau")) {
     tau <- 1 / (1 - (1 + a * eg)^-(1 / a))
     lg <- log(1 + a * eg)
     lg[ind] <- 0
-    lg[ii] <- g
-    tau[ind] <- 1 / eg
+    lg[ii] <- g[ii]
+    tau[ind] <- 1 / eg[ind]
     tau[ii] <- 1
 
     tau
@@ -75,7 +75,7 @@ btlg <- function(g, a, what = c("k", "tau")) {
   lg_f <- function() {
     lg <- log(1 + a * eg)
     lg[ind] <- 0
-    lg[ii] <- g
+    lg[ii] <- g[ii]
 
     lg
   }
@@ -221,16 +221,18 @@ ldth0 <- function(g, y, th0) {
   l1 <- -a * k * y + tau * w + y -
     1 / a * (digamma(y + 1 / a) - digamma(1 / a))
   l1[ind] <- y[ind] - (1 / a) * (digamma(y + (1 / a)) - digamma(1 / a))
-  l1[ii] <- (1 / a) * (th0 + g - 1 - digamma(y + (1 / a)) + digamma(1 / a))
+  l1[ii] <- (1 / a) * (th0 + g[ii] - 1 - digamma(y[ii] + (1 / a)) +
+    digamma(1 / a))
 
   # second derivative
   l2 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y + tau^2 * w^2 - tau * w^2 -
     tau * w + (1 / a) * (digamma(y + 1 / a) - digamma(1 / a)) +
     (1 / (a^2)) * (psigamma(y + 1 / a) - psigamma(1 / a, 2))
-  l2[ind] <- (1 / a) * (digamma(y + 1 / a) - digamma(1 / a)) +
-    (1 / (a^2)) * (psigamma(y + (1 / a), 1) - psigamma(1 / a, 1))
-  l2[ii] <- (1 / a) * (2 - th0 - g - digamma(y + 1 / a) - digamma(1 / a) -
-    (1 / a) * (psigamma(y + (1 / a), 1) - psigamma(1 / a, 1)))
+  l2[ind] <- (1 / a) * (digamma(y[ind] + 1 / a) - digamma(1 / a)) +
+    (1 / (a^2)) * (psigamma(y[ind] + (1 / a), 1) - psigamma(1 / a, 1))
+  l2[ii] <- (1 / a) * (2 - th0 - g[ii] - digamma(y[ii] + 1 / a) -
+    digamma(1 / a) - (1 / a) * (psigamma(y[ii] + (1 / a), 1) -
+      psigamma(1 / a, 1)))
 
   list(l1 = l1, l2 = l2)
 }
