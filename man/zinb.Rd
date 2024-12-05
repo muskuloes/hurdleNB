@@ -9,15 +9,15 @@ zinb(theta = NULL, link = "identity", b = 0)
 \arguments{
 \item{theta}{\itemize{
 \item 𝛉, a numeric vector containing the 3 parameters of the model,
-θ₀, θ₁, θ₂.
+θ₀, θ₁, θ₂,
 }}
 
 \item{link}{\itemize{
-\item link function name, a character string or function name.
+\item link function name, a character string or function name,
 }}
 
 \item{b}{\itemize{
-\item a numeric parameter.
+\item a numeric parameter,
 }}
 }
 \value{

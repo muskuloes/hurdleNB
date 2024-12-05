@@ -8,17 +8,17 @@ lde(eta, deriv = 4)
 }
 \arguments{
 \item{eta}{\itemize{
-\item 𝛈, a numeric vector.
+\item 𝛈, a numeric vector,
 }}
 
 \item{deriv}{\itemize{
-\item <= 1 - first and second derivatives.
-== 2 - first, second and third derivatives.
+\item <= 1 - first and second derivatives,
+== 2 - first, second and third derivatives,
 >= 3 - first, second, third and fourth derivatives.
 }}
 }
 \value{
-A list of derivatives of the log-likelihood w.r.t. eta.
+A list of derivatives of the log-likelihood w.r.t. 𝛈 (eta).
 }
 \description{
 Log-likelihood derivates w.r.t. 𝛈.

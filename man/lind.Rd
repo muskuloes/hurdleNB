@@ -8,16 +8,16 @@ lind(g, theta, deriv = 0, b = 0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝝲, a numeric vector.
+\item 𝝲, a numeric vector,
 }}
 
 \item{theta}{\itemize{
-\item 𝛉, a numeric vector.
+\item 𝛉, a numeric vector,
 }}
 
 \item{deriv}{\itemize{
 \item A numeric, indicating whether to return deriv
-w.r.t. θ₁ & θ₂.
+w.r.t. θ₁ & θ₂,
 }}
 
 \item{b}{\itemize{

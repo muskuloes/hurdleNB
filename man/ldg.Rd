@@ -8,25 +8,25 @@ ldg(g, y, a, deriv = 4)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector.
+\item 𝛄, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector.
+\item 𝐲, a numeric vector,
 }}
 
 \item{a}{\itemize{
-\item α, a numeric.
+\item α, a numeric,
 }}
 
 \item{deriv}{\itemize{
-\item <= 1 - first and second derivatives.
-== 2 - first, second and third derivatives.
+\item <= 1 - first and second derivatives,
+== 2 - first, second and third derivatives,
 >= 3 - first, second, third and fourth derivatives.
 }}
 }
 \value{
-A list of derivatives of the log-likelihood w.r.t. g.
+A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
 }
 \description{
 Log-likelihood derivates w.r.t. 𝛄.

@@ -1,7 +1,7 @@
-#' generate zero-inflated NB random variables.
+#' Generate zero-inflated NB random variables.
 #'
-#' @param g     - 𝝲, a numeric vector.
-#' @param theta - 𝛉, a numeric vector.
+#' @param g     - 𝝲, a numeric vector,
+#' @param theta - 𝛉, a numeric vector,
 #' @param b     - A numeric.
 #'
 #' @return zero-inflated negative binomial random variables.
@@ -26,10 +26,10 @@ rzinb <- function(g, theta = c(-2, .3, 2), b = 0) {
 
 #' 𝛈 = θ₁ + (b + exp(θ₂))𝝲.
 #'
-#' @param g     - 𝝲, a numeric vector.
-#' @param theta - 𝛉, a numeric vector.
+#' @param g     - 𝝲, a numeric vector,
+#' @param theta - 𝛉, a numeric vector,
 #' @param deriv - A numeric, indicating whether to return deriv
-#'                w.r.t. θ₁ & θ₂.
+#'                w.r.t. θ₁ & θ₂,
 #' @param b     - A numeric.
 #'
 #' @return A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
@@ -59,9 +59,9 @@ lind <- function(g, theta, deriv = 0, b = 0) {
 #' Zero-Inflated Negative Binomial extended family for mgcv
 #'
 #' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
-#'                θ₀, θ₁, θ₂.
-#' @param link  - link function name, a character string or function name.
-#' @param b     - a numeric parameter.
+#'                θ₀, θ₁, θ₂,
+#' @param link  - link function name, a character string or function name,
+#' @param b     - a numeric parameter,
 #'
 #' @return An S3 object of type c("extended.family", "family") consisting of:
 #'            family          - name of family character string.
@@ -469,7 +469,6 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       return(fv)
     }
   }
-
 
   environment(aic) <- environment(Dd) <- environment(dev_resids) <-
     environment(get_theta) <- environment(predict) <- environment(put_theta) <-

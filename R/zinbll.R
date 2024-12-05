@@ -18,7 +18,7 @@ l1ee <- function(x) {
 
 #' log(1 - (1 + αeˣ)^(-1/α)).
 #'
-#' @param x   - A numeric vector.
+#' @param x   - A numeric vector,
 #' @param th0 - θ₀, a numeric.
 #'
 #' @return Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
@@ -38,13 +38,13 @@ l11aea <- function(x, th0) {
 
 #' A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).
 #'
-#' @param g    - 𝛄, a numeric vector.
-#' @param a    - α, a numeric.
+#' @param g    - 𝛄, a numeric vector,
+#' @param a    - α, a numeric,
 #' @param what - A character vector specifying what to return.
 #'
 #' @return A list containing:
-#          k -- 𝛋, tau -- 𝛕, lg -- log(1+αeᵞ).
-#'         ind -- indices of yᵢ for which γᵢ is very small.
+#          k -- 𝛋, tau -- 𝛕, lg -- log(1+αeᵞ),
+#'         ind -- indices of yᵢ for which γᵢ is very small,
 #'         ii -- indices of yᵢ for which γᵢ is very large.
 btlg <- function(g, a, what = c("k", "tau")) {
   ind <- g < log(.Machine$double.eps)
@@ -98,12 +98,12 @@ btlg <- function(g, a, what = c("k", "tau")) {
 
 #' Log-likelihood derivates w.r.t. 𝛈.
 #'
-#' @param eta   - 𝛈, a numeric vector.
-#' @param deriv - <= 1 - first and second derivatives.
-#'                == 2 - first, second and third derivatives.
+#' @param eta   - 𝛈, a numeric vector,
+#' @param deriv - <= 1 - first and second derivatives,
+#'                == 2 - first, second and third derivatives,
 #'                >= 3 - first, second, third and fourth derivatives.
 #'
-#' @return A list of derivatives of the log-likelihood w.r.t. eta.
+#' @return A list of derivatives of the log-likelihood w.r.t. 𝛈 (eta).
 lde <- function(eta, deriv = 4) {
   ind <- eta < log(.Machine$double.eps) / 3
   ii <- eta > log(.Machine$double.xmax)
@@ -147,14 +147,14 @@ lde <- function(eta, deriv = 4) {
 
 #' Log-likelihood derivates w.r.t. 𝛄.
 #'
-#' @param g     - 𝛄, a numeric vector.
-#' @param y     - 𝐲, a numeric vector.
-#' @param a     - α, a numeric.
-#' @param deriv - <= 1 - first and second derivatives.
-#'                == 2 - first, second and third derivatives.
+#' @param g     - 𝛄, a numeric vector,
+#' @param y     - 𝐲, a numeric vector,
+#' @param a     - α, a numeric,
+#' @param deriv - <= 1 - first and second derivatives,
+#'                == 2 - first, second and third derivatives,
 #'                >= 3 - first, second, third and fourth derivatives.
 #'
-#' @return A list of derivatives of the log-likelihood w.r.t. g.
+#' @return A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
 ldg <- function(g, y, a, deriv = 4) {
   d <- btlg(g, a, c("k", "tau"))
   k <- d$k
@@ -202,20 +202,22 @@ ldg <- function(g, y, a, deriv = 4) {
 
 #' Log-likelihood derivatives w.r.t. θ₀.
 #'
-#' @param g   - 𝛄, a numeric vector
-#' @param y   - 𝐲, a numeric vector
-#' @param th0 - θ₀, a numeric
+#' @param g     - 𝛄, a numeric vector
+#' @param y     - 𝐲, a numeric vector
+#' @param th0   - θ₀, a numeric
 #'
 #' @return A list of the first and second derivatives of the
-#          log-likelihood w.r.t. θ₀.
+#'          log-likelihood w.r.t. θ₀.
 ldth0 <- function(g, y, th0) {
   a <- exp(th0)
-  d <- btlg(g, a, c("k", "tau"))
+  d <- btlg(g, a, c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
   w <- d$lg / a - k
   ind <- d$ind
   ii <- d$ii
+
+  l1 <- l2 <- NULL
 
   # first derivative
   l1 <- -a * k * y + tau * w + y -
@@ -239,16 +241,16 @@ ldth0 <- function(g, y, th0) {
 
 #' Mixed derivatives of l w.r.t. 𝛄 and θ₀.
 #'
-#' @param g   - 𝛄, a numeric vector.
-#' @param y   - 𝐲, a numeric vector.
-#' @param th0 - θ₀, a numeric.
-#'
+#' @param g     - 𝛄, a numeric vector.
+#' @param y     - 𝐲, a numeric vector.
+#' @param th0   - θ₀, a numeric.
+#' @param deriv - <= 1 - second mixed derivatives,
+#'                <= 3 - second and third mixed derivatives,
+#'                 > 3 - second, third and fourth mixed derivatives.
 #' @return A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
-ldgth0 <- function(g, y, th0) {
-  r <- list()
-
+ldgth0 <- function(g, y, th0, deriv = 4) {
   a <- exp(th0)
-  d <- btlg(g, a, c("k", "tau"))
+  d <- btlg(g, a, c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
   lg <- d$lg
@@ -256,59 +258,67 @@ ldgth0 <- function(g, y, th0) {
   ind <- d$ind
   ii <- d$ii
 
+  l_gth0 <- l_ggth0 <- l_gth0th0 <- l_gggth0 <- l_ggth0th0 <- NULL
+
   # ∂²ℓ/∂𝛄∂θ₀
-  r$l_gth0 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y - k * tau^2 * w +
+  l_gth0 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y - k * tau^2 * w +
     k * tau * w
-  r$l_gth0[ind] <- 0
-  r$l_gth0[ii] <- 0
+  l_gth0[ind] <- 0
+  l_gth0[ii] <- 0
 
-  # ∂³ℓ/∂𝛄²∂θ₀
-  r$l_ggth0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
-    2 * a * k^3 * tau^2 + 2 * a * k^3 * tau + a * k^2 * tau^2 * w -
-    a * k^2 * tau * w + 2 * a * k^2 * tau - a * k * y + 2 * k^2 * tau^3 * w -
-    3 * k^2 * tau^2 * w + k^2 * tau * w - k * tau^2 * w + k * tau * w
-  r$l_ggth0[ind] <- 0
-  r$l_ggth0[ii] <- 1 / a
+  if (deriv > 1) {
+    # ∂³ℓ/∂𝛄²∂θ₀
+    l_ggth0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
+      2 * a * k^3 * tau^2 + 2 * a * k^3 * tau + a * k^2 * tau^2 * w -
+      a * k^2 * tau * w + 2 * a * k^2 * tau - a * k * y + 2 * k^2 * tau^3 * w -
+      3 * k^2 * tau^2 * w + k^2 * tau * w - k * tau^2 * w + k * tau * w
+    l_ggth0[ind] <- 0
+    l_ggth0[ii] <- 1 / a
 
-  # ∂³ℓ/∂𝛄∂θ₀²
-  r$l_gth0th0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
-    a * k^3 * tau^2 + a * k^3 * tau + 2 * a * k^2 * tau^2 * w -
-    2 * a * k^2 * tau * w + a * k^2 * tau - a * k * y - 2 * k * tau^3 * w^2 +
-    3 * k * tau^2 * w^2 + k * tau^2 * w - k * tau * w^2 - k * tau * w
-  r$l_gth0th0[ind] <- 0
-  r$l_gth0th0[ii] <- 0
+    # ∂³ℓ/∂𝛄∂θ₀²
+    l_gth0th0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
+      a * k^3 * tau^2 + a * k^3 * tau + 2 * a * k^2 * tau^2 * w -
+      2 * a * k^2 * tau * w + a * k^2 * tau - a * k * y - 2 * k * tau^3 * w^2 +
+      3 * k * tau^2 * w^2 + k * tau^2 * w - k * tau * w^2 - k * tau * w
+    l_gth0th0[ind] <- 0
+    l_gth0th0[ii] <- 0
+  }
+  if (deriv > 3) {
+    # ∂⁴ℓ/∂𝛄³∂θ₀
+    l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
+      9 * a^2 * k^4 * tau^2 - 9 * a^2 * k^4 * tau - 2 * a^2 * k^3 * tau^2 * w +
+      2 * a^2 * k^3 * tau * w - 10 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
+      6 * a * k^4 * tau^3 - 9 * a * k^4 * tau^2 + 3 * a * k^4 * tau -
+      6 * a * k^3 * tau^3 * w + 9 * a * k^3 * tau^2 * w - 9 * a * k^3 * tau^2 -
+      3 * a * k^3 * tau * w + 9 * a * k^3 * tau + 3 * a * k^2 * tau^2 * w -
+      3 * a * k^2 * tau * w + 4 * a * k^2 * tau - a * k * y -
+      6 * k^3 * tau^4 * w + 12 * k^3 * tau^3 * w - 7 * k^3 * tau^2 * w +
+      k^3 * tau * w + 6 * k^2 * tau^3 * w - 9 * k^2 * tau^2 * w +
+      3 * k^2 * tau * w - k * tau^2 * w + k * tau * w
+    l_gggth0[ind] <- 0
+    l_gggth0[ii] <- 0
 
-  # ∂⁴ℓ/∂𝛄³∂θ₀
-  r$l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
-    9 * a^2 * k^4 * tau^2 - 9 * a^2 * k^4 * tau - 2 * a^2 * k^3 * tau^2 * w +
-    2 * a^2 * k^3 * tau * w - 10 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
-    6 * a * k^4 * tau^3 - 9 * a * k^4 * tau^2 + 3 * a * k^4 * tau -
-    6 * a * k^3 * tau^3 * w + 9 * a * k^3 * tau^2 * w - 9 * a * k^3 * tau^2 -
-    3 * a * k^3 * tau * w + 9 * a * k^3 * tau + 3 * a * k^2 * tau^2 * w -
-    3 * a * k^2 * tau * w + 4 * a * k^2 * tau - a * k * y -
-    6 * k^3 * tau^4 * w + 12 * k^3 * tau^3 * w - 7 * k^3 * tau^2 * w +
-    k^3 * tau * w + 6 * k^2 * tau^3 * w - 9 * k^2 * tau^2 * w +
-    3 * k^2 * tau * w - k * tau^2 * w + k * tau * w
-  r$l_gggth0[ind] <- 0
-  r$l_gggth0[ii] <- 0
+    # ∂⁴ℓ/∂𝛄²∂θ₀²
+    l_ggth0th0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
+      7 * a^2 * k^4 * tau^2 - 7 * a^2 * k^4 * tau - 4 * a^2 * k^3 * tau^2 * w +
+      4 * a^2 * k^3 * tau * w - 8 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
+      2 * a * k^4 * tau^3 - 3 * a * k^4 * tau^2 + a * k^4 * tau -
+      8 * a * k^3 * tau^3 * w + 12 * a * k^3 * tau^2 * w - 3 * a * k^3 * tau^2 -
+      4 * a * k^3 * tau * w + 3 * a * k^3 * tau + 2 * a * k^2 * tau^3 * w^2 -
+      3 * a * k^2 * tau^2 * w^2 + 3 * a * k^2 * tau^2 * w +
+      a * k^2 * tau * w^2 - 3 * a * k^2 * tau * w + 2 * a * k^2 * tau -
+      a * k * y + 6 * k^2 * tau^4 * w^2 - 12 * k^2 * tau^3 * w^2 -
+      2 * k^2 * tau^3 * w + 7 * k^2 * tau^2 * w^2 + 3 * k^2 * tau^2 * w -
+      k^2 * tau * w^2 - k^2 * tau * w - 2 * k * tau^3 * w^2 +
+      3 * k * tau^2 * w^2 + k * tau^2 * w - k * tau * w^2 - k * tau * w
+    l_ggth0th0[ind] <- 0
+    l_ggth0th0[ii] <- 0
+  }
 
-  # ∂⁴ℓ/∂𝛄²∂θ₀²
-  r$l_ggth0th0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
-    7 * a^2 * k^4 * tau^2 - 7 * a^2 * k^4 * tau - 4 * a^2 * k^3 * tau^2 * w +
-    4 * a^2 * k^3 * tau * w - 8 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
-    2 * a * k^4 * tau^3 - 3 * a * k^4 * tau^2 + a * k^4 * tau -
-    8 * a * k^3 * tau^3 * w + 12 * a * k^3 * tau^2 * w - 3 * a * k^3 * tau^2 -
-    4 * a * k^3 * tau * w + 3 * a * k^3 * tau + 2 * a * k^2 * tau^3 * w^2 -
-    3 * a * k^2 * tau^2 * w^2 + 3 * a * k^2 * tau^2 * w + a * k^2 * tau * w^2 -
-    3 * a * k^2 * tau * w + 2 * a * k^2 * tau - a * k * y +
-    6 * k^2 * tau^4 * w^2 - 12 * k^2 * tau^3 * w^2 - 2 * k^2 * tau^3 * w +
-    7 * k^2 * tau^2 * w^2 + 3 * k^2 * tau^2 * w - k^2 * tau * w^2 -
-    k^2 * tau * w - 2 * k * tau^3 * w^2 + 3 * k * tau^2 * w^2 + k * tau^2 * w -
-    k * tau * w^2 - k * tau * w
-  r$l_ggth0th0[ind] <- 0
-  r$l_ggth0th0[ii] <- 0
-
-  r
+  list(
+    l_gth0 = l_gth0, l_ggth0 = l_ggth0, l_gth0th0 = l_gth0th0,
+    l_gggth0 = l_gggth0, l_ggth0th0 = l_ggth0th0
+  )
 }
 
 #' Evaluate zero-inflated NB log-likelihood
@@ -333,7 +343,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   l <- et <- exp(eta)
   yp <- y[!zind]
   l[zind] <- -et[zind]
-  d <- btlg(g, a, what = c("k", "tau", "lg"))
+  d <- btlg(g, a, what = c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
   lg <- d$lg
@@ -352,13 +362,13 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l1 <- matrix(0, n, 3)
     l_e <- lde(eta, deriv)
     l_g <- ldg(g, y, a, deriv)
-    l_th0 <- ldth0(g, y, th0)
-    l_gth0 <- ldgth0(g, y, th0)
+    l_dth0 <- ldth0(g, y, th0)
+    l_dgth0 <- ldgth0(g, y, th0, deriv)
 
     l1[!zind, 1] <- l_g$l1[!zind] # ∂ℓ/∂𝛄, y>0
     l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
     l1[!zind, 2] <- l_e$l1[!zind] # ∂ℓ/∂𝛈, y>0
-    l1[!zind, 3] <- l_th0$l1[!zind] # ∂ℓ/∂θ₀, y>0
+    l1[!zind, 3] <- l_dth0$l1[!zind] # ∂ℓ/∂θ₀, y>0
 
     # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
     l2 <- matrix(0, n, 5)
@@ -368,8 +378,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
     l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
     l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
-    l2[!zind, 4] <- l_gth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
-    l2[!zind, 5] <- l_th0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+    l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
+    l2[!zind, 5] <- l_dth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
       a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
     El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
@@ -382,8 +392,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l3[!zind, 1] <- l_g$l3[!zind]
     l3[!zind, 4] <- l_e$l3[!zind]
     l3[zind, 4] <- l[zind]
-    l3[!zind, 5] <- l_gth0$l_ggth0[!zind]
-    l3[!zind, 6] <- l_gth0$l_gth0th0[!zind]
+    l3[!zind, 5] <- l_dgth0$l_ggth0[!zind]
+    l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
   }
 
   # fourth derivatives
@@ -394,8 +404,8 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l4[!zind, 1] <- l_g$l4[!zind]
     l4[!zind, 5] <- l_e$l4[!zind]
     l4[zind, 5] <- l[zind]
-    l4[!zind, 6] <- l_gth0$l_gggth0[!zind]
-    l4[!zind, 7] <- l_gth0$l_ggth0th0[!zind]
+    l4[!zind, 6] <- l_dgth0$l_gggth0[!zind]
+    l4[!zind, 7] <- l_dgth0$l_ggth0th0[!zind]
   }
 
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)

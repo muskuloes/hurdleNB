@@ -2,17 +2,17 @@
 % Please edit documentation in R/zinb.R
 \name{rzinb}
 \alias{rzinb}
-\title{generate zero-inflated NB random variables.}
+\title{Generate zero-inflated NB random variables.}
 \usage{
 rzinb(g, theta = c(-2, 0.3, 2), b = 0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝝲, a numeric vector.
+\item 𝝲, a numeric vector,
 }}
 
 \item{theta}{\itemize{
-\item 𝛉, a numeric vector.
+\item 𝛉, a numeric vector,
 }}
 
 \item{b}{\itemize{
@@ -23,5 +23,5 @@ rzinb(g, theta = c(-2, 0.3, 2), b = 0)
 zero-inflated negative binomial random variables.
 }
 \description{
-generate zero-inflated NB random variables.
+Generate zero-inflated NB random variables.
 }

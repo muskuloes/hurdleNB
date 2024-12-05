@@ -21,6 +21,7 @@ ldth0(g, y, th0)
 }
 \value{
 A list of the first and second derivatives of the
+log-likelihood w.r.t. θ₀.
 }
 \description{
 Log-likelihood derivatives w.r.t. θ₀.

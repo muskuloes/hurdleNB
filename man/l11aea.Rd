@@ -8,7 +8,7 @@ l11aea(x, th0)
 }
 \arguments{
 \item{x}{\itemize{
-\item A numeric vector.
+\item A numeric vector,
 }}
 
 \item{th0}{\itemize{

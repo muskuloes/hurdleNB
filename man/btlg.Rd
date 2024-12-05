@@ -8,11 +8,11 @@ btlg(g, a, what = c("k", "tau"))
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector.
+\item 𝛄, a numeric vector,
 }}
 
 \item{a}{\itemize{
-\item α, a numeric.
+\item α, a numeric,
 }}
 
 \item{what}{\itemize{
@@ -21,7 +21,7 @@ btlg(g, a, what = c("k", "tau"))
 }
 \value{
 A list containing:
-ind -- indices of yᵢ for which γᵢ is very small.
+ind -- indices of yᵢ for which γᵢ is very small,
 ii -- indices of yᵢ for which γᵢ is very large.
 }
 \description{
