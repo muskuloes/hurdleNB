@@ -1,61 +1,3 @@
-#' Generate zero-inflated NB random variables.
-#'
-#' @param g     - 𝝲, a numeric vector,
-#' @param theta - 𝛉, a numeric vector,
-#' @param b     - A numeric.
-#'
-#' @return zero-inflated negative binomial random variables.
-#' @export
-rzinb <- function(g, theta = c(-2, .3, 2), b = 0) {
-  y <- g
-  n <- length(y)
-  lambda <- exp(g)
-
-  eta <- theta[1] + (b + exp(theta[2])) * g
-  p <- 1 - exp(-exp(eta))
-  ind <- p > runif(n)
-  y[!ind] <- 0
-
-  # generate from zero-truncated NB, given y > 0
-  a <- exp(theta[3])
-  prob <- 1 / (1 + a * lambda)
-  y[ind] <- actuar::rztnbinom(sum(ind), (1 / a), prob[ind])
-
-  y
-}
-
-#' 𝛈 = θ₁ + (b + exp(θ₂))𝝲.
-#'
-#' @param g     - 𝝲, a numeric vector,
-#' @param theta - 𝛉, a numeric vector,
-#' @param deriv - A numeric, indicating whether to return deriv
-#'                w.r.t. θ₁ & θ₂,
-#' @param b     - A numeric.
-#'
-#' @return A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
-#'         w.r.t. 𝝲, θ₁ & θ₂.
-lind <- function(g, theta, deriv = 0, b = 0) {
-  theta[2] <- exp(theta[2])
-  r <- list(eta = theta[1] + (b + theta[2]) * g)
-  r$eta_g <- b + theta[2]
-  r$eta_gg <- 0
-
-  if (deriv) {
-    n <- length(g)
-    r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 2)
-    r$eta_th[, 1] <- 1 # d𝛈/dθ₁
-    r$eta_th[, 2] <- theta[2] * g # d𝛈/dθ₂
-    r$eta_gth[, 2] <- theta[2] # d²𝛈/d𝛄dθ₂
-    r$eta_gggg <- r$eta_ggg <- 0 # d⁴𝛈/d𝛄⁴, d³𝛈/d𝛄³
-    # order dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
-    r$eta_ggth2 <- r$eta_gth2 <- r$eta_th2 <- matrix(0, n, 3)
-    r$eta_th2[, 3] <- theta[2] * g
-    r$eta_gth2[, 3] <- theta[2]
-  }
-
-  r
-}
-
 #' Zero-Inflated Negative Binomial extended family for mgcv
 #'
 #' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
@@ -484,4 +426,62 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     ini.theta = ini_theta, putTheta = put_theta, getTheta = get_theta,
     saturated.ll = saturated_ll
   ), class = c("extended.family", "family"))
+}
+
+#' Generate zero-inflated NB random variables.
+#'
+#' @param g     - 𝝲, a numeric vector,
+#' @param theta - 𝛉, a numeric vector,
+#' @param b     - A numeric.
+#'
+#' @return zero-inflated negative binomial random variables.
+#' @export
+rzinb <- function(g, theta = c(-2, .3, 2), b = 0) {
+  y <- g
+  n <- length(y)
+  lambda <- exp(g)
+
+  eta <- theta[1] + (b + exp(theta[2])) * g
+  p <- 1 - exp(-exp(eta))
+  ind <- p > runif(n)
+  y[!ind] <- 0
+
+  # generate from zero-truncated NB, given y > 0
+  a <- exp(theta[3])
+  prob <- 1 / (1 + a * lambda)
+  y[ind] <- actuar::rztnbinom(sum(ind), (1 / a), prob[ind])
+
+  y
+}
+
+#' 𝛈 = θ₁ + (b + exp(θ₂))𝝲.
+#'
+#' @param g     - 𝝲, a numeric vector,
+#' @param theta - 𝛉, a numeric vector,
+#' @param deriv - A numeric, indicating whether to return deriv
+#'                w.r.t. θ₁ & θ₂,
+#' @param b     - A numeric.
+#'
+#' @return A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
+#'         w.r.t. 𝝲, θ₁ & θ₂.
+lind <- function(g, theta, deriv = 0, b = 0) {
+  theta[2] <- exp(theta[2])
+  r <- list(eta = theta[1] + (b + theta[2]) * g)
+  r$eta_g <- b + theta[2]
+  r$eta_gg <- 0
+
+  if (deriv) {
+    n <- length(g)
+    r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 2)
+    r$eta_th[, 1] <- 1 # d𝛈/dθ₁
+    r$eta_th[, 2] <- theta[2] * g # d𝛈/dθ₂
+    r$eta_gth[, 2] <- theta[2] # d²𝛈/d𝛄dθ₂
+    r$eta_gggg <- r$eta_ggg <- 0 # d⁴𝛈/d𝛄⁴, d³𝛈/d𝛄³
+    # order dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+    r$eta_ggth2 <- r$eta_gth2 <- r$eta_th2 <- matrix(0, n, 3)
+    r$eta_th2[, 3] <- theta[2] * g
+    r$eta_gth2[, 3] <- theta[2]
+  }
+
+  r
 }

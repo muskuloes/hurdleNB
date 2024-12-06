@@ -1,3 +1,93 @@
+#' Evaluate zero-inflated NB log-likelihood
+#' and its derivatives w.r.t. g (gamma) and eta, with
+#' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
+#' p is probability of potential presence. mu is the NB mean.
+#'
+#' @param y     - 𝐲, a numeric vector
+#' @param g     - 𝛄, a numeric vector
+#' @param eta   - 𝛈, a numeric vector
+#' @param th0   - θ₀, a numeric
+#' @param deriv - 0 - eval.
+#'                1 - gradient and Hessian.
+#'                2 - third derivatives.
+#'                4 - fourth derivatives.
+#'
+#' @return ZINB log-likelihood and its derivatives.
+#' @export
+zinbll <- function(y, g, eta, th0, deriv = 0) {
+  a <- exp(th0)
+  zind <- y == 0
+  l <- et <- exp(eta)
+  yp <- y[!zind]
+  l[zind] <- -et[zind]
+  d <- btlg(g, a, what = c("k", "lg", "tau"))
+  k <- d$k
+  tau <- d$tau
+  lg <- d$lg
+  l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
+    yp * lg[!zind] - l11aea(g[!zind], th0) +
+    lgamma(yp + 1 / a) - lgamma(yp + 1) - lgamma(1 / a)
+  q <- 1 - exp(-et)
+
+  n <- length(y)
+
+  l1 <- El2 <- l2 <- l3 <- l4 <- NULL
+
+  # first and second derivatives.
+  if (deriv > 0) {
+    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
+    l1 <- matrix(0, n, 3)
+    l_e <- lde(eta, deriv)
+    l_g <- ldg(g, y, a, deriv)
+    l_dth0 <- ldth0(g, y, th0)
+    l_dgth0 <- ldgth0(g, y, th0, deriv)
+
+    l1[!zind, 1] <- l_g$l1[!zind] # ∂ℓ/∂𝛄, y>0
+    l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
+    l1[!zind, 2] <- l_e$l1[!zind] # ∂ℓ/∂𝛈, y>0
+    l1[!zind, 3] <- l_dth0$l1[!zind] # ∂ℓ/∂θ₀, y>0
+
+    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
+    l2 <- matrix(0, n, 5)
+    # order E[∂²ℓ/∂𝛄²], E[∂²ℓ/∂𝛈∂𝛄], E[∂²ℓ/∂𝛈²].
+    El2 <- matrix(0, n, 3)
+
+    l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
+    l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
+    l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
+    l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
+    l2[!zind, 5] <- l_dth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
+      a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
+    El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
+  }
+
+  # third derivates.
+  if (deriv > 1) {
+    # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂θ₀, ∂³ℓ/∂𝛄∂θ₀².
+    l3 <- matrix(0, n, 6)
+    l3[!zind, 1] <- l_g$l3[!zind]
+    l3[!zind, 4] <- l_e$l3[!zind]
+    l3[zind, 4] <- l[zind]
+    l3[!zind, 5] <- l_dgth0$l_ggth0[!zind]
+    l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
+  }
+
+  # fourth derivatives
+  if (deriv > 3) {
+    # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀,
+    # ∂⁴ℓ/∂𝛄²∂θ₀².
+    l4 <- matrix(0, n, 7)
+    l4[!zind, 1] <- l_g$l4[!zind]
+    l4[!zind, 5] <- l_e$l4[!zind]
+    l4[zind, 5] <- l[zind]
+    l4[!zind, 6] <- l_dgth0$l_gggth0[!zind]
+    l4[!zind, 7] <- l_dgth0$l_ggth0th0[!zind]
+  }
+
+  list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
+}
+
 #' log(1-exp(-exp(x))).
 #'
 #' @param x - A numeric vector.
@@ -16,7 +106,7 @@ l1ee <- function(x) {
   l
 }
 
-#' log(1 - (1 + αeˣ)^(-1/α)).
+#' log(1 - (1 + αeˣ)\^(-1/α)).
 #'
 #' @param x   - A numeric vector,
 #' @param th0 - θ₀, a numeric.
@@ -319,94 +409,4 @@ ldgth0 <- function(g, y, th0, deriv = 4) {
     l_gth0 = l_gth0, l_ggth0 = l_ggth0, l_gth0th0 = l_gth0th0,
     l_gggth0 = l_gggth0, l_ggth0th0 = l_ggth0th0
   )
-}
-
-#' Evaluate zero-inflated NB log-likelihood
-#' and its derivatives w.r.t. g (gamma) and eta, with
-#' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
-#' p is probability of potential presence. mu is the NB mean.
-#'
-#' @param y     - 𝐲, a numeric vector
-#' @param g     - 𝛄, a numeric vector
-#' @param eta   - 𝛈, a numeric vector
-#' @param th0   - θ₀, a numeric
-#' @param deriv - 0 - eval.
-#'                1 - gradient and Hessian.
-#'                2 - third derivatives.
-#'                4 - fourth derivatives.
-#'
-#' @return ZINB log-likelihood and its derivatives.
-#' @export
-zinbll <- function(y, g, eta, th0, deriv = 0) {
-  a <- exp(th0)
-  zind <- y == 0
-  l <- et <- exp(eta)
-  yp <- y[!zind]
-  l[zind] <- -et[zind]
-  d <- btlg(g, a, what = c("k", "lg", "tau"))
-  k <- d$k
-  tau <- d$tau
-  lg <- d$lg
-  l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
-    yp * lg[!zind] - l11aea(g[!zind], th0) +
-    lgamma(yp + 1 / a) - lgamma(yp + 1) - lgamma(1 / a)
-  q <- 1 - exp(-et)
-
-  n <- length(y)
-
-  l1 <- El2 <- l2 <- l3 <- l4 <- NULL
-
-  # first and second derivatives.
-  if (deriv > 0) {
-    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
-    l1 <- matrix(0, n, 3)
-    l_e <- lde(eta, deriv)
-    l_g <- ldg(g, y, a, deriv)
-    l_dth0 <- ldth0(g, y, th0)
-    l_dgth0 <- ldgth0(g, y, th0, deriv)
-
-    l1[!zind, 1] <- l_g$l1[!zind] # ∂ℓ/∂𝛄, y>0
-    l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
-    l1[!zind, 2] <- l_e$l1[!zind] # ∂ℓ/∂𝛈, y>0
-    l1[!zind, 3] <- l_dth0$l1[!zind] # ∂ℓ/∂θ₀, y>0
-
-    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
-    l2 <- matrix(0, n, 5)
-    # order E[∂²ℓ/∂𝛄²], E[∂²ℓ/∂𝛈∂𝛄], E[∂²ℓ/∂𝛈²].
-    El2 <- matrix(0, n, 3)
-
-    l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
-    l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
-    l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
-    l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
-    l2[!zind, 5] <- l_dth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
-    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
-      a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
-    El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
-  }
-
-  # third derivates.
-  if (deriv > 1) {
-    # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂θ₀, ∂³ℓ/∂𝛄∂θ₀².
-    l3 <- matrix(0, n, 6)
-    l3[!zind, 1] <- l_g$l3[!zind]
-    l3[!zind, 4] <- l_e$l3[!zind]
-    l3[zind, 4] <- l[zind]
-    l3[!zind, 5] <- l_dgth0$l_ggth0[!zind]
-    l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
-  }
-
-  # fourth derivatives
-  if (deriv > 3) {
-    # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀,
-    # ∂⁴ℓ/∂𝛄²∂θ₀².
-    l4 <- matrix(0, n, 7)
-    l4[!zind, 1] <- l_g$l4[!zind]
-    l4[!zind, 5] <- l_e$l4[!zind]
-    l4[zind, 5] <- l[zind]
-    l4[!zind, 6] <- l_dgth0$l_gggth0[!zind]
-    l4[!zind, 7] <- l_dgth0$l_ggth0th0[!zind]
-  }
-
-  list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
 }
