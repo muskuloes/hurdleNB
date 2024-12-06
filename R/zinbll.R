@@ -1,7 +1,7 @@
-#' Evaluate zero-inflated NB log-likelihood
-#' and its derivatives w.r.t. g (gamma) and eta, with
-#' 1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
-#' p is probability of potential presence. mu is the NB mean.
+#' Evaluate zero-inflated negative binomial log-likelihood
+#' and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
+#' 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
+#' q is probability of potential presence. mu is the NB mean.
 #'
 #' @param y     - 𝐲, a numeric vector
 #' @param g     - 𝛄, a numeric vector
@@ -35,23 +35,22 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
 
   # first and second derivatives.
   if (deriv > 0) {
-    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
-    l1 <- matrix(0, n, 3)
     l_e <- lde(eta, deriv)
     l_g <- ldg(g, y, a, deriv)
     l_dth0 <- ldth0(g, y, th0)
     l_dgth0 <- ldgth0(g, y, th0, deriv)
 
-    l1[!zind, 1] <- l_g$l1[!zind] # ∂ℓ/∂𝛄, y>0
-    l1[zind, 2] <- l[zind] # ∂ℓ/∂𝛈, y==0
-    l1[!zind, 2] <- l_e$l1[!zind] # ∂ℓ/∂𝛈, y>0
-    l1[!zind, 3] <- l_dth0$l1[!zind] # ∂ℓ/∂θ₀, y>0
+    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
+    l1 <- matrix(0, n, 3)
+    l1[!zind, 1] <- l_g$l1[!zind]
+    l1[zind, 2] <- l[zind]
+    l1[!zind, 2] <- l_e$l1[!zind]
+    l1[!zind, 3] <- l_dth0$l1[!zind]
 
     # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
     l2 <- matrix(0, n, 5)
     # order E[∂²ℓ/∂𝛄²], E[∂²ℓ/∂𝛈∂𝛄], E[∂²ℓ/∂𝛈²].
     El2 <- matrix(0, n, 3)
-
     l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
     l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
     l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
@@ -88,40 +87,40 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
 }
 
-#' log(1-exp(-exp(x))).
+#' log(1-exp(-exp(𝛄))).
 #'
-#' @param x - A numeric vector.
+#' @param g - 𝛄, a numeric vector,
 #'
-#' @return  Carefully computed log(1-exp(-exp(x)))
-l1ee <- function(x) {
-  ind <- x < log(.Machine$double.eps) / 3
-  ex <- exp(x)
-  exi <- ex[ind]
+#' @return  Carefully computed log(1-exp(-exp(𝛄))).
+l1ee <- function(g) {
+  ind <- g < log(.Machine$double.eps) / 3
+  eg <- exp(g)
+  egi <- eg[ind]
 
-  l <- log(1 - exp(-ex))
-  l[ind] <- log(exi - (exi^2) / 2 + (exi^3) / 6)
-  ind <- x < -log(.Machine$double.xmax)
-  l[ind] <- x[ind]
+  l <- log(1 - exp(-eg))
+  l[ind] <- log(egi - (egi^2) / 2 + (egi^3) / 6)
+  ind <- g < -log(.Machine$double.xmax)
+  l[ind] <- g[ind]
 
   l
 }
 
-#' log(1 - (1 + αeˣ)\^(-1/α)).
+#' log(1 - (1 + αexp(𝛄))^(-1/α)).
 #'
-#' @param x   - A numeric vector,
+#' @param g   - 𝛄, a numeric vector,
 #' @param th0 - θ₀, a numeric.
 #'
 #' @return Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
-l11aea <- function(x, th0) {
+l11aea <- function(g, th0) {
   a <- exp(th0)
-  ind <- x < -log(.Machine$double.xmax)
-  ex <- exp(x)
+  ind <- g < -log(.Machine$double.xmax)
+  eg <- exp(g)
 
-  l <- log((1 + a * ex)^(1 / a) - 1)
-  l[ind] <- x[ind]
+  l <- log((1 + a * eg)^(1 / a) - 1)
+  l[ind] <- g[ind]
 
-  ii <- x > log(.Machine$double.xmax)
-  l[ii] <- (1 / a) * (th0 + x[ii])
+  ii <- g > log(.Machine$double.xmax)
+  l[ii] <- (1 / a) * (th0 + g[ii])
 
   l
 }

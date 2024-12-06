@@ -2,10 +2,10 @@
 % Please edit documentation in R/zinbll.R
 \name{zinbll}
 \alias{zinbll}
-\title{Evaluate zero-inflated NB log-likelihood
-and its derivatives w.r.t. g (gamma) and eta, with
-1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
-p is probability of potential presence. mu is the NB mean.}
+\title{Evaluate zero-inflated negative binomial log-likelihood
+and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
+1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
+q is probability of potential presence. mu is the NB mean.}
 \usage{
 zinbll(y, g, eta, th0, deriv = 0)
 }
@@ -37,8 +37,8 @@ zinbll(y, g, eta, th0, deriv = 0)
 ZINB log-likelihood and its derivatives.
 }
 \description{
-Evaluate zero-inflated NB log-likelihood
-and its derivatives w.r.t. g (gamma) and eta, with
-1-q = exp(-exp(eta)) and mu = exp(g), for each datum in vector y.
-p is probability of potential presence. mu is the NB mean.
+Evaluate zero-inflated negative binomial log-likelihood
+and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
+1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
+q is probability of potential presence. mu is the NB mean.
 }

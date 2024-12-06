@@ -2,18 +2,18 @@
 % Please edit documentation in R/zinbll.R
 \name{l1ee}
 \alias{l1ee}
-\title{log(1-exp(-exp(x))).}
+\title{log(1-exp(-exp(𝛄))).}
 \usage{
-l1ee(x)
+l1ee(g)
 }
 \arguments{
-\item{x}{\itemize{
-\item A numeric vector.
+\item{g}{\itemize{
+\item 𝛄, a numeric vector,
 }}
 }
 \value{
-Carefully computed log(1-exp(-exp(x)))
+Carefully computed log(1-exp(-exp(𝛄))).
 }
 \description{
-log(1-exp(-exp(x))).
+log(1-exp(-exp(𝛄))).
 }

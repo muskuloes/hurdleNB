@@ -2,13 +2,13 @@
 % Please edit documentation in R/zinbll.R
 \name{l11aea}
 \alias{l11aea}
-\title{log(1 - (1 + αeˣ)^(-1/α)).}
+\title{log(1 - (1 + αexp(𝛄))^(-1/α)).}
 \usage{
-l11aea(x, th0)
+l11aea(g, th0)
 }
 \arguments{
-\item{x}{\itemize{
-\item A numeric vector,
+\item{g}{\itemize{
+\item 𝛄, a numeric vector,
 }}
 
 \item{th0}{\itemize{
@@ -19,5 +19,5 @@ l11aea(x, th0)
 Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
 }
 \description{
-log(1 - (1 + αeˣ)^(-1/α)).
+log(1 - (1 + αexp(𝛄))^(-1/α)).
 }
