@@ -3,27 +3,27 @@
 #' 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
 #' q is probability of potential presence. mu is the NB mean.
 #'
-#' @param y     - 𝐲, a numeric vector
-#' @param g     - 𝛄, a numeric vector
-#' @param eta   - 𝛈, a numeric vector
-#' @param th0   - θ₀, a numeric
-#' @param deriv - 0 - eval.
-#'                1 - gradient and Hessian.
-#'                2 - third derivatives.
+#' @param y     - 𝐲, a numeric vector,
+#' @param g     - 𝛄, a numeric vector,
+#' @param eta   - 𝛈, a numeric vector,
+#' @param th0   - θ₀, a numeric,
+#' @param deriv - 0 - eval,
+#'                1 - gradient and Hessian,
+#'                2 - third derivatives,
 #'                4 - fourth derivatives.
 #'
 #' @return ZINB log-likelihood and its derivatives.
 #' @export
 zinbll <- function(y, g, eta, th0, deriv = 0) {
   a <- exp(th0)
-  zind <- y == 0
-  l <- et <- exp(eta)
-  yp <- y[!zind]
-  l[zind] <- -et[zind]
   d <- btlg(g, a, what = c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
   lg <- d$lg
+  zind <- y == 0
+  l <- et <- exp(eta)
+  yp <- y[!zind]
+  l[zind] <- -et[zind]
   l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
     yp * lg[!zind] - l11aea(g[!zind], th0) +
     lgamma(yp + 1 / a) - lgamma(yp + 1) - lgamma(1 / a)
@@ -56,6 +56,7 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
     l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
     l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
     l2[!zind, 5] <- l_dth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
       a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
     El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
@@ -87,30 +88,30 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
 }
 
-#' log(1-exp(-exp(𝛄))).
+#' log(1-exp(-exp(𝛈))).
 #'
-#' @param g - 𝛄, a numeric vector,
+#' @param eta - 𝛈, a numeric vector.
 #'
-#' @return  Carefully computed log(1-exp(-exp(𝛄))).
-l1ee <- function(g) {
-  ind <- g < log(.Machine$double.eps) / 3
-  eg <- exp(g)
-  egi <- eg[ind]
+#' @return  Carefully computed log(1-exp(-exp(𝛈))).
+l1ee <- function(eta) {
+  ind <- eta < log(.Machine$double.eps) / 3
+  ex <- exp(eta)
+  exi <- ex[ind]
 
-  l <- log(1 - exp(-eg))
-  l[ind] <- log(egi - (egi^2) / 2 + (egi^3) / 6)
-  ind <- g < -log(.Machine$double.xmax)
-  l[ind] <- g[ind]
+  l <- log(1 - exp(-ex))
+  l[ind] <- log(exi - (exi^2) / 2 + (exi^3) / 6)
+  ind <- eta < -log(.Machine$double.xmax)
+  l[ind] <- eta[ind]
 
   l
 }
 
-#' log(1 - (1 + αexp(𝛄))^(-1/α)).
+#' log((1 + αexp(𝛄))^(1/α) - 1).
 #'
 #' @param g   - 𝛄, a numeric vector,
 #' @param th0 - θ₀, a numeric.
 #'
-#' @return Carfully compute log(1 - (1 + exp(θ₀)exp(x))^(-1/(exp(θ₀)))).
+#' @return Carfully compute log((1 + exp(θ₀)exp(x))^(1/(exp(θ₀))) - 1).
 l11aea <- function(g, th0) {
   a <- exp(th0)
   ind <- g < -log(.Machine$double.xmax)
@@ -291,9 +292,9 @@ ldg <- function(g, y, a, deriv = 4) {
 
 #' Log-likelihood derivatives w.r.t. θ₀.
 #'
-#' @param g     - 𝛄, a numeric vector
-#' @param y     - 𝐲, a numeric vector
-#' @param th0   - θ₀, a numeric
+#' @param g     - 𝛄, a numeric vector,
+#' @param y     - 𝐲, a numeric vector,
+#' @param th0   - θ₀, a numeric.
 #'
 #' @return A list of the first and second derivatives of the
 #'          log-likelihood w.r.t. θ₀.
@@ -302,7 +303,7 @@ ldth0 <- function(g, y, th0) {
   d <- btlg(g, a, c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
-  w <- d$lg / a - k
+  w <- (d$lg / a) - k
   ind <- d$ind
   ii <- d$ii
 
@@ -330,20 +331,20 @@ ldth0 <- function(g, y, th0) {
 
 #' Mixed derivatives of l w.r.t. 𝛄 and θ₀.
 #'
-#' @param g     - 𝛄, a numeric vector.
-#' @param y     - 𝐲, a numeric vector.
-#' @param th0   - θ₀, a numeric.
+#' @param g     - 𝛄, a numeric vector,
+#' @param y     - 𝐲, a numeric vector,
+#' @param th0   - θ₀, a numeric,
 #' @param deriv - <= 1 - second mixed derivatives,
-#'                <= 3 - second and third mixed derivatives,
-#'                 > 3 - second, third and fourth mixed derivatives.
+#'                == 2 - second and third mixed derivatives,
+#'                >= 3 - second, third and fourth mixed derivatives.
+#'
 #' @return A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
 ldgth0 <- function(g, y, th0, deriv = 4) {
   a <- exp(th0)
   d <- btlg(g, a, c("k", "lg", "tau"))
   k <- d$k
   tau <- d$tau
-  lg <- d$lg
-  w <- (lg / a) - k
+  w <- (d$lg / a) - k
   ind <- d$ind
   ii <- d$ii
 
@@ -372,7 +373,7 @@ ldgth0 <- function(g, y, th0, deriv = 4) {
     l_gth0th0[ind] <- 0
     l_gth0th0[ii] <- 0
   }
-  if (deriv > 3) {
+  if (deriv > 2) {
     # ∂⁴ℓ/∂𝛄³∂θ₀
     l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
       9 * a^2 * k^4 * tau^2 - 9 * a^2 * k^4 * tau - 2 * a^2 * k^3 * tau^2 * w +

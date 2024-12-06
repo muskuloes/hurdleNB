@@ -8,15 +8,15 @@ ldth0(g, y, th0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector
+\item 𝛄, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector
+\item 𝐲, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric
+\item θ₀, a numeric.
 }}
 }
 \value{

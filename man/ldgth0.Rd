@@ -8,21 +8,21 @@ ldgth0(g, y, th0, deriv = 4)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector.
+\item 𝛄, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector.
+\item 𝐲, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric.
+\item θ₀, a numeric,
 }}
 
 \item{deriv}{\itemize{
 \item <= 1 - second mixed derivatives,
-<= 3 - second and third mixed derivatives,
-> 3 - second, third and fourth mixed derivatives.
+== 2 - second and third mixed derivatives,
+>= 3 - second, third and fourth mixed derivatives.
 }}
 }
 \value{

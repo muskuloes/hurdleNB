@@ -11,25 +11,25 @@ zinbll(y, g, eta, th0, deriv = 0)
 }
 \arguments{
 \item{y}{\itemize{
-\item 𝐲, a numeric vector
+\item 𝐲, a numeric vector,
 }}
 
 \item{g}{\itemize{
-\item 𝛄, a numeric vector
+\item 𝛄, a numeric vector,
 }}
 
 \item{eta}{\itemize{
-\item 𝛈, a numeric vector
+\item 𝛈, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric
+\item θ₀, a numeric,
 }}
 
 \item{deriv}{\itemize{
-\item 0 - eval.
-1 - gradient and Hessian.
-2 - third derivatives.
+\item 0 - eval,
+1 - gradient and Hessian,
+2 - third derivatives,
 4 - fourth derivatives.
 }}
 }
