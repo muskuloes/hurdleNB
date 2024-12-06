@@ -2,7 +2,7 @@
 % Please edit documentation in R/zinb.R
 \name{zinb}
 \alias{zinb}
-\title{Zero-Inflated Negative Binomial extended family for mgcv}
+\title{Zero-inflated negative binomial extended family for mgcv.}
 \usage{
 zinb(theta = NULL, link = "identity", b = 0)
 }
@@ -76,5 +76,13 @@ analytic solution exists.
 scale           - < 0 to estimate. Ignored if NULL.
 }
 \description{
-Zero-Inflated Negative Binomial extended family for mgcv
+Zero-inflated negative binomial extended family for mgcv.
+}
+\examples{
+library(mgcv)
+set.seed(1)
+n <- 400
+dat <- gamSim(1, n = n)
+dat$y <- rzinb(dat$f / 4 - 1)
+m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), family = zinb(), data = dat)
 }

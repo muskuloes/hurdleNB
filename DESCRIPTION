@@ -1,5 +1,5 @@
 Package: zinb
-Title: Zero-Inflated Negative Binomial for mgcv
+Title: Zero-inflated negative binomial for mgcv
 Version: 0.0.0.9000
 Authors@R: 
     person("Victor", "Tuekam", , "tuekam@ifo.de", role = c("aut", "cre"),

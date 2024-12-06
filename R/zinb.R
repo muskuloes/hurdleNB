@@ -1,4 +1,4 @@
-#' Zero-Inflated Negative Binomial extended family for mgcv
+#' Zero-inflated negative binomial extended family for mgcv.
 #'
 #' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
 #'                θ₀, θ₁, θ₂,
@@ -59,6 +59,16 @@
 #'                              analytic solution exists.
 #'            scale           - < 0 to estimate. Ignored if NULL.
 #' @export
+#'
+#' @examples
+#' library(mgcv)
+#' set.seed(1)
+#' n <- 400
+#' dat <- gamSim(1, n = n)
+#' dat$y <- rzinb(dat$f / 4 - 1)
+#' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), family = zinb(), data = dat)
+#' m$outer.info # check convergence!
+# " plot(b, page=1)
 zinb <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
@@ -263,7 +273,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   postproc <- function(family, y, prior.weights, fitted, linear.predictors,
                        offset, intercept) {
     posr <- list()
-    posr$family <- paste("Zero-Inflated Negative Binomial(",
+    posr$family <- paste("Zero-inflated negative binomial(",
       paste(round(family$getTheta(TRUE), 3), collapse = ","), ")",
       sep = ""
     )
@@ -342,12 +352,13 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       res <- object$family$dev.resids(y, g, wts)
 
       res <- res - object$family$saturated.ll(y, object$family, wts)
-      fv <- mgcv::predict.gam(object(object, type = "response"))
+      fv <- mgcv::predict.gam(object, type = "response")
       s <- attr(res, "sign")
       if (is.null(s)) s <- sign(y - fv)
       res <- as.numeric(s * sqrt(pmax(res, 0)))
     }
 
+    print(res)
     res
   }
 
@@ -387,12 +398,12 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     eta <- theta[1] + (b + exp(theta[2])) * g
     et <- exp(eta)
     q <- 1 - exp(-et)
-    fv <- lambda <- exp(gamma)
+    fv <- lambda <- exp(g)
     d <- btlg(g, theta[3], what = c("b", "tau"))
     mu <- d$tau * lambda
     # the above should handle limiting behaviour of g already,
     # but just in case we have the lines below.
-    mu[d$ii] <- lambda
+    mu[d$ii] <- lambda[d$ii]
     mu[d$ind] <- 1
 
     fv <- list(q * mu)
@@ -402,8 +413,8 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     } else {
       dq_dg <- exp(-et) * et * (b + exp(theta[2]))
       dmu_dg <- lambda * (d$k * d$tau - d$k * d$tau^2 + d$tau)
-      dmu_dg[d$ind] <- d$k
-      dmu_dg[d$ii] <- lambda
+      dmu_dg[d$ind] <- d$k[d$ind]
+      dmu_dg[d$ii] <- lambda[d$ii]
 
       fv[[2]] <- abs(dq_dg * mu + dmu_dg * q) * se
       names(fv) <- c("fit", "se.fit")
