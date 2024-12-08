@@ -35,7 +35,6 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   deriv <- 1
   if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
 
-  # first and second derivatives.
   l_e <- lde(eta, level)
   l_g <- ldg(g, y, a, v, level)
 
@@ -57,7 +56,6 @@ zinbll <- function(y, g, eta, th0, level = 0) {
     a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau))
   El2[, 3] <- -(1 - q) * et + q * l_e$l2
 
-  # third derivatives.
   if (level > 0 && deriv > 1) {
     l_dgth0 <- ldgth0(g, y, th0, v, level)
 
@@ -72,7 +70,6 @@ zinbll <- function(y, g, eta, th0, level = 0) {
     l3[!zind, 5] <- l_dgth0$l_ggth0[!zind]
   }
 
-  # fourth derivatives
   if (level > 0 && deriv > 3) {
     l2[!zind, 5] <- l_dgth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
     l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
@@ -113,7 +110,7 @@ l1ee <- function(eta) {
 #' @param g   - 𝛄, a numeric vector,
 #' @param th0 - θ₀, a numeric.
 #'
-#' @return Carfully compute log((1 + exp(θ₀)exp(x))^(1/(exp(θ₀))) - 1).
+#' @return Carfully compute log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
 l11aea <- function(g, th0) {
   a <- exp(th0)
   ind <- g < -log(.Machine$double.xmax)
@@ -214,8 +211,8 @@ lde <- function(eta, level = 2) {
   l2[ii] <- 0
   l3 <- l4 <- NULL
 
-  # third derivative
   if (level > 0) {
+    # third derivative
     ii <- eta > log(.Machine$double.xmax) / 2
     l3 <- l1 * (-et + (1 - et)^2 - 3 * (1 - et) * l1 + 2 * l1^2)
     l3[ind] <- l1[ind] * (-3 * eti + eti^2 - 3 * (-eti + b - eti * b) +
@@ -223,8 +220,8 @@ lde <- function(eta, level = 2) {
     l3[ii] <- 0
   }
 
-  # fourth derivative
   if (level > 1) {
+    # fourth derivative
     ii <- eta > log(.Machine$double.xmax) / 3
     l4 <- l1 * ((3 * et - 4) * et + 4 * et * l1 + (1 - et)^3 -
       7 * (1 - et)^2 * l1 + 12 * (1 - et) * l1^2 - 6 * l1^3)
@@ -259,7 +256,7 @@ ldg <- function(g, y, a, v, level = 2) {
   l1[ind] <- y[ind] - 1
   l1[ii] <- -1 / a
 
-  # second derivatauive
+  # second derivative
   l2 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y + k^2 * tau^2 - k^2 * tau -
     k * tau
   l2[ind] <- 0
