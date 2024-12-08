@@ -2,9 +2,9 @@
 % Please edit documentation in R/zinbll.R
 \name{ldg}
 \alias{ldg}
-\title{Log-likelihood derivates w.r.t. 𝛄.}
+\title{Log-likelihood derivatives w.r.t. 𝛄.}
 \usage{
-ldg(g, y, a, v, deriv = 4)
+ldg(g, y, a, v, level = 2)
 }
 \arguments{
 \item{g}{\itemize{
@@ -23,15 +23,15 @@ ldg(g, y, a, v, deriv = 4)
 \item v, a list containing 𝛋 and 𝛕,
 }}
 
-\item{deriv}{\itemize{
-\item <= 1 - first and second derivatives,
-== 2 - first, second and third derivatives,
->= 3 - first, second, third and fourth derivatives.
+\item{level}{\itemize{
+\item == 0 - first and second derivatives,
+>  0 - derivatives needed for quasi-Newton,
+>  1 - derivatives need for full Newton.
 }}
 }
 \value{
 A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
 }
 \description{
-Log-likelihood derivates w.r.t. 𝛄.
+Log-likelihood derivatives w.r.t. 𝛄.
 }

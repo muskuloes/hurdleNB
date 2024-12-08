@@ -4,7 +4,7 @@
 \alias{lind}
 \title{𝛈 = θ₁ + (b + exp(θ₂))𝝲.}
 \usage{
-lind(g, theta, deriv = 0, b = 0)
+lind(g, theta, level = 0, b = 0)
 }
 \arguments{
 \item{g}{\itemize{
@@ -15,7 +15,7 @@ lind(g, theta, deriv = 0, b = 0)
 \item 𝛉, a numeric vector,
 }}
 
-\item{deriv}{\itemize{
+\item{level}{\itemize{
 \item A numeric, indicating whether to return deriv
 w.r.t. θ₁ & θ₂,
 }}

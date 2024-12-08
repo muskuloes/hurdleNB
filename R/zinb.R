@@ -11,7 +11,7 @@
 #'            linkfun         - the link function.
 #'            linkinv         - the inverse link function.
 #'            dev.resids      - function computing deviance residuals.
-#'            Dd              - function returning derivates of deviance
+#'            Dd              - function returning derivatives of deviance
 #'                              residuals w.r.t. 𝝻, 𝛄 and 𝝷.
 #'            rd              - optional function simulating response data from
 #'                              fitted model.
@@ -38,7 +38,7 @@
 #'                              compute (optionally) the label for the family,
 #'                              deviance and null deviance.
 #'            ls              - function to evaluate log saturated log-likeli-
-#'                              hood and derivates w.r.t. ϕ and 𝛉 for use in
+#'                              hood and derivatives w.r.t. ϕ and 𝛉 for use in
 #'                              RE/ML optimization analytically. If deviance
 #'                              used is just -2*log-likelihood can just return
 #'                              zeroes.
@@ -122,7 +122,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
 
-    -2 * zinbll(y, g, eta, theta[3], deriv = 0)$l
+    -2 * zinbll(y, g, eta, theta[3], level = 0)$l
   }
 
   Dd <- function(y, g, theta, wt = NULL, level = 0) {
@@ -130,15 +130,13 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       theta <- get(".Theta")
     }
 
-    deriv <- 1
-    if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
-
     b <- get(".b")
     lin <- lind(g, theta, level, b)
-    z <- zinbll(y, g, lin$eta, theta[3], deriv)
-    oo <- list()
+    z <- zinbll(y, g, lin$eta, theta[3], level)
     n <- length(y)
     if (is.null(wt)) wt <- rep(1, n)
+
+    oo <- list()
     oo$Dmu <- -2 * wt * (z$l1[, 1] + z$l1[, 2] * lin$eta_g)
     oo$Dmu2 <- -2 * wt * (z$l2[, 1] + z$l2[, 3] * (lin$eta_g^2) +
       z$l1[, 2] * lin$eta_gg)
@@ -247,7 +245,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
 
-    sum(-2 * wt * zinbll(y, g, eta, theta[3], 0)$l)
+    sum(-2 * wt * zinbll(y, g, eta, theta[3], level = 0)$l)
   }
 
   ls <- function(y, wt, theta, scale) {
@@ -361,7 +359,6 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       res <- as.numeric(s * sqrt(pmax(res, 0)))
     }
 
-    print(res)
     res
   }
 
@@ -446,19 +443,19 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 #'
 #' @param g     - 𝝲, a numeric vector,
 #' @param theta - 𝛉, a numeric vector,
-#' @param deriv - A numeric, indicating whether to return deriv
+#' @param level - A numeric, indicating whether to return deriv
 #'                w.r.t. θ₁ & θ₂,
 #' @param b     - A numeric.
 #'
 #' @return A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
 #'         w.r.t. 𝝲, θ₁ & θ₂.
-lind <- function(g, theta, deriv = 0, b = 0) {
+lind <- function(g, theta, level = 0, b = 0) {
   theta[2] <- exp(theta[2])
   r <- list(eta = theta[1] + (b + theta[2]) * g)
   r$eta_g <- b + theta[2]
   r$eta_gg <- 0
 
-  if (deriv) {
+  if (level) {
     n <- length(g)
     r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 2)
     r$eta_th[, 1] <- 1 # d𝛈/dθ₁

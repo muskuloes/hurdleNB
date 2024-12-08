@@ -2,7 +2,7 @@
 % Please edit documentation in R/zinbll.R
 \name{lde}
 \alias{lde}
-\title{Log-likelihood derivates w.r.t. 𝛈.}
+\title{Log-likelihood derivatives w.r.t. 𝛈.}
 \usage{
 lde(eta, deriv = 4)
 }
@@ -21,5 +21,5 @@ lde(eta, deriv = 4)
 A list of derivatives of the log-likelihood w.r.t. 𝛈 (eta).
 }
 \description{
-Log-likelihood derivates w.r.t. 𝛈.
+Log-likelihood derivatives w.r.t. 𝛈.
 }

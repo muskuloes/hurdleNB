@@ -2,9 +2,10 @@
 % Please edit documentation in R/zinbll.R
 \name{ldgth0}
 \alias{ldgth0}
-\title{Mixed derivatives of l w.r.t. 𝛄 and θ₀.}
+\title{Log-likelihood (ℓ) derivatives w.r.t. θ₀.
+and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.}
 \usage{
-ldgth0(g, y, th0, v, deriv = 4)
+ldgth0(g, y, th0, v, level = 2)
 }
 \arguments{
 \item{g}{\itemize{
@@ -23,15 +24,17 @@ ldgth0(g, y, th0, v, deriv = 4)
 \item v, a list containing 𝛋, 𝛕 and lg,
 }}
 
-\item{deriv}{\itemize{
-\item <= 1 - second mixed derivatives,
-== 2 - second and third mixed derivatives,
->= 3 - second, third and fourth mixed derivatives.
+\item{level}{\itemize{
+\item == 0 - list of NULLs (not needed for estimating parameters),
+>  0 - derivatives needed for quasi-Newton,
+>  1 - derivatives need for full Newton.
 }}
 }
 \value{
-A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
+A list of the first, second amd mixed derivatives of the
+log-likelihood w.r.t. θ₀ and 𝛄.
 }
 \description{
-Mixed derivatives of l w.r.t. 𝛄 and θ₀.
+Log-likelihood (ℓ) derivatives w.r.t. θ₀.
+and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.
 }

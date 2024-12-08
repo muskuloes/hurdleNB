@@ -27,7 +27,7 @@ link            - name of link character string.
 linkfun         - the link function.
 linkinv         - the inverse link function.
 dev.resids      - function computing deviance residuals.
-Dd              - function returning derivates of deviance
+Dd              - function returning derivatives of deviance
 residuals w.r.t. 𝝻, 𝛄 and 𝝷.
 rd              - optional function simulating response data from
 fitted model.
@@ -54,7 +54,7 @@ postproc        - function with arguments \code{family}, \code{y},
 compute (optionally) the label for the family,
 deviance and null deviance.
 ls              - function to evaluate log saturated log-likeli-
-hood and derivates w.r.t. ϕ and 𝛉 for use in
+hood and derivatives w.r.t. ϕ and 𝛉 for use in
 RE/ML optimization analytically. If deviance
 used is just -2*log-likelihood can just return
 zeroes.

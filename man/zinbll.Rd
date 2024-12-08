@@ -7,7 +7,7 @@ and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
 q is probability of potential presence. mu is the NB mean.}
 \usage{
-zinbll(y, g, eta, th0, deriv = 0)
+zinbll(y, g, eta, th0, level = 0)
 }
 \arguments{
 \item{y}{\itemize{
@@ -26,11 +26,10 @@ zinbll(y, g, eta, th0, deriv = 0)
 \item θ₀, a numeric,
 }}
 
-\item{deriv}{\itemize{
-\item 0 - eval,
-1 - gradient and Hessian,
-2 - third derivatives,
-4 - fourth derivatives.
+\item{level}{\itemize{
+\item == 0 - eval,
+>  0 - derivatives for estimating 𝛃 and 𝛒 using quasi-Newton,
+>  1 - derivatives for estimating 𝛃 and 𝛒 using full Newton.
 }}
 }
 \value{

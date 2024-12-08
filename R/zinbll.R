@@ -7,14 +7,13 @@
 #' @param g     - 𝛄, a numeric vector,
 #' @param eta   - 𝛈, a numeric vector,
 #' @param th0   - θ₀, a numeric,
-#' @param deriv - 0 - eval,
-#'                1 - gradient and Hessian,
-#'                2 - third derivatives,
-#'                4 - fourth derivatives.
+#' @param level - == 0 - eval,
+#'                >  0 - derivatives for estimating 𝛃 and 𝛒 using quasi-Newton,
+#'                >  1 - derivatives for estimating 𝛃 and 𝛒 using full Newton.
 #'
 #' @return ZINB log-likelihood and its derivatives.
 #' @export
-zinbll <- function(y, g, eta, th0, deriv = 0) {
+zinbll <- function(y, g, eta, th0, level = 0) {
   a <- exp(th0)
   v <- ktlg(g, a, what = c("k", "lg", "tau"))
   k <- v$k
@@ -33,37 +32,40 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
 
   l1 <- El2 <- l2 <- l3 <- l4 <- NULL
 
+  deriv <- 1
+  if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
+
   # first and second derivatives.
-  if (deriv > 0) {
-    l_e <- lde(eta, deriv)
-    l_g <- ldg(g, y, a, v, deriv)
-    l_dth0 <- ldth0(g, y, th0, v)
-    l_dgth0 <- ldgth0(g, y, th0, v, deriv)
+  if (level > 0 && deriv > 0) {
+    l_e <- lde(eta, level)
+    l_g <- ldg(g, y, a, v, level)
 
     # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
     l1 <- matrix(0, n, 3)
     l1[!zind, 1] <- l_g$l1[!zind]
     l1[zind, 2] <- l[zind]
     l1[!zind, 2] <- l_e$l1[!zind]
-    l1[!zind, 3] <- l_dth0$l1[!zind]
+    l1[!zind, 3] <- l_dgth0$l1[!zind]
 
     # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
     l2 <- matrix(0, n, 5)
-    # order E[∂²ℓ/∂𝛄²], E[∂²ℓ/∂𝛈∂𝛄], E[∂²ℓ/∂𝛈²].
-    El2 <- matrix(0, n, 3)
-    l2[!zind, 1] <- l_g$l2[!zind] # ∂²ℓ/∂𝛄², y>0
-    l2[zind, 3] <- l[zind] # ∂²ℓ/𝛈², y==0
-    l2[!zind, 3] <- l_e$l2[!zind] # ∂²ℓ/∂𝛈², y>0
-    l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
-    l2[!zind, 5] <- l_dth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+    l2[!zind, 1] <- l_g$l2[!zind]
+    l2[zind, 3] <- l[zind]
+    l2[!zind, 3] <- l_e$l2[!zind]
 
+    # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
+    El2 <- matrix(0, n, 3)
     El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
       a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
-    El2[, 3] <- -(1 - q) * et + q * l_e$l2 # E[∂²ℓ/∂𝛈²]
+    El2[, 3] <- -(1 - q) * et + q * l_e$l2
   }
 
-  # third derivates.
-  if (deriv > 1) {
+  # third derivatives.
+  if (level > 0 && deriv > 1) {
+    l_dgth0 <- ldgth0(g, y, th0, v, level)
+
+    l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
+
     # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂θ₀, ∂³ℓ/∂𝛄∂θ₀².
     l3 <- matrix(0, n, 6)
     l3[!zind, 1] <- l_g$l3[!zind]
@@ -74,7 +76,9 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   }
 
   # fourth derivatives
-  if (deriv > 3) {
+  if (level > 0 && deriv > 3) {
+    l2[!zind, 5] <- l_dgth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+
     # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀,
     # ∂⁴ℓ/∂𝛄²∂θ₀².
     l4 <- matrix(0, n, 7)
@@ -186,7 +190,7 @@ ktlg <- function(g, a, what = c("k", "tau")) {
   list(k = k, tau = tau, lg = lg, ind = ind, ii = ii)
 }
 
-#' Log-likelihood derivates w.r.t. 𝛈.
+#' Log-likelihood derivatives w.r.t. 𝛈.
 #'
 #' @param eta   - 𝛈, a numeric vector,
 #' @param deriv - <= 1 - first and second derivatives,
@@ -235,18 +239,18 @@ lde <- function(eta, deriv = 4) {
   list(l1 = l1, l2 = l2, l3 = l3, l4 = l4)
 }
 
-#' Log-likelihood derivates w.r.t. 𝛄.
+#' Log-likelihood derivatives w.r.t. 𝛄.
 #'
 #' @param g     - 𝛄, a numeric vector,
 #' @param y     - 𝐲, a numeric vector,
 #' @param a     - α, a numeric,
 #' @param v     - v, a list containing 𝛋 and 𝛕,
-#' @param deriv - <= 1 - first and second derivatives,
-#'                == 2 - first, second and third derivatives,
-#'                >= 3 - first, second, third and fourth derivatives.
+#' @param level - == 0 - first and second derivatives,
+#'                >  0 - derivatives needed for quasi-Newton,
+#'                >  1 - derivatives need for full Newton.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
-ldg <- function(g, y, a, v, deriv = 4) {
+ldg <- function(g, y, a, v, level = 2) {
   k <- v$k
   tau <- v$tau
   ind <- v$ind
@@ -265,7 +269,7 @@ ldg <- function(g, y, a, v, deriv = 4) {
 
   l3 <- l4 <- NULL
 
-  if (deriv > 1) {
+  if (level > 0) {
     # third derivative
     l3 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
       3 * a * k^3 * tau^2 + 3 * a * k^3 * tau + 3 * a * k^2 * tau - a * k * y -
@@ -274,7 +278,7 @@ ldg <- function(g, y, a, v, deriv = 4) {
     l3[ind] <- 0
     l3[ii] <- 0
   }
-  if (deriv > 2) {
+  if (level > 1) {
     # fourth derivative
     l4 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
       11 * a^2 * k^4 * tau^2 - 11 * a^2 * k^4 * tau - 12 * a^2 * k^3 * tau +
@@ -329,18 +333,20 @@ ldth0 <- function(g, y, th0, v) {
   list(l1 = l1, l2 = l2)
 }
 
-#' Mixed derivatives of l w.r.t. 𝛄 and θ₀.
+#' Log-likelihood (ℓ) derivatives w.r.t. θ₀.
+#' and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.
 #'
 #' @param g     - 𝛄, a numeric vector,
 #' @param y     - 𝐲, a numeric vector,
 #' @param th0   - θ₀, a numeric,
 #' @param v     - v, a list containing 𝛋, 𝛕 and lg,
-#' @param deriv - <= 1 - second mixed derivatives,
-#'                == 2 - second and third mixed derivatives,
-#'                >= 3 - second, third and fourth mixed derivatives.
+#' @param level - == 0 - list of NULLs (not needed for estimating parameters),
+#'                >  0 - derivatives needed for quasi-Newton,
+#'                >  1 - derivatives need for full Newton.
 #'
-#' @return A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
-ldgth0 <- function(g, y, th0, v, deriv = 4) {
+#' @return A list of the first, second amd mixed derivatives of the
+#'          log-likelihood w.r.t. θ₀ and 𝛄.
+ldgth0 <- function(g, y, th0, v, level = 2) {
   a <- exp(th0)
   k <- v$k
   tau <- v$tau
@@ -348,15 +354,23 @@ ldgth0 <- function(g, y, th0, v, deriv = 4) {
   ind <- v$ind
   ii <- v$ii
 
+  l1 <- l2 <- NULL
   l_gth0 <- l_ggth0 <- l_gth0th0 <- l_gggth0 <- l_ggth0th0 <- NULL
 
-  # ∂²ℓ/∂𝛄∂θ₀
-  l_gth0 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y - k * tau^2 * w +
-    k * tau * w
-  l_gth0[ind] <- 0
-  l_gth0[ii] <- 0
+  if (level > 0) {
+    # ∂ℓ/θ₀
+    l1 <- -a * k * y + tau * w + y -
+      1 / a * (digamma(y + 1 / a) - digamma(1 / a))
+    l1[ind] <- y[ind] - (1 / a) * (digamma(y + (1 / a)) - digamma(1 / a))
+    l1[ii] <- (1 / a) * (th0 + g[ii] - 1 - digamma(y[ii] + (1 / a)) +
+      digamma(1 / a))
 
-  if (deriv > 1) {
+    # ∂²ℓ/∂𝛄∂θ₀
+    l_gth0 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y - k * tau^2 * w +
+      k * tau * w
+    l_gth0[ind] <- 0
+    l_gth0[ii] <- 0
+
     # ∂³ℓ/∂𝛄²∂θ₀
     l_ggth0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
       2 * a * k^3 * tau^2 + 2 * a * k^3 * tau + a * k^2 * tau^2 * w -
@@ -364,6 +378,17 @@ ldgth0 <- function(g, y, th0, v, deriv = 4) {
       3 * k^2 * tau^2 * w + k^2 * tau * w - k * tau^2 * w + k * tau * w
     l_ggth0[ind] <- 0
     l_ggth0[ii] <- 1 / a
+  }
+  if (level > 1) {
+    # ∂²ℓ/∂θ₀²
+    l2 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y + tau^2 * w^2 - tau * w^2 -
+      tau * w + (1 / a) * (digamma(y + 1 / a) - digamma(1 / a)) +
+      (1 / (a^2)) * (psigamma(y + 1 / a, 1) - psigamma(1 / a, 1))
+    l2[ind] <- (1 / a) * (digamma(y[ind] + 1 / a) - digamma(1 / a)) +
+      (1 / (a^2)) * (psigamma(y[ind] + (1 / a), 1) - psigamma(1 / a, 1))
+    l2[ii] <- (1 / a) * (2 - th0 - g[ii] - digamma(y[ii] + 1 / a) -
+      digamma(1 / a) - (1 / a) * (psigamma(y[ii] + (1 / a), 1) -
+        psigamma(1 / a, 1)))
 
     # ∂³ℓ/∂𝛄∂θ₀²
     l_gth0th0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
@@ -372,8 +397,7 @@ ldgth0 <- function(g, y, th0, v, deriv = 4) {
       3 * k * tau^2 * w^2 + k * tau^2 * w - k * tau * w^2 - k * tau * w
     l_gth0th0[ind] <- 0
     l_gth0th0[ii] <- 0
-  }
-  if (deriv > 2) {
+
     # ∂⁴ℓ/∂𝛄³∂θ₀
     l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
       9 * a^2 * k^4 * tau^2 - 9 * a^2 * k^4 * tau - 2 * a^2 * k^3 * tau^2 * w +
@@ -406,7 +430,7 @@ ldgth0 <- function(g, y, th0, v, deriv = 4) {
   }
 
   list(
-    l_gth0 = l_gth0, l_ggth0 = l_ggth0, l_gth0th0 = l_gth0th0,
+    l1 = l1, l2 = l2, l_gth0 = l_gth0, l_ggth0 = l_ggth0, l_gth0th0 = l_gth0th0,
     l_gggth0 = l_gggth0, l_ggth0th0 = l_ggth0th0
   )
 }
