@@ -36,7 +36,6 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
 
   # first and second derivatives.
-  #  if (level > 0 && deriv > 0) {
   l_e <- lde(eta, level)
   l_g <- ldg(g, y, a, v, level)
 
@@ -55,9 +54,8 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
   El2 <- matrix(0, n, 3)
   El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
-    a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
+    a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau))
   El2[, 3] <- -(1 - q) * et + q * l_e$l2
-  # }
 
   # third derivatives.
   if (level > 0 && deriv > 1) {
