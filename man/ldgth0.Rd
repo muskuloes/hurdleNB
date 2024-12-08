@@ -4,7 +4,7 @@
 \alias{ldgth0}
 \title{Mixed derivatives of l w.r.t. 𝛄 and θ₀.}
 \usage{
-ldgth0(g, y, th0, deriv = 4)
+ldgth0(g, y, th0, v, deriv = 4)
 }
 \arguments{
 \item{g}{\itemize{
@@ -17,6 +17,10 @@ ldgth0(g, y, th0, deriv = 4)
 
 \item{th0}{\itemize{
 \item θ₀, a numeric,
+}}
+
+\item{v}{\itemize{
+\item v, a list containing 𝛋, 𝛕 and lg,
 }}
 
 \item{deriv}{\itemize{

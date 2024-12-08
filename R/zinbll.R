@@ -16,10 +16,10 @@
 #' @export
 zinbll <- function(y, g, eta, th0, deriv = 0) {
   a <- exp(th0)
-  d <- btlg(g, a, what = c("k", "lg", "tau"))
-  k <- d$k
-  tau <- d$tau
-  lg <- d$lg
+  v <- ktlg(g, a, what = c("k", "lg", "tau"))
+  k <- v$k
+  tau <- v$tau
+  lg <- v$lg
   zind <- y == 0
   l <- et <- exp(eta)
   yp <- y[!zind]
@@ -36,9 +36,9 @@ zinbll <- function(y, g, eta, th0, deriv = 0) {
   # first and second derivatives.
   if (deriv > 0) {
     l_e <- lde(eta, deriv)
-    l_g <- ldg(g, y, a, deriv)
-    l_dth0 <- ldth0(g, y, th0)
-    l_dgth0 <- ldgth0(g, y, th0, deriv)
+    l_g <- ldg(g, y, a, v, deriv)
+    l_dth0 <- ldth0(g, y, th0, v)
+    l_dgth0 <- ldgth0(g, y, th0, v, deriv)
 
     # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
     l1 <- matrix(0, n, 3)
@@ -126,7 +126,7 @@ l11aea <- function(g, th0) {
   l
 }
 
-#' A helper function returning stable 𝛃, 𝞃, and log(1+αeᵞ).
+#' A helper function returning stable 𝛋, 𝞃, and log(1+αeᵞ).
 #'
 #' @param g    - 𝛄, a numeric vector,
 #' @param a    - α, a numeric,
@@ -136,7 +136,7 @@ l11aea <- function(g, th0) {
 #          k -- 𝛋, tau -- 𝛕, lg -- log(1+αeᵞ),
 #'         ind -- indices of yᵢ for which γᵢ is very small,
 #'         ii -- indices of yᵢ for which γᵢ is very large.
-btlg <- function(g, a, what = c("k", "tau")) {
+ktlg <- function(g, a, what = c("k", "tau")) {
   ind <- g < log(.Machine$double.eps)
   ii <- g > log(.Machine$double.xmax) / 2
   eg <- exp(g)
@@ -152,7 +152,7 @@ btlg <- function(g, a, what = c("k", "tau")) {
   }
 
   tau_f <- function() {
-    tau <- 1 / (1 - (1 + a * eg)^-(1 / a))
+    tau <- 1 / (1 - (1 + a * eg)^(-(1 / a)))
     lg <- log(1 + a * eg)
     lg[ind] <- 0
     lg[ii] <- g[ii]
@@ -240,17 +240,17 @@ lde <- function(eta, deriv = 4) {
 #' @param g     - 𝛄, a numeric vector,
 #' @param y     - 𝐲, a numeric vector,
 #' @param a     - α, a numeric,
+#' @param v     - v, a list containing 𝛋 and 𝛕,
 #' @param deriv - <= 1 - first and second derivatives,
 #'                == 2 - first, second and third derivatives,
 #'                >= 3 - first, second, third and fourth derivatives.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
-ldg <- function(g, y, a, deriv = 4) {
-  d <- btlg(g, a, c("k", "tau"))
-  k <- d$k
-  tau <- d$tau
-  ind <- d$ind
-  ii <- d$ii
+ldg <- function(g, y, a, v, deriv = 4) {
+  k <- v$k
+  tau <- v$tau
+  ind <- v$ind
+  ii <- v$ii
 
   # first derivative
   l1 <- -a * k * y - k * tau + y
@@ -294,18 +294,18 @@ ldg <- function(g, y, a, deriv = 4) {
 #'
 #' @param g     - 𝛄, a numeric vector,
 #' @param y     - 𝐲, a numeric vector,
-#' @param th0   - θ₀, a numeric.
+#' @param th0   - θ₀, a numeric,
+#' @param v     - v, a list containing 𝛋, 𝛕 and lg.
 #'
 #' @return A list of the first and second derivatives of the
 #'          log-likelihood w.r.t. θ₀.
-ldth0 <- function(g, y, th0) {
+ldth0 <- function(g, y, th0, v) {
   a <- exp(th0)
-  d <- btlg(g, a, c("k", "lg", "tau"))
-  k <- d$k
-  tau <- d$tau
-  w <- (d$lg / a) - k
-  ind <- d$ind
-  ii <- d$ii
+  k <- v$k
+  tau <- v$tau
+  w <- (v$lg / a) - k
+  ind <- v$ind
+  ii <- v$ii
 
   l1 <- l2 <- NULL
 
@@ -334,19 +334,19 @@ ldth0 <- function(g, y, th0) {
 #' @param g     - 𝛄, a numeric vector,
 #' @param y     - 𝐲, a numeric vector,
 #' @param th0   - θ₀, a numeric,
+#' @param v     - v, a list containing 𝛋, 𝛕 and lg,
 #' @param deriv - <= 1 - second mixed derivatives,
 #'                == 2 - second and third mixed derivatives,
 #'                >= 3 - second, third and fourth mixed derivatives.
 #'
 #' @return A list of mixed derivatives of l w.r.t. 𝛄 and θ₀.
-ldgth0 <- function(g, y, th0, deriv = 4) {
+ldgth0 <- function(g, y, th0, v, deriv = 4) {
   a <- exp(th0)
-  d <- btlg(g, a, c("k", "lg", "tau"))
-  k <- d$k
-  tau <- d$tau
-  w <- (d$lg / a) - k
-  ind <- d$ind
-  ii <- d$ii
+  k <- v$k
+  tau <- v$tau
+  w <- (v$lg / a) - k
+  ind <- v$ind
+  ii <- v$ii
 
   l_gth0 <- l_ggth0 <- l_gth0th0 <- l_gggth0 <- l_ggth0th0 <- NULL
 

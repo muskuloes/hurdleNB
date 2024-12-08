@@ -4,7 +4,7 @@
 \alias{ldth0}
 \title{Log-likelihood derivatives w.r.t. θ₀.}
 \usage{
-ldth0(g, y, th0)
+ldth0(g, y, th0, v)
 }
 \arguments{
 \item{g}{\itemize{
@@ -16,7 +16,11 @@ ldth0(g, y, th0)
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric.
+\item θ₀, a numeric,
+}}
+
+\item{v}{\itemize{
+\item v, a list containing 𝛋, 𝛕 and lg.
 }}
 }
 \value{

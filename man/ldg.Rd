@@ -4,7 +4,7 @@
 \alias{ldg}
 \title{Log-likelihood derivates w.r.t. 𝛄.}
 \usage{
-ldg(g, y, a, deriv = 4)
+ldg(g, y, a, v, deriv = 4)
 }
 \arguments{
 \item{g}{\itemize{
@@ -17,6 +17,10 @@ ldg(g, y, a, deriv = 4)
 
 \item{a}{\itemize{
 \item α, a numeric,
+}}
+
+\item{v}{\itemize{
+\item v, a list containing 𝛋 and 𝛕,
 }}
 
 \item{deriv}{\itemize{

@@ -66,9 +66,12 @@
 #' n <- 400
 #' dat <- gamSim(1, n = n)
 #' dat$y <- rzinb(dat$f / 4 - 1)
-#' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), family = zinb(), data = dat)
+#' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
+#'   family = zinb(), data = dat,
+#'   optimizer = c("outer", "bfgs")
+#' )
 #' m$outer.info # check convergence!
-#' plot(b, page=1)
+#' plot(m, page = 1)
 zinb <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
@@ -399,12 +402,12 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     et <- exp(eta)
     q <- 1 - exp(-et)
     fv <- lambda <- exp(g)
-    d <- btlg(g, theta[3], what = c("b", "tau"))
-    mu <- d$tau * lambda
+    v <- ktlg(g, exp(theta[3]), what = c("b", "tau"))
+    mu <- v$tau * lambda
     # the above should handle limiting behaviour of g already,
     # but just in case we have the lines below.
-    mu[d$ii] <- lambda[d$ii]
-    mu[d$ind] <- 1
+    mu[v$ii] <- lambda[v$ii]
+    mu[v$ind] <- 1
 
     fv <- list(q * mu)
 
@@ -412,9 +415,9 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       return(fv)
     } else {
       dq_dg <- exp(-et) * et * (b + exp(theta[2]))
-      dmu_dg <- lambda * (d$k * d$tau - d$k * d$tau^2 + d$tau)
-      dmu_dg[d$ind] <- d$k[d$ind]
-      dmu_dg[d$ii] <- lambda[d$ii]
+      dmu_dg <- lambda * (v$k * v$tau - v$k * v$tau^2 + v$tau)
+      dmu_dg[v$ind] <- v$k[v$ind]
+      dmu_dg[v$ii] <- lambda[v$ii]
 
       fv[[2]] <- abs(dq_dg * mu + dmu_dg * q) * se
       names(fv) <- c("fit", "se.fit")
