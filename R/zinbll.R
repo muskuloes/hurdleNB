@@ -36,34 +36,34 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
 
   # first and second derivatives.
-  if (level > 0 && deriv > 0) {
-    l_e <- lde(eta, level)
-    l_g <- ldg(g, y, a, v, level)
+  #  if (level > 0 && deriv > 0) {
+  l_e <- lde(eta, level)
+  l_g <- ldg(g, y, a, v, level)
 
-    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
-    l1 <- matrix(0, n, 3)
-    l1[!zind, 1] <- l_g$l1[!zind]
-    l1[zind, 2] <- l[zind]
-    l1[!zind, 2] <- l_e$l1[!zind]
-    l1[!zind, 3] <- l_dgth0$l1[!zind]
+  # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
+  l1 <- matrix(0, n, 3)
+  l1[!zind, 1] <- l_g$l1[!zind]
+  l1[zind, 2] <- l[zind]
+  l1[!zind, 2] <- l_e$l1[!zind]
 
-    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
-    l2 <- matrix(0, n, 5)
-    l2[!zind, 1] <- l_g$l2[!zind]
-    l2[zind, 3] <- l[zind]
-    l2[!zind, 3] <- l_e$l2[!zind]
+  # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
+  l2 <- matrix(0, n, 5)
+  l2[!zind, 1] <- l_g$l2[!zind]
+  l2[zind, 3] <- l[zind]
+  l2[!zind, 3] <- l_e$l2[!zind]
 
-    # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
-    El2 <- matrix(0, n, 3)
-    El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
-      a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
-    El2[, 3] <- -(1 - q) * et + q * l_e$l2
-  }
+  # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
+  El2 <- matrix(0, n, 3)
+  El2[, 1] <- q * (q * tau * exp(g) * ((a^2) * k^2 - a * k) +
+    a * (k^2) * tau - tau * k + (k^2) * (tau^2) - (k^2) * (tau)) # E[∂²ℓ/∂𝛄²]
+  El2[, 3] <- -(1 - q) * et + q * l_e$l2
+  # }
 
   # third derivatives.
   if (level > 0 && deriv > 1) {
     l_dgth0 <- ldgth0(g, y, th0, v, level)
 
+    l1[!zind, 3] <- l_dgth0$l1[!zind]
     l2[!zind, 4] <- l_dgth0$l_gth0[!zind] # ∂²ℓ/∂𝛄θ₀, y>0
 
     # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂θ₀, ∂³ℓ/∂𝛄∂θ₀².
@@ -72,12 +72,12 @@ zinbll <- function(y, g, eta, th0, level = 0) {
     l3[!zind, 4] <- l_e$l3[!zind]
     l3[zind, 4] <- l[zind]
     l3[!zind, 5] <- l_dgth0$l_ggth0[!zind]
-    l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
   }
 
   # fourth derivatives
   if (level > 0 && deriv > 3) {
     l2[!zind, 5] <- l_dgth0$l2[!zind] # ∂²ℓ/∂θ₀², y>0
+    l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
 
     # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀,
     # ∂⁴ℓ/∂𝛄²∂θ₀².
@@ -193,12 +193,12 @@ ktlg <- function(g, a, what = c("k", "tau")) {
 #' Log-likelihood derivatives w.r.t. 𝛈.
 #'
 #' @param eta   - 𝛈, a numeric vector,
-#' @param deriv - <= 1 - first and second derivatives,
-#'                == 2 - first, second and third derivatives,
-#'                >= 3 - first, second, third and fourth derivatives.
+#' @param level - == 0 - first and second derivatives,
+#'                >  0 - derivatives needed for quasi-Newton,
+#'                >  1 - derivatives need for full Newton.
 #'
 #' @return A list of derivatives of the log-likelihood w.r.t. 𝛈 (eta).
-lde <- function(eta, deriv = 4) {
+lde <- function(eta, level = 2) {
   ind <- eta < log(.Machine$double.eps) / 3
   ii <- eta > log(.Machine$double.xmax)
   l1 <- et <- exp(eta)
@@ -217,7 +217,7 @@ lde <- function(eta, deriv = 4) {
   l3 <- l4 <- NULL
 
   # third derivative
-  if (deriv > 1) {
+  if (level > 0) {
     ii <- eta > log(.Machine$double.xmax) / 2
     l3 <- l1 * (-et + (1 - et)^2 - 3 * (1 - et) * l1 + 2 * l1^2)
     l3[ind] <- l1[ind] * (-3 * eti + eti^2 - 3 * (-eti + b - eti * b) +
@@ -226,7 +226,7 @@ lde <- function(eta, deriv = 4) {
   }
 
   # fourth derivative
-  if (deriv > 2) {
+  if (level > 1) {
     ii <- eta > log(.Machine$double.xmax) / 3
     l4 <- l1 * ((3 * et - 4) * et + 4 * et * l1 + (1 - et)^3 -
       7 * (1 - et)^2 * l1 + 12 * (1 - et) * l1^2 - 6 * l1^3)

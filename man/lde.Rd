@@ -4,17 +4,17 @@
 \alias{lde}
 \title{Log-likelihood derivatives w.r.t. 𝛈.}
 \usage{
-lde(eta, deriv = 4)
+lde(eta, level = 2)
 }
 \arguments{
 \item{eta}{\itemize{
 \item 𝛈, a numeric vector,
 }}
 
-\item{deriv}{\itemize{
-\item <= 1 - first and second derivatives,
-== 2 - first, second and third derivatives,
->= 3 - first, second, third and fourth derivatives.
+\item{level}{\itemize{
+\item == 0 - first and second derivatives,
+>  0 - derivatives needed for quasi-Newton,
+>  1 - derivatives need for full Newton.
 }}
 }
 \value{
