@@ -3,7 +3,7 @@
 #' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
 #'                θ₀, θ₁, θ₂,
 #' @param link  - link function name, a character string or function name,
-#' @param b     - a numeric parameter,
+#' @param b     - a numeric parameter.
 #'
 #' @return An S3 object of type c("extended.family", "family") consisting of:
 #'            family          - name of family character string.

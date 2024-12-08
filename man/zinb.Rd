@@ -17,7 +17,7 @@ zinb(theta = NULL, link = "identity", b = 0)
 }}
 
 \item{b}{\itemize{
-\item a numeric parameter,
+\item a numeric parameter.
 }}
 }
 \value{
