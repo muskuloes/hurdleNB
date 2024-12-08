@@ -68,7 +68,7 @@
 #' dat$y <- rzinb(dat$f / 4 - 1)
 #' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), family = zinb(), data = dat)
 #' m$outer.info # check convergence!
-# " plot(b, page=1)
+#' plot(b, page=1)
 zinb <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
