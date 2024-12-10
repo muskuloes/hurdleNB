@@ -23,9 +23,9 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   l <- et <- exp(eta)
   yp <- y[!zind]
   l[zind] <- -et[zind]
-  l[!zind] <- l1ee(eta[!zind]) + yp * log(a) + yp * g[!zind] -
-    yp * lg[!zind] - l11aea(g[!zind], th0) +
-    lgamma(yp + 1 / a) - lgamma(yp + 1) - lgamma(1 / a)
+  l[!zind] <- yp * g[!zind] + yp * log(a) -
+    yp * lg[!zind] + l1ee(eta[!zind]) - l11aea(g[!zind], th0) -
+    lgamma(yp + 1) - lgamma(1 / a) + lgamma(yp + 1 / a)
   q <- 1 - exp(-et)
 
   n <- length(y)
@@ -43,12 +43,15 @@ zinbll <- function(y, g, eta, th0, level = 0) {
   l1[!zind, 1] <- l_g$l1[!zind]
   l1[zind, 2] <- l[zind]
   l1[!zind, 2] <- l_e$l1[!zind]
+  l1[, 3] <- NaN
 
   # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
   l2 <- matrix(0, n, 5)
   l2[!zind, 1] <- l_g$l2[!zind]
   l2[zind, 3] <- l[zind]
   l2[!zind, 3] <- l_e$l2[!zind]
+  l2[, 4] <- NaN
+  l2[, 5] <- NaN
 
   # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
   El2 <- matrix(0, n, 3)

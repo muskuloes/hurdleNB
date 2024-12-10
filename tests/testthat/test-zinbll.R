@@ -1,0 +1,25 @@
+test_that("zinbll works for scalar y at level=0", {
+  # for y == 0
+  z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(.5), level = 0)
+  expect_equal(z$l, -1)
+  expect_equal(z$l1[, 1], 0)
+  expect_equal(z$l1[, 2], -1)
+  expect_equal(z$l1[, 3], NaN)
+  expect_equal(z$l2[, 1], 0)
+  expect_equal(z$l2[, 2], 0)
+  expect_equal(z$l2[, 3], -1)
+  expect_equal(z$l2[, 4], NaN)
+  expect_equal(z$l2[, 5], NaN)
+
+  # for y > 0
+  z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(.5), level = 0)
+  expect_equal(round(z$l, 5), -15.81674)
+  expect_equal(round(z$l1[, 1], 5), -1.99755)
+  expect_equal(round(z$l1[, 2], 5), 0.58198)
+  expect_equal(z$l1[, 3], NaN)
+  expect_equal(round(z$l2[, 1], 5), -0.00245)
+  expect_equal(z$l2[, 2], 0)
+  expect_equal(round(z$l2[, 3], 5), -0.33870)
+  expect_equal(z$l2[, 4], NaN)
+  expect_equal(z$l2[, 5], NaN)
+})
