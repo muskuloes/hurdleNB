@@ -319,7 +319,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       ind <- l1 > l & ucov
       kk <- 0
 
-      while (sum(ind) > 0 && k < 50) {
+      while (sum(ind) > 0 && kk < 50) {
         step[ind] <- step[ind] / 2
         g1 <- g + step
         l1 <- family$dev.resids(y, g1, wt, theta)
