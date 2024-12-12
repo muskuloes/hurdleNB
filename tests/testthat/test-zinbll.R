@@ -20,6 +20,10 @@ test_that("zinbll works for scalar y at level=0", {
   expect_equal(z$El2[, 2], 0)
   expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
 
+  # ∂³ℓ, ∂⁴ℓ.
+  expect_equal(z$l3, NULL)
+  expect_equal(z$l4, NULL)
+
   # for y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
   # ∂²ℓ/∂θ₀².
   z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(.5), level = 0)
@@ -37,6 +41,10 @@ test_that("zinbll works for scalar y at level=0", {
   expect_equal(round(z$El2[, 1], 5), -1.26413)
   expect_equal(z$El2[, 2], 0)
   expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
+
+  # ∂³ℓ, ∂⁴ℓ.
+  expect_equal(z$l3, NULL)
+  expect_equal(z$l4, NULL)
 })
 
 test_that("zinbll works for vector y at level=0", {
@@ -119,4 +127,8 @@ test_that("zinbll works for vector y at level=0", {
   expect_equal(round(z$El2[, 1], 5), El_g2)
   expect_equal(z$El2[, 2], rep(0, n))
   expect_equal(round(z$El2[, 3], 4), round(El_eta2, 4))
+
+  # ∂³ℓ, ∂⁴ℓ.
+  expect_equal(z$l3, NULL)
+  expect_equal(z$l4, NULL)
 })
