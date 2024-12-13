@@ -1,7 +1,8 @@
 test_that("zinbll works for scalar y at level=0", {
-  # for y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
-  # ∂²ℓ/∂θ₀².
   z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(.5), level = 0)
+
+  # y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
+  # ∂²ℓ/∂θ₀².
   expect_equal(z$l, -1)
   expect_equal(z$l1[, 1], 0)
   expect_equal(z$l1[, 2], -1)
@@ -21,12 +22,13 @@ test_that("zinbll works for scalar y at level=0", {
   expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
 
   # ∂³ℓ, ∂⁴ℓ.
-  expect_equal(z$l3, NULL)
-  expect_equal(z$l4, NULL)
+  expect_null(z$l3)
+  expect_null(z$l4)
 
-  # for y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
-  # ∂²ℓ/∂θ₀².
   z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(.5), level = 0)
+
+  # y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
+  # ∂²ℓ/∂θ₀².
   expect_equal(round(z$l, 5), -15.81674)
   expect_equal(round(z$l1[, 1], 5), -1.99755)
   expect_equal(round(z$l1[, 2], 5), 0.58198)
@@ -43,8 +45,8 @@ test_that("zinbll works for scalar y at level=0", {
   expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
 
   # ∂³ℓ, ∂⁴ℓ.
-  expect_equal(z$l3, NULL)
-  expect_equal(z$l4, NULL)
+  expect_null(z$l3)
+  expect_null(z$l4)
 })
 
 test_that("zinbll works for vector y at level=0", {
@@ -56,20 +58,21 @@ test_that("zinbll works for vector y at level=0", {
   #> g <- x0 + 2 * x1 + 3 * x2 + 4 * x3
   #> y <- rzinb(g, theta = c(-2, .3, 2), b = 0)
   # the expectations are then gotten using sympy.
+  n <- 18
   g <- c(
     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
     1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
     0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
   )
 
-  n <- 18
   y <- c(15, 0, 60, 0, 7, 0, 0, 1, 78, 0, 0, 4, 0, 7, 0, 1, 0, 0)
   eta <- -2 + exp(.3) * g
   th0 <- 2
+
   z <- zinbll(y, g, eta, th0, level = 0)
   zind <- y == 0
 
-  # for y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈².
+  # y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈².
   expect_equal(z$l[zind], -exp(eta[zind]))
   expect_equal(z$l1[zind, 1], rep(0, sum(zind)))
   expect_equal(z$l1[zind, 2], -exp(eta[zind]))
@@ -80,28 +83,28 @@ test_that("zinbll works for vector y at level=0", {
     -4.86116, -6.74632, -4.38402, -2.18796, -6.95198, -3.48723, -3.63684,
     -2.01474
   )
-  l1_g <- c(
+  l_g <- c(
     0.16857, 1.05483, -0.00144, -0.32947, 1.09841, -0.20166, -0.17410,
     -0.31890
   )
-  l1_eta <- c(
+  l_e <- c(
     0.65408, 0.45088, 0.80983, 0.72025, 0.31547, 0.72936, 0.42404,
     0.60301
   )
-  l2_g <- c(
+  l_gg <- c(
     -0.43937, -1.29564, -0.28844, 0.03413, -1.33727, -0.08930, -0.09360, 0.03550
   )
-  l2_eta <- c(
+  l_ee <- c(
     -0.29469, -0.39553, -0.17641, -0.24793, -0.41127, -0.24106, -0.40266,
     -0.32668
   )
 
-  # for y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈².
+  # y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈².
   expect_equal(round(z$l[!zind], 5), l)
-  expect_equal(round(z$l1[!zind, 1], 5), l1_g)
-  expect_equal(round(z$l1[!zind, 2], 5), l1_eta)
-  expect_equal(round(z$l2[!zind, 1], 5), l2_g)
-  expect_equal(round(z$l2[!zind, 3], 5), l2_eta)
+  expect_equal(round(z$l1[!zind, 1], 5), l_g)
+  expect_equal(round(z$l1[!zind, 2], 5), l_e)
+  expect_equal(round(z$l2[!zind, 1], 5), l_gg)
+  expect_equal(round(z$l2[!zind, 3], 5), l_ee)
 
   # ∂ℓ/∂θ₀, ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
   expect_equal(z$l1[, 3], rep(NaN, n))
@@ -109,26 +112,116 @@ test_that("zinbll works for vector y at level=0", {
   expect_equal(z$l2[, 4], rep(NaN, n))
   expect_equal(z$l2[, 5], rep(NaN, n))
 
-  El_g2 <- c(
+  El_gg <- c(
     -0.15194, -0.13553, -0.20149, -0.11977, -0.09709, -0.14073, -0.15971,
     -0.13070, -0.22336, -0.08825, -0.09636, -0.12755, -0.10626, -0.20648,
     -0.09965, -0.16649, -0.12455, -0.07415
   )
-  q <- 1 - exp(-exp(eta))
-  nl2_eta <- rep(0, n)
-  nl2_eta[zind] <- c(
-    -0.25849, -0.22421, -0.26993, -0.31183, -0.15835, -0.17491, -0.19549,
-    -0.18171, -0.23455, -0.13035
+  El_ee <- c(
+    -0.52095, -0.46607, -0.64311, -0.41111, -0.33042, -0.48378,
+    -0.54558, -0.44942, -0.62722, -0.29884, -0.32781, -0.43845, -0.36315,
+    -0.64689, -0.33957, -0.56607, -0.42796, -0.24875
   )
-  nl2_eta[!zind] <- l2_eta
-  El_eta2 <- (1 - q) * (-exp(eta)) + q * nl2_eta
 
   # 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
-  expect_equal(round(z$El2[, 1], 5), El_g2)
+  expect_equal(round(z$El2[, 1], 5), El_gg)
   expect_equal(z$El2[, 2], rep(0, n))
-  expect_equal(round(z$El2[, 3], 4), round(El_eta2, 4))
+  expect_equal(round(z$El2[, 3], 5), El_ee)
 
   # ∂³ℓ, ∂⁴ℓ.
-  expect_equal(z$l3, NULL)
-  expect_equal(z$l4, NULL)
+  expect_null(z$l3)
+  expect_null(z$l4)
+})
+
+test_that("zinbll works for scalar y at level=1", {
+  z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(.5), level = 1)
+
+  # y==0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
+  expect_equal(z$l1[, 3], 0)
+  expect_equal(z$l2[, 4], 0)
+  expect_equal(z$l2[, 5], NaN)
+  expect_equal(z$l3[, 1], 0)
+  expect_equal(z$l3[, 4], -1)
+  expect_equal(z$l3[, 5], 0)
+  expect_equal(z$l3[, 6], NaN)
+
+  # ∂⁴ℓ.
+  expect_null(z$l4)
+
+  z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(.5), level = 1)
+
+  # y>0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
+  expect_equal(round(z$l1[, 3], 5), 10.90750)
+  expect_equal(round(z$l2[, 4], 5), 1.99737)
+  expect_equal(round(z$l2[, 5], 5), NaN)
+  expect_equal(round(z$l3[, 1], 5), 0.00245)
+  expect_equal(round(z$l3[, 4], 5), -0.18775)
+  expect_equal(round(z$l3[, 5], 5), 0.00263)
+  expect_equal(round(z$l3[, 6], 5), NaN)
+
+  # ∂⁴ℓ.
+  expect_null(z$l4)
+})
+
+test_that("zinbll works for vector y at level=1", {
+  n <- 18
+  g <- c(
+    1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
+    1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
+    0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
+  )
+
+  y <- c(15, 0, 60, 0, 7, 0, 0, 1, 78, 0, 0, 4, 0, 7, 0, 1, 0, 0)
+  eta <- -2 + exp(.3) * g
+  th0 <- 2
+
+  z <- zinbll(y, g, eta, th0, level = 1)
+  zind <- y == 0
+
+  l_eee0 <- c(
+    -0.66020, -0.54728, -0.70103, -0.86946, -0.35964, -0.40390,
+    -0.46146, -0.42259, -0.57997, -0.28832
+  )
+
+  # y==0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
+  expect_equal(z$l1[zind, 3], rep(0, sum(zind)))
+  expect_equal(z$l2[zind, 4], rep(0, sum(zind)))
+  expect_equal(z$l2[zind, 5], rep(NaN, sum(zind)))
+  expect_equal(z$l3[zind, 1], rep(0, sum(zind)))
+  expect_equal(round(z$l3[zind, 4], 5), l_eee0)
+  expect_equal(z$l3[zind, 5], rep(0, sum(zind)))
+  expect_equal(z$l3[zind, 6], rep(NaN, sum(zind)))
+
+  l_t0 <- c(
+    -0.00161, 0.72745, -0.10116, -0.09930, 0.75448, -0.19927, -0.20057,
+    -0.06606
+  )
+  l_gt0 <- c(
+    -0.36428, -1.21840, -0.21635, 0.10820, -1.25893, -0.01540,
+    -0.01613, 0.11123
+  )
+  l_ggg <- c(
+    0.44515, 1.26825, 0.29758, 0.00720, 1.31895, 0.12039, 0.12148,
+    0.00215
+  )
+  l_eee <- c(
+    -0.19543, -0.11781, -0.14913, -0.18551, 0.03868, -0.18296,
+    -0.09379, -0.1921
+  )
+  l_ggt0 <- c(
+    0.45057, 1.27287, 0.30432, 0.01305, 1.32323, 0.12631, 0.12603,
+    0.00732
+  )
+
+  # y>0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
+  expect_equal(round(z$l1[!zind, 3], 5), l_t0)
+  expect_equal(round(z$l2[!zind, 4], 5), l_gt0)
+  expect_equal(round(z$l2[!zind, 5], 5), rep(NaN, sum(!zind)))
+  expect_equal(round(z$l3[!zind, 1], 5), l_ggg)
+  expect_equal(round(z$l3[!zind, 4], 5), l_eee)
+  expect_equal(round(z$l3[!zind, 5], 5), l_ggt0)
+  expect_equal(round(z$l3[!zind, 6], 5), rep(NaN, sum(!zind)))
+
+  # ∂⁴ℓ.
+  expect_null(z$l4)
 })
