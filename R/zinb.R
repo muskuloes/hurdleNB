@@ -479,7 +479,7 @@ lind <- function(g, theta, level = 0, b = 0) {
 #'
 #' @return zero-inflated negative binomial random variables.
 #' @export
-rzinb <- function(g, theta = c(-2, .3, 2), b = 0) {
+rzinb <- function(g, theta = c(-2, 0.3, 2), b = 0) {
   y <- g
   n <- length(y)
   lambda <- exp(g)
