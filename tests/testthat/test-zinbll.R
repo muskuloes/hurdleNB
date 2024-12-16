@@ -14,13 +14,6 @@ test_that("zinbll works for scalar y at level 0", {
   expect_equal(z$l2[, 4], NaN)
   expect_equal(z$l2[, 5], NaN)
 
-  q <- 1 - exp(-exp(0))
-  El_eta2 <- (1 - q) * (-exp(0)) + q * -0.33870
-
-  # 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
-  expect_equal(round(z$El2[, 1], 5), -1.26413)
-  expect_equal(z$El2[, 2], 0)
-  expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
 
   # ∂³ℓ, ∂⁴ℓ.
   expect_null(z$l3)
@@ -43,7 +36,7 @@ test_that("zinbll works for scalar y at level 0", {
   # 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
   expect_equal(round(z$El2[, 1], 5), -1.26413)
   expect_equal(z$El2[, 2], 0)
-  expect_equal(round(z$El2[, 3], 5), round(El_eta2, 5))
+  expect_equal(round(z$El2[, 3], 5), -0.58198)
 
   # ∂³ℓ, ∂⁴ℓ.
   expect_null(z$l3)
@@ -245,7 +238,7 @@ test_that("zinbll works for scalar y at level 2", {
   level <- 2
   z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
 
-  expect_true(!is.null(z$l1))
+  expect_false(is.null(z$l1))
 
   # y==0: ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄θ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
   # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀, ∂⁴ℓ/∂𝛄²∂θ₀².
@@ -262,7 +255,7 @@ test_that("zinbll works for scalar y at level 2", {
 
   z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
 
-  expect_true(!is.null(z$l1))
+  expect_false(is.null(z$l1))
 
   # y>0: ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄θ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
   # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀, ∂⁴ℓ/∂𝛄²∂θ₀².
@@ -293,7 +286,7 @@ test_that("zinbll works for vector y at level 2", {
   z <- zinbll(y, g, eta, th0, level = level)
   zind <- y == 0
 
-  expect_true(!is.null(z$l1))
+  expect_false(is.null(z$l1))
 
   l_eeee0 <- c(
     -0.66020, -0.54728, -0.70103, -0.86946, -0.35964, -0.40390,
