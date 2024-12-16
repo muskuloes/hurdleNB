@@ -14,5 +14,6 @@ Imports:
     mgcv,
     stats
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    vctrs
 Config/testthat/edition: 3

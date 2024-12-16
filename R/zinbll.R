@@ -32,9 +32,6 @@ zinbll <- function(y, g, eta, th0, level = 0) {
 
   l1 <- El2 <- l2 <- l3 <- l4 <- NULL
 
-  deriv <- 1
-  if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
-
   l_e <- lde(eta, level)
   l_g <- ldg(g, y, a, v, level)
 
@@ -59,7 +56,7 @@ zinbll <- function(y, g, eta, th0, level = 0) {
     tau * k + k^2 * tau^2 - k^2 * tau)
   El2[, 3] <- -(1 - q) * et + q * l_e$l2
 
-  if (level > 0 && deriv > 1) {
+  if (level >= 1) {
     l_dgth0 <- ldgth0(g, y, th0, v, level)
 
     l1[zind, 3] <- 0
@@ -76,7 +73,7 @@ zinbll <- function(y, g, eta, th0, level = 0) {
     l3[, 6] <- NaN
   }
 
-  if (level > 0 && deriv > 3) {
+  if (level >= 2) {
     l2[zind, 5] <- 0
     l2[!zind, 5] <- l_dgth0$l2[!zind]
     l3[zind, 6] <- 0
