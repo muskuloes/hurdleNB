@@ -88,7 +88,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   }
 
   n_theta <- 3
-  ini_theta <- c(0, 0, 0)
+  ini_theta <- c(0, 0, 1)
   if (!is.null(theta)) {
     # fixed theta supplied
     ini_theta <- c(theta[1], theta[2], theta[3])
