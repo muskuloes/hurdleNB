@@ -88,10 +88,10 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   }
 
   n_theta <- 3
-  ini_theta <- c(0, 0, 1)
+  iniTheta <- c(0, 0, 1)
   if (!is.null(theta)) {
     # fixed theta supplied
-    ini_theta <- c(theta[1], theta[2], theta[3])
+    iniTheta <- c(theta[1], theta[2], theta[3])
     n_theta <- 0 # no thetas to estimate
   }
 
@@ -100,9 +100,9 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   if (b < 0) b <- 0
 
   assign(".b", b, envir = env)
-  assign(".Theta", ini_theta, envir = env)
+  assign(".Theta", iniTheta, envir = env)
 
-  get_theta <- function(trans = FALSE) {
+  getTheta <- function(trans = FALSE) {
     th <- get(".Theta")
     if (trans) {
       th[2] <- get(".b") + exp(th[2])
@@ -111,7 +111,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     th
   }
 
-  put_theta <- function(theta) {
+  putTheta <- function(theta) {
     assign(".Theta", theta, envir = environment(sys.function()))
   }
 
@@ -119,7 +119,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     all(is.finite(mu))
   }
 
-  dev_resids <- function(y, g, wt, theta = NULL) {
+  dev.resids <- function(y, g, wt, theta = NULL) {
     if (is.null(theta)) {
       theta <- get(".Theta")
     }
@@ -302,7 +302,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     rzinb(g, get(".Theta"), get(".b"))
   }
 
-  saturated_ll <- function(y, family, wt = rep(1, length(y))) {
+  saturated.ll <- function(y, family, wt = rep(1, length(y))) {
     pind <- y > 0
     wt <- wt[pind]
     y <- y[pind]
@@ -427,19 +427,19 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     }
   }
 
-  environment(aic) <- environment(Dd) <- environment(dev_resids) <-
-    environment(get_theta) <- environment(predict) <- environment(put_theta) <-
-    environment(rd) <- environment(saturated_ll) <- env
+  environment(aic) <- environment(Dd) <- environment(dev.resids) <-
+    environment(getTheta) <- environment(predict) <- environment(putTheta) <-
+    environment(rd) <- environment(saturated.ll) <- env
 
   structure(list(
     family = "zero-inflated negative binomial", link = linktemp,
-    linkfun = stats$linkfun, linkinv = stats$linkinv, dev.resids = dev_resids,
+    linkfun = stats$linkfun, linkinv = stats$linkinv, dev.resids = dev.resids,
     Dd = Dd, rd = rd, residuals = residuals, aic = aic, mu.eta = stats$mu.eta,
     g2g = stats$g2g, g3g = stats$g3g, g4g = stats$g4g, initialize = initialize,
     postproc = postproc, ls = ls, no.r.sq = TRUE, validmu = validmu,
     valideta = stats$valideta, n.theta = n_theta, predict = predict,
-    ini.theta = ini_theta, putTheta = put_theta, getTheta = get_theta,
-    saturated.ll = saturated_ll
+    ini.theta = iniTheta, putTheta = putTheta, getTheta = getTheta,
+    saturated.ll = saturated.ll
   ), class = c("extended.family", "family"))
 }
 
