@@ -178,10 +178,15 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 
       oo$Dmu2th2 <- oo$Dmuth2 <- oo$Dth2 <- matrix(0, n, 6)
 
-      oo$Dth2[, 1:3] <- -2 * wt * (z$l2[, 3] * eta_thth +
+      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      Dth2 <- -2 * wt * (z$l2[, 3] * eta_thth +
         z$l1[, 2] * lin$eta_th2)
+
+      oo$Dth2[, 1:2] <- Dth2[, 1:2]
       # dθ₁dθ₀.
-      oo$Dth2[, 4] <- 0
+      oo$Dth2[, 3] <- 0
+      # dθ₂dθ₂.
+      oo$Dth2[, 4] <- Dth2[, 3]
       # dθ₂dθ₀.
       oo$Dth2[, 5] <- 0
       # dθ₀dθ₀.
@@ -192,11 +197,16 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       eta_gthth[, 2] <- lin$eta_gth[, 1] * lin$eta_th[, 2] +
         lin$eta_gth[, 2] * lin$eta_th[, 1]
       eta_gthth[, 3] <- 2 * lin$eta_gth[, 2] * lin$eta_th[, 2]
-      oo$Dmuth2[, 1:3] <- -2 * wt * (z$l3[, 4] * eta_thth * lin$eta_g +
+
+      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      Dmuth2 <- -2 * wt * (z$l3[, 4] * eta_thth * lin$eta_g +
         z$l2[, 3] * (lin$eta_th2 * lin$eta_g + eta_gthth) +
         z$l1[, 2] * lin$eta_gth2)
+      oo$Dmuth2[, 1:2] <- Dmuth2[, 1:2]
       # dθ₁dθ₀.
-      oo$Dmuth2[, 4] <- 0
+      oo$Dmuth2[, 3] <- 0
+      # dθ₂dθ₂.
+      oo$Dmuth2[, 4] <- Dmuth2[, 3]
       # dθ₂dθ₀.
       oo$Dmuth2[, 5] <- 0
       # dθ₀dθ₀.
@@ -221,13 +231,18 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
       eta_ggthth[, 2] <- lin$eta_th[, 1] * lin$eta_ggth[, 2] +
         lin$eta_th[, 2] * lin$eta_ggth[, 1]
       eta_ggthth[, 3] <- 2 * lin$eta_th[, 2] * lin$eta_ggth[, 2]
-      oo$Dmu2th2[, 1:3] <- -2 * wt * (z$l4[, 5] * eta_thth * (lin$eta_g^2) +
+
+      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      Dmu2th2 <- -2 * wt * (z$l4[, 5] * eta_thth * (lin$eta_g^2) +
         z$l3[, 4] * (lin$eta_th2 * (lin$eta_g^2) +
           2 * eta_gthth * lin$eta_g + eta_thth * lin$eta_gg) +
         z$l2[, 3] * (eta_gthgth + 2 * lin$eta_g * lin$eta_gth2 + eta_ggthth +
           lin$eta_th2 * lin$eta_gg) + z$l1[, 2] * lin$eta_ggth2)
+      oo$Dmu2th2[, 1:2] <- Dmu2th2[, 1:2]
       # dθ₁dθ₀.
-      oo$Dmu2th2[, 4] <- 0
+      oo$Dmu2th2[, 3] <- 0
+      # dθ₂dθ₂.
+      oo$Dmu2th2[, 4] <- Dmu2th2[, 3]
       # dθ₂dθ₀.
       oo$Dmu2th2[, 5] <- 0
       # dθ₀dθ₀.
