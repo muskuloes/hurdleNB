@@ -2,7 +2,8 @@
 % Please edit documentation in R/zinb.R
 \name{zinb}
 \alias{zinb}
-\title{Zero-inflated negative binomial extended family for mgcv.}
+\title{Zero-inflated negative binomial extended family for use with mgcv's \code{gam} or
+\code{bam}.}
 \usage{
 zinb(theta = NULL, link = "identity", b = 0)
 }
@@ -13,18 +14,24 @@ zinb(theta = NULL, link = "identity", b = 0)
 }}
 
 \item{link}{\itemize{
-\item link function name, a character string or function name,
+\item Link function name, a character string or function name,
 }}
 
 \item{b}{\itemize{
-\item a numeric parameter.
+\item A non-negative numeric parameter, specifying the minimum
+dependence of the zero-inflation rate on the linear predictor.
 }}
 }
 \value{
 An object of class \code{extended.family}.
 }
 \description{
-Zero-inflated negative binomial extended family for mgcv.
+Zero-inflated negative binomial extended family for use with mgcv's \code{gam} or
+\code{bam}.
+}
+\details{
+(θ₁, b + exp(θ₂), θ₀) are the \code{theta} parameters reported in the model
+summary.
 }
 \examples{
 library(mgcv)
@@ -33,9 +40,9 @@ n <- 400
 dat <- gamSim(1, n = n)
 dat$y <- rzinb(dat$f / 4 - 1)
 m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
-  family = zinb(), data = dat,
-  optimizer = c("outer", "bfgs")
+  family = zinb(), data = dat
 )
 m$outer.info # check convergence!
 plot(m, page = 1)
+plot(m, pages = 1, unconditional = TRUE)
 }

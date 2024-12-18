@@ -53,12 +53,18 @@
 #            scale           - < 0 to estimate. Ignored if NULL.
 
 
-#' Zero-inflated negative binomial extended family for mgcv.
+#' Zero-inflated negative binomial extended family for use with mgcv's `gam` or
+#' `bam`.
+#'
+#' @details
+#' (θ₁, b + exp(θ₂), θ₀) are the `theta` parameters reported in the model
+#' summary.
 #'
 #' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
 #'                θ₀, θ₁, θ₂,
-#' @param link  - link function name, a character string or function name,
-#' @param b     - a numeric parameter.
+#' @param link  - Link function name, a character string or function name,
+#' @param b     - A non-negative numeric parameter, specifying the minimum
+#'                dependence of the zero-inflation rate on the linear predictor.
 #'
 #' @return An object of class `extended.family`.
 #'
@@ -71,11 +77,11 @@
 #' dat <- gamSim(1, n = n)
 #' dat$y <- rzinb(dat$f / 4 - 1)
 #' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
-#'   family = zinb(), data = dat,
-#'   optimizer = c("outer", "bfgs")
+#'   family = zinb(), data = dat
 #' )
 #' m$outer.info # check convergence!
 #' plot(m, page = 1)
+#' plot(m, pages = 1, unconditional = TRUE)
 zinb <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
