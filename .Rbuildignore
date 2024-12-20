@@ -1,6 +1,6 @@
 ^LICENSE\.md$
 ^.lintr$
-^notes$
+^derivs$
 ^\.virtual\_documents$
 ^\.ipynb\_checkpoints$
 ^\.github$
