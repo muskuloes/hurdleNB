@@ -1,4 +1,4 @@
-#  An S3 object of class `extend.family` consists of:
+#  An S3 object of class `extended.family` consists of:
 #            family          - name of family character string.
 #            link            - name of link character string.
 #            linkfun         - the link function.
