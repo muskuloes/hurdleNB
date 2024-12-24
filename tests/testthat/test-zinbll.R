@@ -336,3 +336,36 @@ test_that("zinbll works for vector y at level 2", {
   expect_equal(z$l4[, 3], rep(0, n))
   expect_equal(z$l4[, 4], rep(0, n))
 })
+
+test_that("ktlg works", {
+  g <- c(393.54581, 4.76799, -63.07129)
+  a <- exp(2)
+
+  # test κ, τ.
+  v <- ktlg(g, a)
+
+  ind <- c(FALSE, FALSE, TRUE)
+  ii <- c(TRUE, FALSE, FALSE)
+  k <- c(1 / exp(2), 0.13518, exp(g[3]))
+  tau <- c(1, 1.66687, 1 / exp(g[3]))
+
+  expect_null(v$lg)
+  expect_equal(v$ind, ind)
+  expect_equal(v$ii, ii)
+
+  v$k[2] <- round(v$k[2], 5)
+  v$tau[2] <- round(v$tau[2], 5)
+  expect_equal(v$k, k)
+  expect_equal(v$tau, tau)
+
+  # test lg, log(1+αexp(𝛄)).
+  v <- ktlg(g, a, what = c("lg"))
+
+  lg <- c(g[1], 6.76914, 0)
+
+  expect_null(v$k)
+  expect_null(v$tau)
+
+  v$lg[2] <- round(v$lg[2], 5)
+  expect_equal(v$lg, lg)
+})

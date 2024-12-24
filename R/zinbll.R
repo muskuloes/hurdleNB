@@ -157,9 +157,6 @@ ktlg <- function(g, a, what = c("k", "tau")) {
 
   tau_f <- function() {
     tau <- 1 / (1 - (1 + a * eg)^(-(1 / a)))
-    lg <- log(1 + a * eg)
-    lg[ind] <- 0
-    lg[ii] <- g[ii]
     tau[ind] <- 1 / eg[ind]
     tau[ii] <- 1
 
