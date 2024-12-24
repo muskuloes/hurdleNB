@@ -341,7 +341,7 @@ test_that("ktlg works", {
   g <- c(393.54581, 4.76799, -63.07129)
   a <- exp(2)
 
-  # test κ, τ.
+  # test 𝛋, 𝛕.
   v <- ktlg(g, a)
 
   ind <- c(FALSE, FALSE, TRUE)
