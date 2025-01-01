@@ -3,7 +3,7 @@
 \docType{package}
 \name{zinb-package}
 \alias{zinb-package}
-\title{zinb: Zero-inflated negative binomial for mgcv}
+\title{zinb: Zero-inflated negative binomial family for mgcv}
 \description{
 An implementation of the zero-inflated negative binomial extended GAM family for use with mgcv.
 }

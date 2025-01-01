@@ -1,0 +1,8 @@
+bibentry(
+  bibtype  = "Manual",
+  title    = "zinb: Zero-Inflated Negative Binomial Family for mgcv" ,
+  author   = "Victor Tuekam",
+  year     = "2025",
+  url      = "https://github.com/muskuloes/zinb",
+  note     = "R package version 1.0.0"
+)

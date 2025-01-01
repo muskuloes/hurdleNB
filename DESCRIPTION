@@ -1,6 +1,6 @@
 Package: zinb
-Title: Zero-inflated negative binomial for mgcv
-Version: 0.0.0.9000
+Title: Zero-inflated negative binomial family for mgcv
+Version: 1.0.0
 Authors@R: 
     person("Victor", "Tuekam", , "tuekam@ifo.de", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-0973-3492"))
