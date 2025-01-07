@@ -1,9 +1,9 @@
-test_that("zinb is the required structure", {
-  model <- zinb()
+test_that("hurldeNB is the required structure", {
+  model <- hurdleNB()
 
   expect_s3_class(model, "extended.family")
   expect_s3_class(model, "family")
-  expect_equal(model$family, "zero-inflated negative binomial")
+  expect_equal(model$family, "hurdle negative binomial")
   expect_type(model$link, "character")
   expect_type(model$linkfun, "closure")
   expect_type(model$linkinv, "closure")
@@ -76,7 +76,7 @@ test_that("lind works", {
 })
 
 test_that("dev.resids works", {
-  model <- zinb(b = 0.1)
+  model <- hurdleNB(b = 0.1)
   dr <- model$dev.resids(25, 10, 1, theta = c(0, log(0.02), log(0.5)))
 
   expect_equal(round(dr, 5), 30.78976)
@@ -90,14 +90,14 @@ test_that("aic works", {
   )
   y <- c(15, 0, 60, 0, 7, 0, 0, 1, 78, 0, 0, 4, 0, 7, 0, 1, 0, 0)
 
-  model <- zinb()
+  model <- hurdleNB()
   aic <- model$aic(y, g, theta = c(-2, 0.3, 2), 1)
 
   expect_equal(round(aic, 5), 79.12820)
 })
 
 test_that("ls works", {
-  model <- zinb()
+  model <- hurdleNB()
   ls <- model$ls(0, 1, c(0, 0, 0), scale = 1)
 
   expect_equal(ls$ls, 0)
@@ -107,7 +107,7 @@ test_that("ls works", {
 })
 
 test_that("Dd works at level 0", {
-  model <- zinb(b = 0)
+  model <- hurdleNB(b = 0)
   oo <- model$Dd(
     y = 25, g = 10, theta = c(0, 0, log(0.5)), wt = 1,
     level = 0
@@ -128,7 +128,7 @@ test_that("Dd works at level 0", {
 })
 
 test_that("Dd works at level 1", {
-  model <- zinb(b = 0.3)
+  model <- hurdleNB(b = 0.3)
   oo <- model$Dd(
     y = 25, g = 0.5, theta = c(8, log(8), log(0.5)), wt = 1,
     level = 1
@@ -155,7 +155,7 @@ test_that("Dd works at level 1", {
 })
 
 test_that("Dd works at level 2", {
-  model <- zinb(b = 0.7)
+  model <- hurdleNB(b = 0.7)
   oo <- model$Dd(
     y = 12, g = 0.5, theta = c(0.1, log(0.001), log(2)), wt = 1,
     level = 2
@@ -199,7 +199,7 @@ test_that("Dd works at level 2", {
 })
 
 test_that("Dd works for vector y at level 2", {
-  model <- zinb()
+  model <- hurdleNB()
   g <- c(
     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
     1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,

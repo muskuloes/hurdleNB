@@ -53,7 +53,7 @@
 #            scale           - < 0 to estimate. Ignored if NULL.
 
 
-#' Zero-inflated negative binomial extended family for use with mgcv's `gam` or
+#' Hurdle negative binomial extended family for use with mgcv's `gam` or
 #' `bam`.
 #'
 #' @details
@@ -75,14 +75,14 @@
 #' set.seed(1)
 #' n <- 400
 #' dat <- gamSim(1, n = n)
-#' dat$y <- rzinb(dat$f / 4 - 1)
+#' dat$y <- rhurdleNB(dat$f / 4 - 1)
 #' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
-#'   family = zinb(), data = dat
+#'   family = hurdleNB(), data = dat
 #' )
 #' m$outer.info # check convergence!
 #' plot(m, page = 1)
 #' plot(m, pages = 1, unconditional = TRUE)
-zinb <- function(theta = NULL, link = "identity", b = 0) {
+hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
   linktemp <- substitute(link)
   if (!is.character(linktemp)) {
     linktemp <- deparse(linktemp)
@@ -90,7 +90,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   if (linktemp %in% c("identity")) {
     stats <- make.link(linktemp)
   } else {
-    stop(linktemp, " link not available for zero-inflated NB")
+    stop(linktemp, " link not available for hurdle NB")
   }
 
   n_theta <- 3
@@ -101,7 +101,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     n_theta <- 0 # no thetas to estimate
   }
 
-  env <- new.env(parent = environment(zinb))
+  env <- new.env(parent = environment(hurdleNB))
 
   if (b < 0) b <- 0
 
@@ -132,7 +132,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
 
-    -2 * zinbll(y, g, eta, theta[3], level = 0)$l
+    -2 * hurdleNB_ll(y, g, eta, theta[3], level = 0)$l
   }
 
   Dd <- function(y, g, theta, wt = NULL, level = 0) {
@@ -142,7 +142,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 
     b <- get(".b")
     lin <- lind(g, theta, level, b)
-    z <- zinbll(y, g, lin$eta, theta[3], level)
+    z <- hurdleNB_ll(y, g, lin$eta, theta[3], level)
     n <- length(y)
     if (is.null(wt)) wt <- rep(1, n)
 
@@ -270,7 +270,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     b <- get(".b")
     eta <- theta[1] + (b + exp(theta[2])) * g
 
-    sum(-2 * wt * zinbll(y, g, eta, theta[3], level = 0)$l)
+    sum(-2 * wt * hurdleNB_ll(y, g, eta, theta[3], level = 0)$l)
   }
 
   ls <- function(y, wt, theta, scale) {
@@ -284,13 +284,13 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
 
   initialize <- expression({
     if (any(y < 0)) {
-      stop("negative values not allowed for the zero-inflated NB family")
+      stop("negative values not allowed for the hurdle NB family")
     }
     if (all.equal(y, round(y)) != TRUE) {
-      stop("Non-integer response variables are not allowed with zinb")
+      stop("Non-integer response variables are not allowed with hurdleNB")
     }
     if ((min(y) == 0 && max(y) == 1)) {
-      stop("using zinb for binary data makes no sense")
+      stop("using hurdleNB for binary data makes no sense")
     }
 
     mustart <- log(y + (y == 0) / 5)
@@ -299,7 +299,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   postproc <- function(family, y, prior.weights, fitted, linear.predictors,
                        offset, intercept) {
     posr <- list()
-    posr$family <- paste("Zero-inflated negative binomial(",
+    posr$family <- paste("Hurdle negative binomial(",
       paste(round(family$getTheta(TRUE), 3), collapse = ","), ")",
       sep = ""
     )
@@ -320,7 +320,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
   }
 
   rd <- function(g, wt, scale) {
-    rzinb(g, get(".Theta"), get(".b"))
+    rhurdleNB(g, get(".Theta"), get(".b"))
   }
 
   saturated.ll <- function(y, family, wt = rep(1, length(y))) {
@@ -453,7 +453,7 @@ zinb <- function(theta = NULL, link = "identity", b = 0) {
     environment(rd) <- environment(saturated.ll) <- env
 
   structure(list(
-    family = "zero-inflated negative binomial", link = linktemp,
+    family = "hurdle negative binomial", link = linktemp,
     linkfun = stats$linkfun, linkinv = stats$linkinv, dev.resids = dev.resids,
     Dd = Dd, rd = rd, residuals = residuals, aic = aic, mu.eta = stats$mu.eta,
     g2g = stats$g2g, g3g = stats$g3g, g4g = stats$g4g, initialize = initialize,
@@ -496,15 +496,15 @@ lind <- function(g, theta, level = 0, b = 0) {
   r
 }
 
-#' Generate zero-inflated NB random variables.
+#' Generate hurdle NB random variables.
 #'
 #' @param g     - 𝝲, a numeric vector,
 #' @param theta - 𝛉, a numeric vector,
 #' @param b     - A numeric.
 #'
-#' @return zero-inflated negative binomial random variables.
+#' @return hurdle negative binomial random variables.
 #' @export
-rzinb <- function(g, theta = c(-2, 0.3, 2), b = 0) {
+rhurdleNB <- function(g, theta = c(-2, 0.3, 2), b = 0) {
   y <- g
   n <- length(y)
   lambda <- exp(g)

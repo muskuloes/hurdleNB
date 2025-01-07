@@ -1,6 +1,6 @@
-test_that("zinbll works for scalar y at level 0", {
+test_that("hurdleNB_ll works for scalar y at level 0", {
   level <- 0
-  z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   # y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
   # ∂²ℓ/∂θ₀².
@@ -19,7 +19,7 @@ test_that("zinbll works for scalar y at level 0", {
   expect_null(z$l3)
   expect_null(z$l4)
 
-  z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   # y>0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ⁰, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀,
   # ∂²ℓ/∂θ₀².
@@ -43,7 +43,7 @@ test_that("zinbll works for scalar y at level 0", {
   expect_null(z$l4)
 })
 
-test_that("zinbll works for vector y at level 0", {
+test_that("hurdleNB_ll works for vector y at level 0", {
   level <- 0
 
   # example generated using:
@@ -52,7 +52,7 @@ test_that("zinbll works for vector y at level 0", {
   #> x2 <- runif(18)
   #> x3 <- runif(18)
   #> g <- x0 + 2 * x1 + 3 * x2 + 4 * x3
-  #> y <- rzinb(g, theta = c(-2, 0.3, 2), b = 0)
+  #> y <- rhurdleNB(g, theta = c(-2, 0.3, 2), b = 0)
   # the expectations are then gotten using sympy.
   g <- c(
     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
@@ -64,7 +64,7 @@ test_that("zinbll works for vector y at level 0", {
   eta <- -2 + exp(0.3) * g
   th0 <- 2
 
-  z <- zinbll(y, g, eta, th0, level = level)
+  z <- hurdleNB_ll(y, g, eta, th0, level = level)
   zind <- y == 0
 
   # y==0: ℓ, ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈².
@@ -128,9 +128,9 @@ test_that("zinbll works for vector y at level 0", {
   expect_null(z$l4)
 })
 
-test_that("zinbll works for scalar y at level 1", {
+test_that("hurdleNB_ll works for scalar y at level 1", {
   level <- 1
-  z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   # y==0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³,
   # ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
@@ -147,7 +147,7 @@ test_that("zinbll works for scalar y at level 1", {
   # ∂⁴ℓ.
   expect_null(z$l4)
 
-  z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   # y>0: ∂ℓ/∂θ₀, ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³,
   # ∂³ℓ/∂𝛄²θ₀, ∂³ℓ/∂𝛄θ₀².
@@ -165,7 +165,7 @@ test_that("zinbll works for scalar y at level 1", {
   expect_null(z$l4)
 })
 
-test_that("zinbll works for vector y at level 1", {
+test_that("hurdleNB_ll works for vector y at level 1", {
   level <- 1
   g <- c(
     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
@@ -177,7 +177,7 @@ test_that("zinbll works for vector y at level 1", {
   eta <- -2 + exp(0.3) * g
   th0 <- 2
 
-  z <- zinbll(y, g, eta, th0, level = level)
+  z <- hurdleNB_ll(y, g, eta, th0, level = level)
   zind <- y == 0
 
   l_eee0 <- c(
@@ -232,9 +232,9 @@ test_that("zinbll works for vector y at level 1", {
   expect_null(z$l4)
 })
 
-test_that("zinbll works for scalar y at level 2", {
+test_that("hurdleNB_ll works for scalar y at level 2", {
   level <- 2
-  z <- zinbll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 0, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   expect_false(is.null(z$l1))
 
@@ -251,7 +251,7 @@ test_that("zinbll works for scalar y at level 2", {
   expect_equal(z$l4[, 6], 0)
   expect_equal(z$l4[, 7], 0)
 
-  z <- zinbll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
+  z <- hurdleNB_ll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   expect_false(is.null(z$l1))
 
@@ -268,7 +268,7 @@ test_that("zinbll works for scalar y at level 2", {
   expect_equal(round(z$l4[, 7], 5), -0.00299)
 })
 
-test_that("zinbll works for vector y at level 2", {
+test_that("hurdleNB_ll works for vector y at level 2", {
   level <- 2
   g <- c(
     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
@@ -280,7 +280,7 @@ test_that("zinbll works for vector y at level 2", {
   eta <- -2 + exp(0.3) * g
   th0 <- 2
 
-  z <- zinbll(y, g, eta, th0, level = level)
+  z <- hurdleNB_ll(y, g, eta, th0, level = level)
   zind <- y == 0
 
   expect_false(is.null(z$l1))

@@ -1,4 +1,4 @@
-#' Evaluate zero-inflated negative binomial log-likelihood
+#' Evaluate hurdle negative binomial log-likelihood
 #' and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
 #' 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
 #' q is probability of potential presence. mu is the NB mean.
@@ -11,9 +11,9 @@
 #'                >  0 - derivatives for estimating 𝛃 and 𝛒 using quasi-Newton,
 #'                >  1 - derivatives for estimating 𝛃 and 𝛒 using full Newton.
 #'
-#' @return ZINB log-likelihood and its derivatives.
+#' @return hurdleNB log-likelihood and its derivatives.
 #' @export
-zinbll <- function(y, g, eta, th0, level = 0) {
+hurdleNB_ll <- function(y, g, eta, th0, level = 0) {
   a <- exp(th0)
   v <- ktlg(g, a, what = c("k", "lg", "tau"))
   k <- v$k

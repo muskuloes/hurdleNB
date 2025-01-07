@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(zinb)
+library(hurdleNB)
 
-test_check("zinb")
+test_check("hurdleNB")
