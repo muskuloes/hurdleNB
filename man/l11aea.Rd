@@ -16,7 +16,7 @@ l11aea(g, th0)
 }}
 }
 \value{
-Carfully compute log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
+Carefully computed log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
 }
 \description{
 log((1 + αexp(𝛄))^(1/α) - 1).

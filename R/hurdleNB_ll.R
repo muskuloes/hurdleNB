@@ -115,7 +115,7 @@ l1ee <- function(eta) {
 #' @param g   - 𝛄, a numeric vector,
 #' @param th0 - θ₀, a numeric.
 #'
-#' @return Carfully compute log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
+#' @return Carefully computed log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
 l11aea <- function(g, th0) {
   a <- exp(th0)
   ind <- g < -log(.Machine$double.xmax)
