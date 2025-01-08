@@ -313,7 +313,7 @@ ldth0 <- function(g, y, th0, v) {
   # first derivative
   l1 <- -a * k * y + tau * w + y -
     1 / a * (digamma(y + 1 / a) - digamma(1 / a))
-  l1[ind] <- y[ind] - (1 / a) * (digamma(y + (1 / a)) - digamma(1 / a))
+  l1[ind] <- y[ind] - (1 / a) * (digamma(y[ind] + (1 / a)) - digamma(1 / a))
   l1[ii] <- (1 / a) * (th0 + g[ii] - 1 - digamma(y[ii] + (1 / a)) +
     digamma(1 / a))
 
