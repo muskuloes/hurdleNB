@@ -5,7 +5,7 @@
 \title{Evaluate hurdle negative binomial log-likelihood
 and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
-q is probability of potential presence. mu is the NB mean.}
+q is the probability of potential presence. 𝛍 is the NB mean.}
 \usage{
 hurdleNB_ll(y, g, eta, th0, level = 0)
 }
@@ -39,5 +39,5 @@ hurdleNB log-likelihood and its derivatives.
 Evaluate hurdle negative binomial log-likelihood
 and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
-q is probability of potential presence. mu is the NB mean.
+q is the probability of potential presence. 𝛍 is the NB mean.
 }
