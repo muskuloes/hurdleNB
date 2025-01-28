@@ -72,13 +72,16 @@
 #'
 #' @examples
 #' library(mgcv)
+#'
 #' set.seed(1)
 #' n <- 400
 #' dat <- gamSim(1, n = n)
 #' dat$y <- rhurdleNB(dat$f / 4 - 1)
+#'
 #' m <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3),
-#'   family = hurdleNB(), data = dat
+#'   data = dat, family = hurdleNB()
 #' )
+#'
 #' m$outer.info # check convergence!
 #' plot(m, page = 1)
 #' plot(m, pages = 1, unconditional = TRUE)
