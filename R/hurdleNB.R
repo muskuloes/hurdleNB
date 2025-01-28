@@ -72,6 +72,7 @@
 #'
 #' @examples
 #' library(mgcv)
+#' library(hurdleNB)
 #'
 #' set.seed(1)
 #' n <- 400

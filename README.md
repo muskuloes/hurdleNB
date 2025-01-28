@@ -14,6 +14,7 @@ remotes::install_github("muskuloes/hurdleNB")
 
 ```r
 library(mgcv)
+library(hurdleNB)
 
 set.seed(1)
 n <- 400
