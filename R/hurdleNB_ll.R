@@ -393,7 +393,7 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
       2 * a * k^2 * tau * w + a * k^2 * tau - a * k * y - 2 * k * tau^3 * w^2 +
       3 * k * tau^2 * w^2 + k * tau^2 * w - k * tau * w^2 - k * tau * w
     l_gth0th0[ind] <- 0
-    l_gth0th0[ii] <- 0
+    l_gth0th0[ii] <- -1 / a
 
     # ∂⁴ℓ/∂𝛄³∂θ₀
     l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
