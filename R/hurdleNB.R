@@ -57,11 +57,11 @@
 #' `bam`.
 #'
 #' @details
-#' (θ₁, b + exp(θ₂), θ₀) are the `theta` parameters reported in the model
+#' \eqn{(\theta_1, b + e^{\theta_2}, \theta_0)} are the `theta` parameters reported in the model
 #' summary.
 #'
-#' @param theta - 𝛉, a numeric vector containing the 3 parameters of the model,
-#'                θ₀, θ₁, θ₂,
+#' @param theta - \eqn{\theta}, a numeric vector containing the 3 parameters of the model,
+#'                \eqn{\theta_0}, \eqn{\theta_1}, \eqn{\theta_2},
 #' @param link  - Link function name, a character string or function name,
 #' @param b     - A non-negative numeric parameter, specifying the minimum
 #'                dependence of the zero-inflation rate on the linear predictor.

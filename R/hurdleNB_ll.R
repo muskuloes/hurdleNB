@@ -1,15 +1,19 @@
 #' Evaluate hurdle negative binomial log-likelihood
-#' and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
-#' 1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
-#' q is the probability of potential presence. 𝛍 is the NB mean.
+#' and its derivatives. 
+#' @description
+#' Evaluate hurdle negative binomial (NB) log-likelihood
+#' and its derivatives w.r.t. \eqn{\gamma} (g) and \eqn{\eta} (eta), with
+#' \eqn{1 - q = e^{-e^{\eta}}} and \eqn{\mu = e^{\gamma}}, for each datum in vector \eqn{y}.
+#' \eqn{q} is the probability of potential presence. \eqn{\mu} is the NB mean.
 #'
-#' @param y     - 𝐲, a numeric vector,
-#' @param g     - 𝛄, a numeric vector,
-#' @param eta   - 𝛈, a numeric vector,
-#' @param th0   - θ₀, a numeric,
-#' @param level - == 0 - eval,
-#'                >  0 - derivatives for estimating 𝛃 and 𝛒 using quasi-Newton,
-#'                >  1 - derivatives for estimating 𝛃 and 𝛒 using full Newton.
+#' @param y     - \eqn{y}, a numeric vector,
+#' @param g     - \eqn{\gamma}, a numeric vector,
+#' @param eta   - \eqn{\eta}, a numeric vector,
+#' @param th0   - \eqn{\theta_0}, a numeric,
+#' @param level   \itemize{
+#'                 \item \eqn{== 0} - eval,
+#'                 \item \eqn{> 0} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using quasi-Newton,
+#'                 \item \eqn{> 1} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using full Newton.}
 #'
 #' @return hurdleNB log-likelihood and its derivatives.
 #' @export
