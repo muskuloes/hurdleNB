@@ -2,22 +2,23 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{l11aea}
 \alias{l11aea}
-\title{log((1 + αexp(𝛄))^(1/α) - 1).}
+\title{\eqn{\log\left(\left(1 + \alpha e^{\gamma}\right)^{\frac{1}{\alpha}} - 1\right)}}
 \usage{
 l11aea(g, th0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric.
+\item \eqn{\vartheta_0}, a numeric.
 }}
 }
 \value{
-Carefully computed log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
+Carefully computed
+\eqn{\log\left(\left(1 + e^{\vartheta_0} e^{\gamma}\right)^{\frac{1}{e^{\vartheta_0}}} - 1\right)}.
 }
 \description{
-log((1 + αexp(𝛄))^(1/α) - 1).
+\eqn{\log\left(\left(1 + \alpha e^{\gamma}\right)^{\frac{1}{\alpha}} - 1\right)}
 }

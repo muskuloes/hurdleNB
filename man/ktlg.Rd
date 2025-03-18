@@ -2,17 +2,18 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{ktlg}
 \alias{ktlg}
-\title{A helper function returning stable 𝛋, 𝞃, and log(1+αeᵞ).}
+\title{A helper function returning stable
+\eqn{\kappa}, \eqn{\tau}, and \eqn{\log(1 + \alpha e^{\gamma})}.}
 \usage{
 ktlg(g, a, what = c("k", "tau"))
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{a}{\itemize{
-\item α, a numeric,
+\item \eqn{\alpha}, a numeric,
 }}
 
 \item{what}{\itemize{
@@ -21,9 +22,15 @@ ktlg(g, a, what = c("k", "tau"))
 }
 \value{
 A list containing:
-ind -- indices of yᵢ for which γᵢ is very small,
-ii -- indices of yᵢ for which γᵢ is very large.
+\itemize{
+\item \code{k} – \eqn{\kappa},
+\item \code{tau} – \eqn{\tau},
+\item \code{lg} – \eqn{\log(1 + \alpha e^{\gamma})},
+\item \code{ind} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very small,
+\item \code{ii} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very large.
+}
 }
 \description{
-A helper function returning stable 𝛋, 𝞃, and log(1+αeᵞ).
+A helper function returning stable
+\eqn{\kappa}, \eqn{\tau}, and \eqn{\log(1 + \alpha e^{\gamma})}.
 }

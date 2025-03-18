@@ -2,39 +2,39 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{ldgth0}
 \alias{ldgth0}
-\title{Log-likelihood (ℓ) derivatives w.r.t. θ₀.
-and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.}
+\title{Log-likelihood (\eqn{\ell}) derivatives w.r.t. \eqn{\vartheta_0},
+and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and \eqn{\vartheta_0}.}
 \usage{
 ldgth0(g, y, th0, v, level = 2)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector,
+\item \eqn{y}, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric,
+\item \eqn{\vartheta_0}, a numeric,
 }}
 
 \item{v}{\itemize{
-\item v, a list containing 𝛋, 𝛕 and lg,
+\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii},
 }}
 
 \item{level}{\itemize{
-\item == 0 - list of NULLs (not needed for estimating parameters),
->  0 - derivatives needed for quasi-Newton,
->  1 - derivatives need for full Newton.
+\item \eqn{==0} – list of NULLs (not needed for estimating parameters),
+\item \eqn{> 0} – derivatives needed for quasi-Newton,
+\item \eqn{> 1} – derivatives needed for full Newton.
 }}
 }
 \value{
-A list of the first, second amd mixed derivatives of the
-log-likelihood w.r.t. θ₀ and 𝛄.
+A list of the first, second and mixed derivatives of the
+log-likelihood w.r.t. \eqn{\vartheta_0} and \eqn{\gamma}.
 }
 \description{
-Log-likelihood (ℓ) derivatives w.r.t. θ₀.
-and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.
+Log-likelihood (\eqn{\ell}) derivatives w.r.t. \eqn{\vartheta_0},
+and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and \eqn{\vartheta_0}.
 }

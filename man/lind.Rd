@@ -2,22 +2,22 @@
 % Please edit documentation in R/hurdleNB.R
 \name{lind}
 \alias{lind}
-\title{𝛈 = θ₁ + (b + exp(θ₂))𝝲.}
+\title{\eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}.}
 \usage{
 lind(g, theta, level = 0, b = 0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝝲, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{theta}{\itemize{
-\item 𝛉, a numeric vector,
+\item \eqn{\vartheta}, a numeric vector,
 }}
 
 \item{level}{\itemize{
 \item A numeric, indicating whether to return deriv
-w.r.t. θ₁ & θ₂,
+w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},
 }}
 
 \item{b}{\itemize{
@@ -25,9 +25,9 @@ w.r.t. θ₁ & θ₂,
 }}
 }
 \value{
-A list with 𝛈 = θ₁ + (b + exp(θ₂))𝝲 and its derivatives
-w.r.t. 𝝲, θ₁ & θ₂.
+A list with \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}
+and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1}, and \eqn{\vartheta_2}.
 }
 \description{
-𝛈 = θ₁ + (b + exp(θ₂))𝝲.
+\eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}.
 }

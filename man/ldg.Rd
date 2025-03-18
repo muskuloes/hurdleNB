@@ -2,36 +2,36 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{ldg}
 \alias{ldg}
-\title{Log-likelihood derivatives w.r.t. 𝛄.}
+\title{Log-likelihood derivatives w.r.t. \eqn{\gamma}.}
 \usage{
 ldg(g, y, a, v, level = 2)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector,
+\item \eqn{y}, a numeric vector,
 }}
 
 \item{a}{\itemize{
-\item α, a numeric,
+\item \eqn{\alpha}, a numeric,
 }}
 
 \item{v}{\itemize{
-\item v, a list containing 𝛋 and 𝛕,
+\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{ind} and \code{ii},
 }}
 
 \item{level}{\itemize{
-\item == 0 - first and second derivatives,
->  0 - derivatives needed for quasi-Newton,
->  1 - derivatives need for full Newton.
+\item \eqn{0} – first and second derivatives.
+\item \eqn{> 0} – derivatives needed for quasi-Newton.
+\item \eqn{> 1} – derivatives needed for full Newton.
 }}
 }
 \value{
-A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
+A list of derivatives of the log-likelihood w.r.t. \eqn{\gamma} (g).
 }
 \description{
-Log-likelihood derivatives w.r.t. 𝛄.
+Log-likelihood derivatives w.r.t. \eqn{\gamma}.
 }

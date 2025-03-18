@@ -2,31 +2,31 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{ldth0}
 \alias{ldth0}
-\title{Log-likelihood derivatives w.r.t. θ₀.}
+\title{Log-likelihood derivatives w.r.t. \eqn{\vartheta_0}.}
 \usage{
 ldth0(g, y, th0, v)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{y}{\itemize{
-\item 𝐲, a numeric vector,
+\item \eqn{y}, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric,
+\item \eqn{\vartheta_0}, a numeric,
 }}
 
 \item{v}{\itemize{
-\item v, a list containing 𝛋, 𝛕 and lg.
+\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii}.
 }}
 }
 \value{
 A list of the first and second derivatives of the
-log-likelihood w.r.t. θ₀.
+log-likelihood w.r.t. \eqn{\vartheta_0}.
 }
 \description{
-Log-likelihood derivatives w.r.t. θ₀.
+Log-likelihood derivatives w.r.t. \eqn{\vartheta_0}.
 }

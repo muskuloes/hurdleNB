@@ -9,7 +9,7 @@
 #' @param y     - \eqn{y}, a numeric vector,
 #' @param g     - \eqn{\gamma}, a numeric vector,
 #' @param eta   - \eqn{\eta}, a numeric vector,
-#' @param th0   - \eqn{\theta_0}, a numeric,
+#' @param th0   - \eqn{\vartheta_0}, a numeric,
 #' @param level   \itemize{
 #'                 \item \eqn{== 0} - eval,
 #'                 \item \eqn{> 0} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using quasi-Newton,
@@ -96,11 +96,11 @@ hurdleNB_ll <- function(y, g, eta, th0, level = 0) {
   list(l = l, l1 = l1, l2 = l2, l3 = l3, l4 = l4, El2 = El2)
 }
 
-#' log(1-exp(-exp(𝛈))).
+#' \eqn{\log(1 - e^{-e^{\eta}})}.
 #'
-#' @param eta - 𝛈, a numeric vector.
+#' @param eta - \eqn{\eta}, a numeric vector.
 #'
-#' @return  Carefully computed log(1-exp(-exp(𝛈))).
+#' @return  Carefully computed \eqn{\log(1 - e^{-e^{\eta}})}.
 l1ee <- function(eta) {
   ind <- eta < log(.Machine$double.eps) / 3
   ex <- exp(eta)
@@ -114,12 +114,14 @@ l1ee <- function(eta) {
   l
 }
 
-#' log((1 + αexp(𝛄))^(1/α) - 1).
+#' 
+#' \eqn{\log\left(\left(1 + \alpha e^{\gamma}\right)^{\frac{1}{\alpha}} - 1\right)}
 #'
-#' @param g   - 𝛄, a numeric vector,
-#' @param th0 - θ₀, a numeric.
+#' @param g   - \eqn{\gamma}, a numeric vector,
+#' @param th0 - \eqn{\vartheta_0}, a numeric.
 #'
-#' @return Carefully computed log((1 + exp(θ₀)exp(𝛄))^(1/(exp(θ₀))) - 1).
+#' @return Carefully computed 
+#' \eqn{\log\left(\left(1 + e^{\vartheta_0} e^{\gamma}\right)^{\frac{1}{e^{\vartheta_0}}} - 1\right)}.
 l11aea <- function(g, th0) {
   a <- exp(th0)
   ind <- g < -log(.Machine$double.xmax)
@@ -134,16 +136,21 @@ l11aea <- function(g, th0) {
   l
 }
 
-#' A helper function returning stable 𝛋, 𝞃, and log(1+αeᵞ).
+#' A helper function returning stable
+#' \eqn{\kappa}, \eqn{\tau}, and \eqn{\log(1 + \alpha e^{\gamma})}.
 #'
-#' @param g    - 𝛄, a numeric vector,
-#' @param a    - α, a numeric,
+#' @param g    - \eqn{\gamma}, a numeric vector,
+#' @param a    - \eqn{\alpha}, a numeric,
 #' @param what - A character vector specifying what to return.
 #'
 #' @return A list containing:
-#          k -- 𝛋, tau -- 𝛕, lg -- log(1+αeᵞ),
-#'         ind -- indices of yᵢ for which γᵢ is very small,
-#'         ii -- indices of yᵢ for which γᵢ is very large.
+#' \itemize{
+#'   \item \code{k} – \eqn{\kappa},
+#'   \item \code{tau} – \eqn{\tau},
+#'   \item \code{lg} – \eqn{\log(1 + \alpha e^{\gamma})},
+#'   \item \code{ind} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very small,
+#'   \item \code{ii} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very large.
+#' }
 ktlg <- function(g, a, what = c("k", "tau")) {
   ind <- g < log(.Machine$double.eps)
   ii <- g > log(.Machine$double.xmax) / 2
@@ -191,14 +198,17 @@ ktlg <- function(g, a, what = c("k", "tau")) {
   list(k = k, tau = tau, lg = lg, ind = ind, ii = ii)
 }
 
-#' Log-likelihood derivatives w.r.t. 𝛈.
+#' Log-likelihood derivatives w.r.t. \eqn{\eta}.
 #'
-#' @param eta   - 𝛈, a numeric vector,
-#' @param level - == 0 - first and second derivatives,
-#'                >  0 - derivatives needed for quasi-Newton,
-#'                >  1 - derivatives need for full Newton.
+#' @param eta   - \eqn{\eta}, a numeric vector,
+#' @param level 
+#' \itemize{
+#'   \item \eqn{==0} – first and second derivatives,
+#'   \item \eqn{> 0} – derivatives needed for quasi-Newton,
+#'   \item \eqn{> 1} – derivatives needed for full Newton.
+#' }
 #'
-#' @return A list of derivatives of the log-likelihood w.r.t. 𝛈 (eta).
+#' @return A list of derivatives of the log-likelihood w.r.t. \eqn{\eta} (eta).
 lde <- function(eta, level = 2) {
   ind <- eta < log(.Machine$double.eps) / 3
   ii <- eta > log(.Machine$double.xmax)
@@ -240,17 +250,20 @@ lde <- function(eta, level = 2) {
   list(l1 = l1, l2 = l2, l3 = l3, l4 = l4)
 }
 
-#' Log-likelihood derivatives w.r.t. 𝛄.
+#' Log-likelihood derivatives w.r.t. \eqn{\gamma}.
 #'
-#' @param g     - 𝛄, a numeric vector,
-#' @param y     - 𝐲, a numeric vector,
-#' @param a     - α, a numeric,
-#' @param v     - v, a list containing 𝛋 and 𝛕,
-#' @param level - == 0 - first and second derivatives,
-#'                >  0 - derivatives needed for quasi-Newton,
-#'                >  1 - derivatives need for full Newton.
+#' @param g     - \eqn{\gamma}, a numeric vector,
+#' @param y     - \eqn{y}, a numeric vector,
+#' @param a     - \eqn{\alpha}, a numeric,
+#' @param v     - \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{ind} and \code{ii},
+#' @param level 
+#' \itemize{
+#'   \item \eqn{0} – first and second derivatives.
+#'   \item \eqn{> 0} – derivatives needed for quasi-Newton.
+#'   \item \eqn{> 1} – derivatives needed for full Newton.
+#' }
 #'
-#' @return A list of derivatives of the log-likelihood w.r.t. 𝛄 (g).
+#' @return A list of derivatives of the log-likelihood w.r.t. \eqn{\gamma} (g).
 ldg <- function(g, y, a, v, level = 2) {
   k <- v$k
   tau <- v$tau
@@ -295,15 +308,15 @@ ldg <- function(g, y, a, v, level = 2) {
   list(l1 = l1, l2 = l2, l3 = l3, l4 = l4)
 }
 
-#' Log-likelihood derivatives w.r.t. θ₀.
+#' Log-likelihood derivatives w.r.t. \eqn{\vartheta_0}.
 #'
-#' @param g     - 𝛄, a numeric vector,
-#' @param y     - 𝐲, a numeric vector,
-#' @param th0   - θ₀, a numeric,
-#' @param v     - v, a list containing 𝛋, 𝛕 and lg.
+#' @param g     - \eqn{\gamma}, a numeric vector,
+#' @param y     - \eqn{y}, a numeric vector,
+#' @param th0   - \eqn{\vartheta_0}, a numeric,
+#' @param v     - \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii}.
 #'
 #' @return A list of the first and second derivatives of the
-#'          log-likelihood w.r.t. θ₀.
+#'          log-likelihood w.r.t. \eqn{\vartheta_0}.
 ldth0 <- function(g, y, th0, v) {
   a <- exp(th0)
   k <- v$k
@@ -334,19 +347,22 @@ ldth0 <- function(g, y, th0, v) {
   list(l1 = l1, l2 = l2)
 }
 
-#' Log-likelihood (ℓ) derivatives w.r.t. θ₀.
-#' and mixed derivatives of ℓ w.r.t. 𝛄 and θ₀.
+#' Log-likelihood (\eqn{\ell}) derivatives w.r.t. \eqn{\vartheta_0},
+#' and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and \eqn{\vartheta_0}.
 #'
-#' @param g     - 𝛄, a numeric vector,
-#' @param y     - 𝐲, a numeric vector,
-#' @param th0   - θ₀, a numeric,
-#' @param v     - v, a list containing 𝛋, 𝛕 and lg,
-#' @param level - == 0 - list of NULLs (not needed for estimating parameters),
-#'                >  0 - derivatives needed for quasi-Newton,
-#'                >  1 - derivatives need for full Newton.
-#'
-#' @return A list of the first, second amd mixed derivatives of the
-#'          log-likelihood w.r.t. θ₀ and 𝛄.
+#' @param g     - \eqn{\gamma}, a numeric vector,
+#' @param y     - \eqn{y}, a numeric vector,
+#' @param th0   - \eqn{\vartheta_0}, a numeric,
+#' @param v     - \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii},
+#' @param level 
+#' \itemize{
+#'   \item \eqn{==0} – list of NULLs (not needed for estimating parameters),
+#'   \item \eqn{> 0} – derivatives needed for quasi-Newton,
+#'   \item \eqn{> 1} – derivatives needed for full Newton.
+#' }
+#' 
+#' @return A list of the first, second and mixed derivatives of the
+#'          log-likelihood w.r.t. \eqn{\vartheta_0} and \eqn{\gamma}.
 ldgth0 <- function(g, y, th0, v, level = 2) {
   a <- exp(th0)
   k <- v$k
