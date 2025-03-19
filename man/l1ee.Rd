@@ -2,18 +2,18 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{l1ee}
 \alias{l1ee}
-\title{log(1-exp(-exp(𝛈))).}
+\title{\eqn{\log(1 - e^{-e^{\eta}})}.}
 \usage{
 l1ee(eta)
 }
 \arguments{
 \item{eta}{\itemize{
-\item 𝛈, a numeric vector.
+\item \eqn{\eta}, a numeric vector.
 }}
 }
 \value{
-Carefully computed log(1-exp(-exp(𝛈))).
+Carefully computed \eqn{\log(1 - e^{-e^{\eta}})}.
 }
 \description{
-log(1-exp(-exp(𝛈))).
+\eqn{\log(1 - e^{-e^{\eta}})}.
 }

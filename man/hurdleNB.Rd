@@ -9,8 +9,8 @@ hurdleNB(theta = NULL, link = "identity", b = 0)
 }
 \arguments{
 \item{theta}{\itemize{
-\item 𝛉, a numeric vector containing the 3 parameters of the model,
-θ₀, θ₁, θ₂,
+\item \eqn{\vartheta}, a numeric vector containing the 3 parameters of the model,
+\eqn{\vartheta_0}, \eqn{\vartheta_1}, \eqn{\vartheta_2},
 }}
 
 \item{link}{\itemize{
@@ -30,7 +30,7 @@ Hurdle negative binomial extended family for use with mgcv's \code{gam} or
 \code{bam}.
 }
 \details{
-(θ₁, b + exp(θ₂), θ₀) are the \code{theta} parameters reported in the model
+\eqn{(\vartheta_1, b + e^{\vartheta_2}, \vartheta_0)} are the \code{theta} parameters reported in the model
 summary.
 }
 \examples{

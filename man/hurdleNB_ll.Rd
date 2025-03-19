@@ -3,41 +3,38 @@
 \name{hurdleNB_ll}
 \alias{hurdleNB_ll}
 \title{Evaluate hurdle negative binomial log-likelihood
-and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
-1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
-q is the probability of potential presence. 𝛍 is the NB mean.}
+and its derivatives.}
 \usage{
 hurdleNB_ll(y, g, eta, th0, level = 0)
 }
 \arguments{
 \item{y}{\itemize{
-\item 𝐲, a numeric vector,
+\item \eqn{y}, a numeric vector,
 }}
 
 \item{g}{\itemize{
-\item 𝛄, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{eta}{\itemize{
-\item 𝛈, a numeric vector,
+\item \eqn{\eta}, a numeric vector,
 }}
 
 \item{th0}{\itemize{
-\item θ₀, a numeric,
+\item \eqn{\vartheta_0}, a numeric,
 }}
 
 \item{level}{\itemize{
-\item == 0 - eval,
->  0 - derivatives for estimating 𝛃 and 𝛒 using quasi-Newton,
->  1 - derivatives for estimating 𝛃 and 𝛒 using full Newton.
-}}
+\item \eqn{== 0} - eval,
+\item \eqn{> 0} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using quasi-Newton,
+\item \eqn{> 1} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using full Newton.}}
 }
 \value{
 hurdleNB log-likelihood and its derivatives.
 }
 \description{
-Evaluate hurdle negative binomial log-likelihood
-and its derivatives w.r.t. 𝛄 (g) and 𝛈 (eta), with
-1-q = exp(-exp(𝛈)) and 𝛍 = exp(𝛄), for each datum in vector y.
-q is the probability of potential presence. 𝛍 is the NB mean.
+Evaluate hurdle negative binomial (NB) log-likelihood
+and its derivatives w.r.t. \eqn{\gamma} (g) and \eqn{\eta} (eta), with
+\eqn{1 - q = e^{-e^{\eta}}} and \eqn{\mu = e^{\gamma}}, for each datum in vector \eqn{y}.
+\eqn{q} is the probability of potential presence. \eqn{\mu} is the NB mean.
 }

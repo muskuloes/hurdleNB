@@ -8,11 +8,11 @@ rhurdleNB(g, theta = c(-2, 0.3, 2), b = 0)
 }
 \arguments{
 \item{g}{\itemize{
-\item 𝝲, a numeric vector,
+\item \eqn{\gamma}, a numeric vector,
 }}
 
 \item{theta}{\itemize{
-\item 𝛉, a numeric vector,
+\item \eqn{\vartheta}, a numeric vector,
 }}
 
 \item{b}{\itemize{
