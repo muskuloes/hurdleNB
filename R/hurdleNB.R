@@ -146,7 +146,10 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
 
     b <- get(".b")
     lin <- lind(g, theta, level, b)
-    z <- hurdleNB_ll(y, g, lin$eta, theta[3], level)
+
+    deriv <- 1
+    if (level == 1) deriv <- 2 else if (level > 1) deriv <- 4
+    z <- hurdleNB_ll(y, g, lin$eta, theta[3], level = deriv)
     n <- length(y)
     if (is.null(wt)) wt <- rep(1, n)
 
@@ -161,18 +164,18 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
       oo$Dth <- oo$Dmuth <- oo$Dmu2th <- matrix(0, n, 3)
 
       oo$Dth[, 1:2] <- -2 * wt * z$l1[, 2] * lin$eta_th
-      # dθ₀.
+      # dϑ₀.
       oo$Dth[, 3] <- -2 * wt * z$l1[, 3]
 
       oo$Dmuth[, 1:2] <- -2 * wt * (z$l2[, 3] * lin$eta_th * lin$eta_g +
         z$l1[, 2] * lin$eta_gth)
-      # dθ₀.
+      # dϑ₀.
       oo$Dmuth[, 3] <- -2 * wt * z$l2[, 4]
 
       oo$Dmu2th[, 1:2] <- -2 * wt * (z$l3[, 4] * lin$eta_th * (lin$eta_g^2) +
         z$l2[, 3] * (2 * lin$eta_gth * lin$eta_g + lin$eta_gg * lin$eta_th) +
         z$l1[, 2] * lin$eta_ggth)
-      # dθ₀.
+      # dϑ₀.
       oo$Dmu2th[, 3] <- -2 * wt * z$l3[, 5]
 
       oo$Dmu3 <- -2 * wt * (z$l3[, 1] + z$l3[, 4] * (lin$eta_g^3) +
@@ -188,18 +191,18 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
 
       oo$Dmu2th2 <- oo$Dmuth2 <- oo$Dth2 <- matrix(0, n, 6)
 
-      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      # contains dϑ₁dϑ₁, dϑ₁dϑ₂, dϑ₂dϑ₂.
       Dth2 <- -2 * wt * (z$l2[, 3] * eta_thth +
         z$l1[, 2] * lin$eta_th2)
 
       oo$Dth2[, 1:2] <- Dth2[, 1:2]
-      # dθ₁dθ₀.
+      # dϑ₁dϑ₀.
       oo$Dth2[, 3] <- 0
-      # dθ₂dθ₂.
+      # dϑ₂dϑ₂.
       oo$Dth2[, 4] <- Dth2[, 3]
-      # dθ₂dθ₀.
+      # dϑ₂dϑ₀.
       oo$Dth2[, 5] <- 0
-      # dθ₀dθ₀.
+      # dϑ₀dϑ₀.
       oo$Dth2[, 6] <- -2 * wt * z$l2[, 5]
 
       eta_gthth <- matrix(0, n, 3)
@@ -208,18 +211,18 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
         lin$eta_gth[, 2] * lin$eta_th[, 1]
       eta_gthth[, 3] <- 2 * lin$eta_gth[, 2] * lin$eta_th[, 2]
 
-      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      # contains dϑ₁dϑ₁, dϑ₁dϑ₂, dϑ₂dϑ₂.
       Dmuth2 <- -2 * wt * (z$l3[, 4] * eta_thth * lin$eta_g +
         z$l2[, 3] * (lin$eta_th2 * lin$eta_g + eta_gthth) +
         z$l1[, 2] * lin$eta_gth2)
       oo$Dmuth2[, 1:2] <- Dmuth2[, 1:2]
-      # dθ₁dθ₀.
+      # dϑ₁dϑ₀.
       oo$Dmuth2[, 3] <- 0
-      # dθ₂dθ₂.
+      # dϑ₂dϑ₂.
       oo$Dmuth2[, 4] <- Dmuth2[, 3]
-      # dθ₂dθ₀.
+      # dϑ₂dϑ₀.
       oo$Dmuth2[, 5] <- 0
-      # dθ₀dθ₀.
+      # dϑ₀dϑ₀.
       oo$Dmuth2[, 6] <- -2 * wt * z$l3[, 6]
 
       oo$Dmu3th <- matrix(0, n, 3)
@@ -229,7 +232,7 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
         z$l2[, 3] * (3 * lin$eta_gth * lin$eta_gg +
           3 * lin$eta_g * lin$eta_ggth + lin$eta_th * lin$eta_ggg) +
         z$l1[, 2] * lin$eta_gggth)
-      # dθ₀.
+      # dϑ₀.
       oo$Dmu3th[, 3] <- -2 * wt * z$l4[, 6]
 
       eta_gthgth <- matrix(0, n, 3)
@@ -242,20 +245,20 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
         lin$eta_th[, 2] * lin$eta_ggth[, 1]
       eta_ggthth[, 3] <- 2 * lin$eta_th[, 2] * lin$eta_ggth[, 2]
 
-      # contains dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+      # contains dϑ₁dϑ₁, dϑ₁dϑ₂, dϑ₂dϑ₂.
       Dmu2th2 <- -2 * wt * (z$l4[, 5] * eta_thth * (lin$eta_g^2) +
         z$l3[, 4] * (lin$eta_th2 * (lin$eta_g^2) +
           2 * eta_gthth * lin$eta_g + eta_thth * lin$eta_gg) +
         z$l2[, 3] * (eta_gthgth + 2 * lin$eta_g * lin$eta_gth2 + eta_ggthth +
           lin$eta_th2 * lin$eta_gg) + z$l1[, 2] * lin$eta_ggth2)
       oo$Dmu2th2[, 1:2] <- Dmu2th2[, 1:2]
-      # dθ₁dθ₀.
+      # dϑ₁dϑ₀.
       oo$Dmu2th2[, 3] <- 0
-      # dθ₂dθ₂.
+      # dϑ₂dϑ₂.
       oo$Dmu2th2[, 4] <- Dmu2th2[, 3]
-      # dθ₂dθ₀.
+      # dϑ₂dϑ₀.
       oo$Dmu2th2[, 5] <- 0
-      # dθ₀dθ₀.
+      # dϑ₀dϑ₀.
       oo$Dmu2th2[, 6] <- -2 * wt * z$l4[, 7]
 
       oo$Dmu4 <- -2 * wt * (z$l4[, 1] + z$l4[, 5] * (lin$eta_g^4) +
@@ -476,7 +479,7 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
 #'                w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},
 #' @param b     - A numeric.
 #'
-#' @return A list with \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma} 
+#' @return A list with \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}
 #'         and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1}, and \eqn{\vartheta_2}.
 lind <- function(g, theta, level = 0, b = 0) {
   theta[2] <- exp(theta[2])
@@ -487,11 +490,11 @@ lind <- function(g, theta, level = 0, b = 0) {
   if (level) {
     n <- length(g)
     r$eta_gggth <- r$eta_ggth <- r$eta_gth <- r$eta_th <- matrix(0, n, 2)
-    r$eta_th[, 1] <- 1 # d𝛈/dθ₁
-    r$eta_th[, 2] <- theta[2] * g # d𝛈/dθ₂
-    r$eta_gth[, 2] <- theta[2] # d²𝛈/d𝛄dθ₂
+    r$eta_th[, 1] <- 1 # d𝛈/dϑ₁
+    r$eta_th[, 2] <- theta[2] * g # d𝛈/dϑ₂
+    r$eta_gth[, 2] <- theta[2] # d²𝛈/d𝛄dϑ₂
     r$eta_gggg <- r$eta_ggg <- 0 # d⁴𝛈/d𝛄⁴, d³𝛈/d𝛄³
-    # order dθ₁dθ₁, dθ₁dθ₂, dθ₂dθ₂.
+    # order dϑ₁dϑ₁, dϑ₁dϑ₂, dϑ₂dϑ₂.
     r$eta_ggth2 <- r$eta_gth2 <- r$eta_th2 <- matrix(0, n, 3)
     r$eta_th2[, 3] <- theta[2] * g
     r$eta_gth2[, 3] <- theta[2]

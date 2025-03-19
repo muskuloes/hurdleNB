@@ -477,7 +477,7 @@ test_that("Dd works for vector y at level 2", {
   )
   expect_equal(round(oo$EDmu2, 5), EDmu2)
 
-  # dθ₁dθ₀, dθ₂dθ₀.
+  # dϑ₁dϑ₀, dϑ₂dϑ₀.
   expect_equal(oo$Dth2[, 3], rep(0, n))
   expect_equal(oo$Dth2[, 5], rep(0, n))
   expect_equal(oo$Dmuth2[, 3], rep(0, n))

@@ -1,5 +1,5 @@
 #' Evaluate hurdle negative binomial log-likelihood
-#' and its derivatives. 
+#' and its derivatives.
 #' @description
 #' Evaluate hurdle negative binomial (NB) log-likelihood
 #' and its derivatives w.r.t. \eqn{\gamma} (g) and \eqn{\eta} (eta), with
@@ -32,35 +32,34 @@ hurdleNB_ll <- function(y, g, eta, th0, level = 0) {
     lgamma(yp + 1) - lgamma(1 / a) + lgamma(yp + 1 / a)
   q <- 1 - exp(-et)
 
-  n <- length(y)
-
   l1 <- El2 <- l2 <- l3 <- l4 <- NULL
-
-  l_e <- lde(eta, level)
-  l_g <- ldg(g, y, a, v, level)
-
-  # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂θ₀.
-  l1 <- matrix(0, n, 3)
-  l1[!zind, 1] <- l_g$l1[!zind]
-  l1[zind, 2] <- l[zind]
-  l1[!zind, 2] <- l_e$l1[!zind]
-  l1[, 3] <- NaN
-
-  # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂θ₀, ∂²ℓ/∂θ₀².
-  l2 <- matrix(0, n, 5)
-  l2[!zind, 1] <- l_g$l2[!zind]
-  l2[zind, 3] <- l[zind]
-  l2[!zind, 3] <- l_e$l2[!zind]
-  l2[, 4] <- NaN
-  l2[, 5] <- NaN
-
-  # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
-  El2 <- matrix(0, n, 3)
-  El2[, 1] <- q * (tau * exp(g) * ((a^2) * k^2 - a * k) + a * (k^2) * tau -
-    tau * k + k^2 * tau^2 - k^2 * tau)
-  El2[, 3] <- -(1 - q) * et + q * l_e$l2
-
   if (level >= 1) {
+    n <- length(y)
+
+    l_e <- lde(eta, level)
+    l_g <- ldg(g, y, a, v, level)
+
+    # order ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀.
+    l1 <- matrix(0, n, 3)
+    l1[!zind, 1] <- l_g$l1[!zind]
+    l1[zind, 2] <- l[zind]
+    l1[!zind, 2] <- l_e$l1[!zind]
+    l1[, 3] <- NaN
+
+    # order ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀².
+    l2 <- matrix(0, n, 5)
+    l2[!zind, 1] <- l_g$l2[!zind]
+    l2[zind, 3] <- l[zind]
+    l2[!zind, 3] <- l_e$l2[!zind]
+    l2[, 4] <- NaN
+    l2[, 5] <- NaN
+
+    # order 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²].
+    El2 <- matrix(0, n, 3)
+    El2[, 1] <- q * (tau * exp(g) * ((a^2) * k^2 - a * k) + a * (k^2) * tau -
+      tau * k + k^2 * tau^2 - k^2 * tau)
+    El2[, 3] <- -(1 - q) * et + q * l_e$l2
+
     l_dgth0 <- ldgth0(g, y, th0, v, level)
 
     l1[zind, 3] <- 0
@@ -68,7 +67,7 @@ hurdleNB_ll <- function(y, g, eta, th0, level = 0) {
     l2[zind, 4] <- 0
     l2[!zind, 4] <- l_dgth0$l_gth0[!zind]
 
-    # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂θ₀, ∂³ℓ/∂𝛄∂θ₀².
+    # order ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂ϑ₀, ∂³ℓ/∂𝛄∂ϑ₀².
     l3 <- matrix(0, n, 6)
     l3[!zind, 1] <- l_g$l3[!zind]
     l3[!zind, 4] <- l_e$l3[!zind]
@@ -83,8 +82,8 @@ hurdleNB_ll <- function(y, g, eta, th0, level = 0) {
     l3[zind, 6] <- 0
     l3[!zind, 6] <- l_dgth0$l_gth0th0[!zind]
 
-    # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂θ₀,
-    # ∂⁴ℓ/∂𝛄²∂θ₀².
+    # order ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀,
+    # ∂⁴ℓ/∂𝛄²∂ϑ₀².
     l4 <- matrix(0, n, 7)
     l4[!zind, 1] <- l_g$l4[!zind]
     l4[!zind, 5] <- l_e$l4[!zind]
@@ -114,13 +113,13 @@ l1ee <- function(eta) {
   l
 }
 
-#' 
+#'
 #' \eqn{\log\left(\left(1 + \alpha e^{\gamma}\right)^{\frac{1}{\alpha}} - 1\right)}
 #'
 #' @param g   - \eqn{\gamma}, a numeric vector,
 #' @param th0 - \eqn{\vartheta_0}, a numeric.
 #'
-#' @return Carefully computed 
+#' @return Carefully computed
 #' \eqn{\log\left(\left(1 + e^{\vartheta_0} e^{\gamma}\right)^{\frac{1}{e^{\vartheta_0}}} - 1\right)}.
 l11aea <- function(g, th0) {
   a <- exp(th0)
@@ -201,7 +200,7 @@ ktlg <- function(g, a, what = c("k", "tau")) {
 #' Log-likelihood derivatives w.r.t. \eqn{\eta}.
 #'
 #' @param eta   - \eqn{\eta}, a numeric vector,
-#' @param level 
+#' @param level
 #' \itemize{
 #'   \item \eqn{==0} – first and second derivatives,
 #'   \item \eqn{> 0} – derivatives needed for quasi-Newton,
@@ -256,7 +255,7 @@ lde <- function(eta, level = 2) {
 #' @param y     - \eqn{y}, a numeric vector,
 #' @param a     - \eqn{\alpha}, a numeric,
 #' @param v     - \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{ind} and \code{ii},
-#' @param level 
+#' @param level
 #' \itemize{
 #'   \item \eqn{0} – first and second derivatives.
 #'   \item \eqn{> 0} – derivatives needed for quasi-Newton.
@@ -354,13 +353,13 @@ ldth0 <- function(g, y, th0, v) {
 #' @param y     - \eqn{y}, a numeric vector,
 #' @param th0   - \eqn{\vartheta_0}, a numeric,
 #' @param v     - \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii},
-#' @param level 
+#' @param level
 #' \itemize{
 #'   \item \eqn{==0} – list of NULLs (not needed for estimating parameters),
 #'   \item \eqn{> 0} – derivatives needed for quasi-Newton,
 #'   \item \eqn{> 1} – derivatives needed for full Newton.
 #' }
-#' 
+#'
 #' @return A list of the first, second and mixed derivatives of the
 #'          log-likelihood w.r.t. \eqn{\vartheta_0} and \eqn{\gamma}.
 ldgth0 <- function(g, y, th0, v, level = 2) {
@@ -375,20 +374,20 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
   l_gth0 <- l_ggth0 <- l_gth0th0 <- l_gggth0 <- l_ggth0th0 <- NULL
 
   if (level > 0) {
-    # ∂ℓ/θ₀
+    # ∂ℓ/ϑ₀
     l1 <- -a * k * y + tau * w + y -
       1 / a * (digamma(y + 1 / a) - digamma(1 / a))
     l1[ind] <- y[ind] - (1 / a) * (digamma(y[ind] + (1 / a)) - digamma(1 / a))
     l1[ii] <- (1 / a) * (th0 + g[ii] - 1 - digamma(y[ii] + (1 / a)) +
       digamma(1 / a))
 
-    # ∂²ℓ/∂𝛄∂θ₀
+    # ∂²ℓ/∂𝛄∂ϑ₀
     l_gth0 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y - k * tau^2 * w +
       k * tau * w
     l_gth0[ind] <- 0
     l_gth0[ii] <- 0
 
-    # ∂³ℓ/∂𝛄²∂θ₀
+    # ∂³ℓ/∂𝛄²∂ϑ₀
     l_ggth0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
       2 * a * k^3 * tau^2 + 2 * a * k^3 * tau + a * k^2 * tau^2 * w -
       a * k^2 * tau * w + 2 * a * k^2 * tau - a * k * y + 2 * k^2 * tau^3 * w -
@@ -397,7 +396,7 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
     l_ggth0[ii] <- 1 / a
   }
   if (level > 1) {
-    # ∂²ℓ/∂θ₀²
+    # ∂²ℓ/∂ϑ₀²
     l2 <- a^2 * k^2 * y + a * k^2 * tau - a * k * y + tau^2 * w^2 - tau * w^2 -
       tau * w + (1 / a) * (digamma(y + 1 / a) - digamma(1 / a)) +
       (1 / (a^2)) * (psigamma(y + 1 / a, 1) - psigamma(1 / a, 1))
@@ -407,7 +406,7 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
       digamma(1 / a) - (1 / a) * (psigamma(y[ii] + (1 / a), 1) -
         psigamma(1 / a, 1)))
 
-    # ∂³ℓ/∂𝛄∂θ₀²
+    # ∂³ℓ/∂𝛄∂ϑ₀²
     l_gth0th0 <- -2 * a^3 * k^3 * y - 2 * a^2 * k^3 * tau + 3 * a^2 * k^2 * y -
       a * k^3 * tau^2 + a * k^3 * tau + 2 * a * k^2 * tau^2 * w -
       2 * a * k^2 * tau * w + a * k^2 * tau - a * k * y - 2 * k * tau^3 * w^2 +
@@ -415,7 +414,7 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
     l_gth0th0[ind] <- 0
     l_gth0th0[ii] <- -1 / a
 
-    # ∂⁴ℓ/∂𝛄³∂θ₀
+    # ∂⁴ℓ/∂𝛄³∂ϑ₀
     l_gggth0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
       9 * a^2 * k^4 * tau^2 - 9 * a^2 * k^4 * tau - 2 * a^2 * k^3 * tau^2 * w +
       2 * a^2 * k^3 * tau * w - 10 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
@@ -429,7 +428,7 @@ ldgth0 <- function(g, y, th0, v, level = 2) {
     l_gggth0[ind] <- 0
     l_gggth0[ii] <- 0
 
-    # ∂⁴ℓ/∂𝛄²∂θ₀²
+    # ∂⁴ℓ/∂𝛄²∂ϑ₀²
     l_ggth0th0 <- 6 * a^4 * k^4 * y + 6 * a^3 * k^4 * tau - 12 * a^3 * k^3 * y +
       7 * a^2 * k^4 * tau^2 - 7 * a^2 * k^4 * tau - 4 * a^2 * k^3 * tau^2 * w +
       4 * a^2 * k^3 * tau * w - 8 * a^2 * k^3 * tau + 7 * a^2 * k^2 * y +
