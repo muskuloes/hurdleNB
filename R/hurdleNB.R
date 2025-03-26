@@ -57,14 +57,15 @@
 #' `bam`.
 #'
 #' @details
-#' \eqn{(\vartheta_1, b + e^{\vartheta_2}, \vartheta_0)} are the `theta` parameters reported in the model
-#' summary.
+#' \eqn{(\vartheta_1, b + e^{\vartheta_2}, \vartheta_0)} are the `theta`
+#' parameters reported in the model summary.
 #'
-#' @param theta - \eqn{\vartheta}, a numeric vector containing the 3 parameters of the model,
-#'                \eqn{\vartheta_0}, \eqn{\vartheta_1}, \eqn{\vartheta_2},
-#' @param link  - Link function name, a character string or function name,
-#' @param b     - A non-negative numeric parameter, specifying the minimum
-#'                dependence of the zero-inflation rate on the linear predictor.
+#' @param theta \eqn{\vartheta}, a numeric vector containing the 3 parameters
+#'              of the model, \eqn{\vartheta_0}, \eqn{\vartheta_1},
+#'               \eqn{\vartheta_2},
+#' @param link  Link function name, a character string or function name,
+#' @param b     A non-negative numeric parameter, specifying the minimum
+#'              dependence of the zero-inflation rate on the linear predictor.
 #'
 #' @return An object of class `extended.family`.
 #'
@@ -473,14 +474,15 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
 
 #' \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}.
 #'
-#' @param g     - \eqn{\gamma}, a numeric vector,
-#' @param theta - \eqn{\vartheta}, a numeric vector,
-#' @param level - A numeric, indicating whether to return deriv
-#'                w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},
-#' @param b     - A numeric.
+#' @param g     \eqn{\gamma}, a numeric vector,
+#' @param theta \eqn{\vartheta}, a numeric vector,
+#' @param level A numeric, indicating whether to return deriv
+#'              w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},
+#' @param b     A numeric.
 #'
 #' @return A list with \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}
-#'         and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1}, and \eqn{\vartheta_2}.
+#'         and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1},
+#'         and \eqn{\vartheta_2}.
 lind <- function(g, theta, level = 0, b = 0) {
   theta[2] <- exp(theta[2])
   r <- list(eta = theta[1] + (b + theta[2]) * g)
@@ -505,9 +507,9 @@ lind <- function(g, theta, level = 0, b = 0) {
 
 #' Generate hurdle NB random variables.
 #'
-#' @param g     - \eqn{\gamma}, a numeric vector,
-#' @param theta - \eqn{\vartheta}, a numeric vector,
-#' @param b     - A numeric.
+#' @param g     \eqn{\gamma}, a numeric vector,
+#' @param theta \eqn{\vartheta}, a numeric vector,
+#' @param b     A numeric.
 #'
 #' @return hurdle negative binomial random variables.
 #' @export

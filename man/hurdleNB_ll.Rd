@@ -2,39 +2,34 @@
 % Please edit documentation in R/hurdleNB_ll.R
 \name{hurdleNB_ll}
 \alias{hurdleNB_ll}
-\title{Evaluate hurdle negative binomial log-likelihood
-and its derivatives.}
+\title{Evaluate hurdle negative binomial log-likelihood and its derivatives.}
 \usage{
 hurdleNB_ll(y, g, eta, th0, level = 0)
 }
 \arguments{
-\item{y}{\itemize{
-\item \eqn{y}, a numeric vector,
-}}
+\item{y}{\eqn{y}, a numeric vector,}
 
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{eta}{\itemize{
-\item \eqn{\eta}, a numeric vector,
-}}
+\item{eta}{\eqn{\eta}, a numeric vector,}
 
-\item{th0}{\itemize{
-\item \eqn{\vartheta_0}, a numeric,
-}}
+\item{th0}{\eqn{\vartheta_0}, a numeric,}
 
 \item{level}{\itemize{
 \item \eqn{== 0} - eval,
-\item \eqn{> 0} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using quasi-Newton,
-\item \eqn{> 1} - derivatives for estimating \eqn{\beta} and \eqn{\rho} using full Newton.}}
+\item \eqn{> 0}  - derivatives for estimating \eqn{\beta}
+and \eqn{\rho} using quasi-Newton,
+\item \eqn{> 1}  - derivatives for estimating \eqn{\beta}
+and \eqn{\rho} using full Newton.
+}}
 }
 \value{
 hurdleNB log-likelihood and its derivatives.
 }
 \description{
-Evaluate hurdle negative binomial (NB) log-likelihood
-and its derivatives w.r.t. \eqn{\gamma} (g) and \eqn{\eta} (eta), with
-\eqn{1 - q = e^{-e^{\eta}}} and \eqn{\mu = e^{\gamma}}, for each datum in vector \eqn{y}.
-\eqn{q} is the probability of potential presence. \eqn{\mu} is the NB mean.
+Evaluate hurdle negative binomial (NB) log-likelihood and its derivatives
+w.r.t. \eqn{\gamma} (g) and \eqn{\eta} (eta), with
+\eqn{1 - q = e^{-e^{\eta}}} and \eqn{\mu = e^{\gamma}}, for each datum in
+vector \eqn{y}. \eqn{q} is the probability of potential presence.
+\eqn{\mu} is the NB mean.
 }

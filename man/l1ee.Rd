@@ -7,9 +7,7 @@
 l1ee(eta)
 }
 \arguments{
-\item{eta}{\itemize{
-\item \eqn{\eta}, a numeric vector.
-}}
+\item{eta}{\eqn{\eta}, a numeric vector.}
 }
 \value{
 Carefully computed \eqn{\log(1 - e^{-e^{\eta}})}.

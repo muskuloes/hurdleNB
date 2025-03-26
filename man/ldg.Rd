@@ -20,7 +20,8 @@ ldg(g, y, a, v, level = 2)
 }}
 
 \item{v}{\itemize{
-\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{ind} and \code{ii},
+\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau},
+\code{ind} and \code{ii},
 }}
 
 \item{level}{\itemize{

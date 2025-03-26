@@ -3,29 +3,24 @@
 \name{ldgth0}
 \alias{ldgth0}
 \title{Log-likelihood (\eqn{\ell}) derivatives w.r.t. \eqn{\vartheta_0},
-and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and \eqn{\vartheta_0}.}
+and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and
+\eqn{\vartheta_0}.}
 \usage{
 ldgth0(g, y, th0, v, level = 2)
 }
 \arguments{
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{y}{\itemize{
-\item \eqn{y}, a numeric vector,
-}}
+\item{y}{\eqn{y}, a numeric vector,}
 
-\item{th0}{\itemize{
-\item \eqn{\vartheta_0}, a numeric,
-}}
+\item{th0}{\eqn{\vartheta_0}, a numeric,}
 
-\item{v}{\itemize{
-\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii},
-}}
+\item{v}{\code{v}, a list containing \eqn{\kappa}, \eqn{\tau},
+\code{lg}, \code{ind} and \code{ii},}
 
 \item{level}{\itemize{
-\item \eqn{==0} – list of NULLs (not needed for estimating parameters),
+\item \eqn{==0} – list of NULLs
+(not needed for estimating parameters),
 \item \eqn{> 0} – derivatives needed for quasi-Newton,
 \item \eqn{> 1} – derivatives needed for full Newton.
 }}
@@ -36,5 +31,6 @@ log-likelihood w.r.t. \eqn{\vartheta_0} and \eqn{\gamma}.
 }
 \description{
 Log-likelihood (\eqn{\ell}) derivatives w.r.t. \eqn{\vartheta_0},
-and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and \eqn{\vartheta_0}.
+and mixed derivatives of \eqn{\ell} w.r.t. \eqn{\gamma} and
+\eqn{\vartheta_0}.
 }

@@ -7,26 +7,19 @@
 lind(g, theta, level = 0, b = 0)
 }
 \arguments{
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{theta}{\itemize{
-\item \eqn{\vartheta}, a numeric vector,
-}}
+\item{theta}{\eqn{\vartheta}, a numeric vector,}
 
-\item{level}{\itemize{
-\item A numeric, indicating whether to return deriv
-w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},
-}}
+\item{level}{A numeric, indicating whether to return deriv
+w.r.t. \eqn{\vartheta_1} and \eqn{\vartheta_2},}
 
-\item{b}{\itemize{
-\item A numeric.
-}}
+\item{b}{A numeric.}
 }
 \value{
 A list with \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}
-and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1}, and \eqn{\vartheta_2}.
+and its derivatives with respect to \eqn{\gamma}, \eqn{\vartheta_1},
+and \eqn{\vartheta_2}.
 }
 \description{
 \eqn{\eta = \vartheta_1 + (b + e^{\vartheta_2})\gamma}.

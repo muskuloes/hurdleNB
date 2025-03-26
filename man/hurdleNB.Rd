@@ -8,19 +8,14 @@
 hurdleNB(theta = NULL, link = "identity", b = 0)
 }
 \arguments{
-\item{theta}{\itemize{
-\item \eqn{\vartheta}, a numeric vector containing the 3 parameters of the model,
-\eqn{\vartheta_0}, \eqn{\vartheta_1}, \eqn{\vartheta_2},
-}}
+\item{theta}{\eqn{\vartheta}, a numeric vector containing the 3 parameters
+of the model, \eqn{\vartheta_0}, \eqn{\vartheta_1},
+\eqn{\vartheta_2},}
 
-\item{link}{\itemize{
-\item Link function name, a character string or function name,
-}}
+\item{link}{Link function name, a character string or function name,}
 
-\item{b}{\itemize{
-\item A non-negative numeric parameter, specifying the minimum
-dependence of the zero-inflation rate on the linear predictor.
-}}
+\item{b}{A non-negative numeric parameter, specifying the minimum
+dependence of the zero-inflation rate on the linear predictor.}
 }
 \value{
 An object of class \code{extended.family}.
@@ -30,8 +25,8 @@ Hurdle negative binomial extended family for use with mgcv's \code{gam} or
 \code{bam}.
 }
 \details{
-\eqn{(\vartheta_1, b + e^{\vartheta_2}, \vartheta_0)} are the \code{theta} parameters reported in the model
-summary.
+\eqn{(\vartheta_1, b + e^{\vartheta_2}, \vartheta_0)} are the \code{theta}
+parameters reported in the model summary.
 }
 \examples{
 library(mgcv)

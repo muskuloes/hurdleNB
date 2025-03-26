@@ -8,26 +8,22 @@
 ktlg(g, a, what = c("k", "tau"))
 }
 \arguments{
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{a}{\itemize{
-\item \eqn{\alpha}, a numeric,
-}}
+\item{a}{\eqn{\alpha}, a numeric,}
 
-\item{what}{\itemize{
-\item A character vector specifying what to return.
-}}
+\item{what}{A character vector specifying what to return.}
 }
 \value{
 A list containing:
 \itemize{
-\item \code{k} – \eqn{\kappa},
+\item \code{k}   – \eqn{\kappa},
 \item \code{tau} – \eqn{\tau},
-\item \code{lg} – \eqn{\log(1 + \alpha e^{\gamma})},
-\item \code{ind} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very small,
-\item \code{ii} – indices of \eqn{y_i} for which \eqn{\gamma_i} is very large.
+\item \code{lg}  – \eqn{\log(1 + \alpha e^{\gamma})},
+\item \code{ind} – indices of \eqn{y_i} for which \eqn{\gamma_i}
+is very small,
+\item \code{ii}  – indices of \eqn{y_i} for which \eqn{\gamma_i}
+is very large.
 }
 }
 \description{

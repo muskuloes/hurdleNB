@@ -7,17 +7,11 @@
 rhurdleNB(g, theta = c(-2, 0.3, 2), b = 0)
 }
 \arguments{
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{theta}{\itemize{
-\item \eqn{\vartheta}, a numeric vector,
-}}
+\item{theta}{\eqn{\vartheta}, a numeric vector,}
 
-\item{b}{\itemize{
-\item A numeric.
-}}
+\item{b}{A numeric.}
 }
 \value{
 hurdle negative binomial random variables.

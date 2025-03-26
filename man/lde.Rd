@@ -7,9 +7,7 @@
 lde(eta, level = 2)
 }
 \arguments{
-\item{eta}{\itemize{
-\item \eqn{\eta}, a numeric vector,
-}}
+\item{eta}{\eqn{\eta}, a numeric vector,}
 
 \item{level}{\itemize{
 \item \eqn{==0} – first and second derivatives,

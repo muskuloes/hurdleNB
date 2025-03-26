@@ -7,21 +7,14 @@
 ldth0(g, y, th0, v)
 }
 \arguments{
-\item{g}{\itemize{
-\item \eqn{\gamma}, a numeric vector,
-}}
+\item{g}{\eqn{\gamma}, a numeric vector,}
 
-\item{y}{\itemize{
-\item \eqn{y}, a numeric vector,
-}}
+\item{y}{\eqn{y}, a numeric vector,}
 
-\item{th0}{\itemize{
-\item \eqn{\vartheta_0}, a numeric,
-}}
+\item{th0}{\eqn{\vartheta_0}, a numeric,}
 
-\item{v}{\itemize{
-\item \code{v}, a list containing \eqn{\kappa}, \eqn{\tau}, \code{lg}, \code{ind} and \code{ii}.
-}}
+\item{v}{\code{v}, a list containing \eqn{\kappa}, \eqn{\tau},
+\code{lg}, \code{ind} and \code{ii}.}
 }
 \value{
 A list of the first and second derivatives of the
