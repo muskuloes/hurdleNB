@@ -8,7 +8,7 @@
 An implementation of the hurdle negative binomial extended GAM family for use with mgcv.
 }
 \author{
-\strong{Maintainer}: Victor Tuekam \email{tuekam@ifo.de} (\href{https://orcid.org/0000-0002-0973-3492}{ORCID})
+\strong{Maintainer}: Victor Tuekam \email{tuekam@lmu.de} (\href{https://orcid.org/0000-0002-0973-3492}{ORCID})
 
 }
 \keyword{internal}

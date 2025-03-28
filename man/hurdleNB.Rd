@@ -12,7 +12,10 @@ hurdleNB(theta = NULL, link = "identity", b = 0)
 of the model, \eqn{\vartheta_0}, \eqn{\vartheta_1},
 \eqn{\vartheta_2},}
 
-\item{link}{Link function name, a character string or function name,}
+\item{link}{Link function name, a character string or function name.
+Only the identity -- \eqn{\log}-\eqn{\log} link and the
+\eqn{\log} link for \eqn{q} and \eqn{\mu}, respectively,
+are currently supported,}
 
 \item{b}{A non-negative numeric parameter, specifying the minimum
 dependence of the zero-inflation rate on the linear predictor.}

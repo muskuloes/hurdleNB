@@ -2,7 +2,7 @@
 % Please edit documentation in R/hurdleNB.R
 \name{rhurdleNB}
 \alias{rhurdleNB}
-\title{Generate hurdle NB random variables.}
+\title{Generate hurdleNB random variables.}
 \usage{
 rhurdleNB(g, theta = c(-2, 0.3, 2), b = 0)
 }
@@ -17,5 +17,5 @@ rhurdleNB(g, theta = c(-2, 0.3, 2), b = 0)
 hurdle negative binomial random variables.
 }
 \description{
-Generate hurdle NB random variables.
+Generate hurdleNB random variables.
 }

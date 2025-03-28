@@ -63,7 +63,10 @@
 #' @param theta \eqn{\vartheta}, a numeric vector containing the 3 parameters
 #'              of the model, \eqn{\vartheta_0}, \eqn{\vartheta_1},
 #'               \eqn{\vartheta_2},
-#' @param link  Link function name, a character string or function name,
+#' @param link  Link function name, a character string or function name.
+#'              Only the identity -- \eqn{\log}-\eqn{\log} link and the
+#'              \eqn{\log} link for \eqn{q} and \eqn{\mu}, respectively,
+#'              are currently supported,
 #' @param b     A non-negative numeric parameter, specifying the minimum
 #'              dependence of the zero-inflation rate on the linear predictor.
 #'
@@ -95,7 +98,7 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
   if (linktemp %in% c("identity")) {
     stats <- make.link(linktemp)
   } else {
-    stop(linktemp, " link not available for hurdle NB")
+    stop(linktemp, " link not available for hurdleNB")
   }
 
   n_theta <- 3
@@ -292,7 +295,7 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
 
   initialize <- expression({
     if (any(y < 0)) {
-      stop("negative values not allowed for the hurdle NB family")
+      stop("negative values not allowed for the hurdleNB family")
     }
     if (all.equal(y, round(y)) != TRUE) {
       stop("Non-integer response variables are not allowed with hurdleNB")
@@ -505,7 +508,7 @@ lind <- function(g, theta, level = 0, b = 0) {
   r
 }
 
-#' Generate hurdle NB random variables.
+#' Generate hurdleNB random variables.
 #'
 #' @param g     \eqn{\gamma}, a numeric vector,
 #' @param theta \eqn{\vartheta}, a numeric vector,
