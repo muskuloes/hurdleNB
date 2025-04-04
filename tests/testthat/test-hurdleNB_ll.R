@@ -368,25 +368,6 @@ test_that("ktlg works", {
   expect_equal(v$lg, lg)
 })
 
-
-
-
-######################## test that the derivatives of the log-likelihood function behave correctly
-# when gamma -> -Inf
-
-#-inf   ind <- g < log(.Machine$double.eps)
-#inf    ii <- g > log(.Machine$double.xmax) / 2
-
-
-
-  
-
-
-
-
-
-
-
 test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
   g <- log(.Machine$double.eps) - 1 
   eta <- 0
@@ -406,7 +387,6 @@ test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
   expect_null(z$l3)
   expect_null(z$l4)
 })
-
 
 test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
   g <- log(.Machine$double.eps) - 1
@@ -444,7 +424,6 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
 
 })
 
-
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
   g <- log(.Machine$double.eps) - 1  
   eta <- 0
@@ -468,8 +447,6 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
   expect_equal(z$l4[1, 7], 0)
 })
 
-
-
 test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> +Inf", {
   g <- log(.Machine$double.xmax) / 2
   eta <- 0
@@ -489,8 +466,6 @@ test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> +Inf", {
   expect_null(z$l3)
   expect_null(z$l4)
 })
-
-
 
 test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
   g <- log(.Machine$double.xmax) / 2  
@@ -528,7 +503,6 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
   # ∂⁴ℓ
   expect_null(z$l4)
 })
-
 
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
   g <- log(.Machine$double.xmax) / 2  
