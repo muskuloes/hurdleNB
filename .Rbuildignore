@@ -4,3 +4,5 @@
 ^\.virtual\_documents$
 ^\.ipynb\_checkpoints$
 ^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$

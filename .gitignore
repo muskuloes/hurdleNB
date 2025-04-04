@@ -51,3 +51,4 @@ rsconnect/
 # python
 .ipynb_checkpoints/
 .virtual_documents/
+inst/doc

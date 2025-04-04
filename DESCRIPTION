@@ -14,6 +14,9 @@ Imports:
     mgcv,
     stats
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0),
     vctrs
 Config/testthat/edition: 3
+VignetteBuilder: knitr
