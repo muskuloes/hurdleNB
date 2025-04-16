@@ -386,6 +386,19 @@ test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
   expect_null(z$El2)
   expect_null(z$l3)
   expect_null(z$l4)
+
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y == 0: ℓ = -exp(eta) = -1 (since eta = 0)
+  expect_equal(z$l, -1)
+
+  # At this level, no derivatives should be returned
+  expect_null(z$l1)
+  expect_null(z$l2)
+  expect_null(z$El2)
+  expect_null(z$l3)
+  expect_null(z$l4)
 })
 
 test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
@@ -422,6 +435,29 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
   # ∂⁴ℓ.
   expect_null(z$l4)
 
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
+  #       ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(z$l1[, 1], 0)
+  expect_equal(z$l1[, 2], -1)
+  expect_equal(z$l1[, 3], 0)
+  expect_equal(z$l2[, 1], 0)
+  expect_equal(z$l2[, 2], 0)
+  expect_equal(z$l2[, 3], -1)
+  expect_equal(z$l2[, 4], 0)
+  expect_equal(z$l2[, 5], NaN)
+  expect_equal(z$l3[, 1], 0)
+  expect_equal(z$l3[, 2], 0)
+  expect_equal(z$l3[, 3], 0)
+  expect_equal(z$l3[, 4], -1)
+  expect_equal(z$l3[, 5], 0)
+  expect_equal(z$l3[, 6], NaN)
+
+  # ∂⁴ℓ.
+  expect_null(z$l4)
+
 })
 
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
@@ -445,6 +481,24 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
   expect_equal(round(z$l4[1, 5], 5), 0.08452)
   expect_equal(z$l4[1, 6], 0)
   expect_equal(z$l4[1, 7], 0)
+
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  expect_false(is.null(z$l1))
+
+  # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
+  # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  expect_equal(z$l2[, 5], 0)
+  expect_equal(z$l3[, 6], 0)
+  expect_equal(z$l4[, 1], 0)
+  expect_equal(z$l4[, 1], 0)
+  expect_equal(z$l4[, 2], 0)
+  expect_equal(z$l4[, 3], 0)
+  expect_equal(z$l4[, 4], 0)
+  expect_equal(z$l4[, 5], -1)
+  expect_equal(z$l4[, 6], 0)
+  expect_equal(z$l4[, 7], 0)
 })
 
 test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> +Inf", {
@@ -458,6 +512,19 @@ test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> +Inf", {
 
   # y>0: ℓ.
   expect_equal(round(z$l, 5), -707.06333)
+
+  # At this level, no derivatives should be returned
+  expect_null(z$l1)
+  expect_null(z$l2)
+  expect_null(z$El2)
+  expect_null(z$l3)
+  expect_null(z$l4)
+
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y == 0: ℓ = -exp(eta) = -1 (since eta = 0)
+  expect_equal(z$l, -1)
 
   # At this level, no derivatives should be returned
   expect_null(z$l1)
@@ -502,6 +569,29 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
 
   # ∂⁴ℓ
   expect_null(z$l4)
+  
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
+  #       ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(z$l1[, 1], 0)
+  expect_equal(z$l1[, 2], -1)
+  expect_equal(z$l1[, 3], 0)
+  expect_equal(z$l2[, 1], 0)
+  expect_equal(z$l2[, 2], 0)
+  expect_equal(z$l2[, 3], -1)
+  expect_equal(z$l2[, 4], 0)
+  expect_equal(z$l2[, 5], NaN)
+  expect_equal(z$l3[, 1], 0)
+  expect_equal(z$l3[, 2], 0)
+  expect_equal(z$l3[, 3], 0)
+  expect_equal(z$l3[, 4], -1)
+  expect_equal(z$l3[, 5], 0)
+  expect_equal(z$l3[, 6], NaN)
+
+  # ∂⁴ℓ.
+  expect_null(z$l4)
 })
 
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
@@ -525,11 +615,25 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
   expect_equal(round(z$l4[1, 5], 5), 0.08452)
   expect_equal(z$l4[1, 6], 0)
   expect_equal(z$l4[1, 7], 0)
+
+  y <- 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  expect_false(is.null(z$l1))
+
+  # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
+  # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  expect_equal(z$l2[, 5], 0)
+  expect_equal(z$l3[, 6], 0)
+  expect_equal(z$l4[, 1], 0)
+  expect_equal(z$l4[, 1], 0)
+  expect_equal(z$l4[, 2], 0)
+  expect_equal(z$l4[, 3], 0)
+  expect_equal(z$l4[, 4], 0)
+  expect_equal(z$l4[, 5], -1)
+  expect_equal(z$l4[, 6], 0)
+  expect_equal(z$l4[, 7], 0)
 })
-
-
-####################################################################
-
 
 test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
   g1 <- c(
@@ -555,6 +659,22 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
   expect_null(z$El2)
   expect_null(z$l3)
   expect_null(z$l4)
+
+  y <- rep(0, n)                  # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ℓ.
+  expect_equal(z$l, -exp(eta))
+
+  # ℓ = -exp(η) for y == 0
+  expect_equal(z$l, rep(0, n))
+
+  # No derivatives at level 0
+  expect_null(z$l1)
+  expect_null(z$l2)
+  expect_null(z$El2)
+  expect_null(z$l3)
+  expect_null(z$l4)
 })
 
 test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
@@ -570,7 +690,6 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   th0 <- 2
   level <- 1
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
-  zind <- y == 0
 
   l_e <- rep(1, n)  # all ones
   l_t0 <- c(13.58616, 0.88080, 58.39607, 4.71517, 5.69311, 13.58616,
@@ -599,17 +718,17 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   )
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
   # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
-  expect_equal(round(z$l1[!zind, 1], 5), y-1)
-  expect_equal(round(z$l1[!zind, 2], 5), l_e)
-  expect_equal(round(z$l1[!zind, 3], 5), l_t0)
-  expect_equal(round(z$l2[!zind, 1], 5), l_gg)
-  expect_equal(round(z$l2[!zind, 3], 5), l_ee)
-  expect_equal(round(z$l2[!zind, 4], 5), l_gt0)
-  expect_equal(round(z$l2[!zind, 5], 5), rep(NaN, sum(!zind)))
-  expect_equal(round(z$l3[!zind, 1], 5), l_ggg)
-  expect_equal(round(z$l3[!zind, 4], 5), l_eee)
-  expect_equal(round(z$l3[!zind, 5], 5), l_ggt0)
-  expect_equal(round(z$l3[!zind, 6], 5), rep(NaN, sum(!zind)))
+  expect_equal(round(z$l1[, 1], 5), y-1)
+  expect_equal(round(z$l1[, 2], 5), l_e)
+  expect_equal(round(z$l1[, 3], 5), l_t0)
+  expect_equal(round(z$l2[, 1], 5), l_gg)
+  expect_equal(round(z$l2[, 3], 5), l_ee)
+  expect_equal(round(z$l2[, 4], 5), l_gt0)
+  expect_equal(round(z$l2[, 5], 5), rep(NaN, n))
+  expect_equal(round(z$l3[, 1], 5), l_ggg)
+  expect_equal(round(z$l3[, 4], 5), l_eee)
+  expect_equal(round(z$l3[, 5], 5), l_ggt0)
+  expect_equal(round(z$l3[, 6], 5), rep(NaN, n))
 
   # ∂²ℓ/∂𝛈∂𝛄, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈².
   expect_equal(z$l2[, 2], rep(0, n))
@@ -622,6 +741,32 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   expect_equal(round(z$El2[, 3], 5), El_ee)
 
   # ∂⁴ℓ.
+  expect_null(z$l4)
+
+  y <- rep(0, n) # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+ 
+  # y==0: ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³,
+  # ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(z$l, -exp(eta))
+  expect_equal(z$l1[, 1], rep(0, n))
+  expect_equal(z$l1[, 2], -exp(eta))
+  expect_equal(z$l1[, 3], rep(0, n))
+  expect_equal(z$l2[, 1], rep(0, n))
+  expect_equal(z$l2[, 3], -exp(eta))
+  expect_equal(z$l2[, 4], rep(0, n))
+  expect_equal(z$l2[, 5], rep(NaN, n))
+  expect_equal(z$l3[, 1], rep(0, n))
+  expect_equal(z$l3[, 4], -exp(eta))
+  expect_equal(z$l3[, 5], rep(0, n))
+  expect_equal(z$l3[, 6], rep(NaN, n))
+
+  # 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²]
+  expect_equal(z$El2[, 1], rep(0, n))
+  expect_equal(z$El2[, 2], rep(0, n))
+  expect_equal(z$El2[, 3], -exp(eta))
+
+  # ∂⁴ℓ
   expect_null(z$l4)
 })
 
@@ -638,7 +783,6 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> -Inf", {
   th0 <- 2
   level <- 2
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
-  zind <- y == 0
 
   l_t0t0 <- c(
     0.3899923, 0.1049936, 0.5791440, 0.2629717, 0.2845435, 0.3899923,
@@ -658,17 +802,28 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> -Inf", {
   l_ggt0t0 <- rep(0, n)
 
   # y>0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
-  expect_equal(round(z$l2[!zind, 5], 5), l_t0t0, tolerance = 1e-5)
-  expect_equal(round(z$l3[!zind, 6], 5), l_gt0t0)
-  expect_equal(round(z$l4[!zind, 1], 5), l_gggg)
-  expect_equal(round(z$l4[!zind, 5], 5), l_eeee)
-  expect_equal(round(z$l4[!zind, 6], 5), l_gt0t0t0)
-  expect_equal(round(z$l4[!zind, 7], 5), l_ggt0t0)
+  expect_equal(round(z$l2[, 5], 5), l_t0t0, tolerance = 1e-5)
+  expect_equal(round(z$l3[, 6], 5), l_gt0t0)
+  expect_equal(round(z$l4[, 1], 5), l_gggg)
+  expect_equal(round(z$l4[, 5], 5), l_eeee)
+  expect_equal(round(z$l4[, 6], 5), l_gt0t0t0)
+  expect_equal(round(z$l4[, 7], 5), l_ggt0t0)
 
   # ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³.
   expect_equal(z$l4[, 2], rep(0, n))
   expect_equal(z$l4[, 3], rep(0, n))
   expect_equal(z$l4[, 4], rep(0, n))
+
+  y <- rep(0, n)                  # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  expect_equal(z$l2[, 5], rep(0, n))
+  expect_equal(z$l3[, 6], rep(0, n))
+  expect_equal(z$l4[, 1], rep(0, n))
+  expect_equal(z$l4[, 5], -exp(eta))
+  expect_equal(z$l4[, 6], rep(0, n))
+  expect_equal(z$l4[, 7], rep(0, n))
 })
 
 test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
@@ -685,7 +840,6 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
   level <- 0
 
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-  zind <- y == 0
 
   l <- c(
     -22.894552, -47.160436,  65.851303, -40.070660, -38.173063, -22.881756,
@@ -693,9 +847,25 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
       6.562801, -38.305285,  54.064258, -48.629508, -11.152556,  79.916284
   )
   # all entries in y>0: ℓ.
-  expect_equal(round(z$l[!zind], 5), round(l,5)) # log-likelihood should go to Inf
+  expect_equal(round(z$l, 5), round(l,5)) # log-likelihood should go to Inf
 
   # ∂ℓ, ∂²ℓ, 𝔼[∂²ℓ], ∂³ℓ, ∂⁴ℓ.
+  expect_null(z$l1)
+  expect_null(z$l2)
+  expect_null(z$El2)
+  expect_null(z$l3)
+  expect_null(z$l4)
+
+  y <- rep(0, n)                  # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ℓ.
+  expect_equal(z$l, -exp(eta))
+
+  # ℓ = log(1 - p) → -Inf as γ → ∞
+  expect_true(all(z$l < -1e100))
+
+  # No derivatives at level 0
   expect_null(z$l1)
   expect_null(z$l2)
   expect_null(z$El2)
@@ -717,8 +887,6 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
   th0 <- log(alpha)
   level <- 1
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
-  zind <- y == 0
-
 
   l_e <- rep(0, n)  
   l_t0 <- c(
@@ -748,17 +916,17 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
   El_ee <- rep(0, n)
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
   # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
-  expect_equal(round(z$l1[!zind, 1], 5), rep(round(-1/alpha,5),n))
-  expect_equal(round(z$l1[!zind, 2], 5), l_e)
-  expect_equal(round(z$l1[!zind, 3], 5), l_t0)
-  expect_equal(round(z$l2[!zind, 1], 5), l_gg)
-  expect_equal(round(z$l2[!zind, 3], 5), l_ee)
-  expect_equal(round(z$l2[!zind, 4], 5), l_gt0)
-  expect_equal(round(z$l2[!zind, 5], 5), rep(NaN, sum(!zind)))
-  expect_equal(round(z$l3[!zind, 1], 5), l_ggg)
-  expect_equal(round(z$l3[!zind, 4], 5), l_eee)
-  expect_equal(round(z$l3[!zind, 5], 5), l_ggt0)
-  expect_equal(round(z$l3[!zind, 6], 5), rep(NaN, sum(!zind)))
+  expect_equal(round(z$l1[, 1], 5), rep(round(-1/alpha,5),n))
+  expect_equal(round(z$l1[, 2], 5), l_e)
+  expect_equal(round(z$l1[, 3], 5), l_t0)
+  expect_equal(round(z$l2[, 1], 5), l_gg)
+  expect_equal(round(z$l2[, 3], 5), l_ee)
+  expect_equal(round(z$l2[, 4], 5), l_gt0)
+  expect_equal(round(z$l2[, 5], 5), rep(NaN, n))
+  expect_equal(round(z$l3[, 1], 5), l_ggg)
+  expect_equal(round(z$l3[, 4], 5), l_eee)
+  expect_equal(round(z$l3[, 5], 5), l_ggt0)
+  expect_equal(round(z$l3[, 6], 5), rep(NaN, n))
 
   # ∂²ℓ/∂𝛈∂𝛄, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈².
   expect_equal(z$l2[, 2], rep(0, n))
@@ -771,6 +939,32 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
   expect_equal(round(z$El2[, 3], 5), El_ee)
 
   # ∂⁴ℓ.
+  expect_null(z$l4)
+
+  y <- rep(0, n)                  # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+  
+  # y==0: # ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³,
+  # ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(z$l, -exp(eta))
+  expect_equal(z$l1[, 1], rep(0, n))
+  expect_equal(z$l1[, 2], -exp(eta))
+  expect_equal(z$l1[, 3], rep(0, n))
+  expect_equal(z$l2[, 1], rep(0, n))
+  expect_equal(z$l2[, 3], -exp(eta))
+  expect_equal(z$l2[, 4], rep(0, n))
+  expect_equal(z$l2[, 5], rep(NaN, n))
+  expect_equal(z$l3[, 1], rep(0, n))
+  expect_equal(z$l3[, 4], -exp(eta))
+  expect_equal(z$l3[, 5], rep(0, n))
+  expect_equal(z$l3[, 6], rep(NaN, n))
+
+  # 𝔼[∂²ℓ/∂𝛄²], 𝔼[∂²ℓ/∂𝛈∂𝛄], 𝔼[∂²ℓ/∂𝛈²]
+  expect_true(all(z$El2[, 1] > 1e100))
+  expect_equal(z$El2[, 2], rep(0, n))
+  expect_equal(z$El2[, 3], rep(0, n))
+
+  # ∂⁴ℓ
   expect_null(z$l4)
 })
 
@@ -788,7 +982,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
   th0 <- log(alpha)
   level <- 2
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
-  zind <- y == 0
+ 
   l_t0t0 <- c(
     -46.63106, -46.32724, -46.87863, -46.46642, -46.45855, -46.61826,
     -46.66486, -46.21659, -46.94755, -46.36701, -46.43596, -46.41851,
@@ -801,15 +995,26 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
   l_ggt0t0 <- rep(0, n)
 
   # y>0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
-  expect_equal(round(z$l2[!zind, 5], 5), l_t0t0, tolerance = 1e-5)
-  expect_equal(round(z$l3[!zind, 6], 5), round(l_gt0t0,5))
-  expect_equal(round(z$l4[!zind, 1], 5), l_gggg)
-  expect_equal(round(z$l4[!zind, 5], 5), l_eeee)
-  expect_equal(round(z$l4[!zind, 6], 5), l_gt0t0t0)
-  expect_equal(round(z$l4[!zind, 7], 5), l_ggt0t0)
+  expect_equal(round(z$l2[, 5], 5), l_t0t0, tolerance = 1e-5)
+  expect_equal(round(z$l3[, 6], 5), round(l_gt0t0,5))
+  expect_equal(round(z$l4[, 1], 5), l_gggg)
+  expect_equal(round(z$l4[, 5], 5), l_eeee)
+  expect_equal(round(z$l4[, 6], 5), l_gt0t0t0)
+  expect_equal(round(z$l4[, 7], 5), l_ggt0t0)
 
   # ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³.
   expect_equal(z$l4[, 2], rep(0, n))
   expect_equal(z$l4[, 3], rep(0, n))
   expect_equal(z$l4[, 4], rep(0, n))
+
+  y <- rep(0, n)                  # all entries in y are 0
+  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+
+  # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  expect_equal(z$l2[, 5], rep(0, n))
+  expect_equal(z$l3[, 6], rep(0, n))
+  expect_equal(z$l4[, 1], rep(0, n))
+  expect_true(all(z$l4[, 5] < -1e100))
+  expect_equal(z$l4[, 6], rep(0, n))
+  expect_equal(z$l4[, 7], rep(0, n))
 })
