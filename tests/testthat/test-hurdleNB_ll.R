@@ -95,7 +95,7 @@ test_that("hurdleNB_ll works for scalar y at level 1", {
   z <- hurdleNB_ll(y = 25, g = 10, eta = 0, th0 = log(0.5), level = level)
 
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀,  ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
-  # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  #      ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
   expect_equal(round(z$l1[, 1], 5), -1.99755)
   expect_equal(round(z$l1[, 2], 5), 0.58198)
   expect_equal(round(z$l1[, 3], 5), 10.90750)
@@ -189,7 +189,7 @@ test_that("hurdleNB_ll works for vector y at level 1", {
   )
 
   # y==0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³,
-  # ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  #       ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
   expect_equal(z$l1[zind, 1], rep(0, sum(zind)))
   expect_equal(z$l1[zind, 2], -exp(eta[zind]))
   expect_equal(z$l1[zind, 3], rep(0, sum(zind)))
@@ -237,7 +237,7 @@ test_that("hurdleNB_ll works for scalar y at level 2", {
   expect_false(is.null(z$l1))
 
   # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
-  # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  #       ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(z$l2[, 5], 0)
   expect_equal(z$l3[, 6], 0)
   expect_equal(z$l4[, 1], 0)
@@ -369,7 +369,7 @@ test_that("ktlg works", {
 })
 
 test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
-  g <- log(.Machine$double.eps) - 1 
+  g <- log(.Machine$double.eps) - 1
   eta <- 0
   th0 <- log(0.5)
   y <- 5
@@ -411,7 +411,7 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀,  ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
-  # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  #      ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
   expect_equal(z$l1[, 1], y - 1)
   expect_equal(round(z$l1[1, 2], 5), 0.58198)
   expect_equal(round(z$l1[1, 3], 5), 2.1)
@@ -457,11 +457,10 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
 
   # ∂⁴ℓ.
   expect_null(z$l4)
-
 })
 
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
-  g <- log(.Machine$double.eps) - 1  
+  g <- log(.Machine$double.eps) - 1
   eta <- 0
   th0 <- log(0.5)
   y <- 5
@@ -471,7 +470,7 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
 
   expect_false(is.null(z$l1))
   # y>0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈²,
-  #       ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  #      ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(round(z$l2[1, 5], 5), 0.93444)
   expect_equal(z$l3[1, 6], 0)
   expect_equal(z$l4[1, 1], 0)
@@ -488,7 +487,7 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> -Inf", {
   expect_false(is.null(z$l1))
 
   # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
-  # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  #       ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(z$l2[, 5], 0)
   expect_equal(z$l3[, 6], 0)
   expect_equal(z$l4[, 1], 0)
@@ -535,7 +534,7 @@ test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> +Inf", {
 })
 
 test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
-  g <- log(.Machine$double.xmax) / 2  
+  g <- log(.Machine$double.xmax) / 2
   eta <- 0
   alpha <- 0.5
   th0 <- log(alpha)
@@ -547,7 +546,7 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀,
   #       ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈∂𝛄, ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
   #       ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛄²∂𝛈, ∂³ℓ/∂𝛄∂𝛈², ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²∂ϑ₀, ∂³ℓ/∂𝛄∂ϑ₀².
-  expect_equal(z$l1[, 1], -1/alpha) # ∂ℓ/∂γ = -1/α in the limit as γ → ∞
+  expect_equal(z$l1[, 1], -1 / alpha) # ∂ℓ/∂γ = -1/α in the limit as γ → ∞
   expect_equal(round(z$l1[1, 2], 5), 0.58198)
   expect_equal(round(z$l1[1, 3], 5), 703.49642)
   expect_equal(z$l2[1, 1], 0)
@@ -569,7 +568,7 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
 
   # ∂⁴ℓ
   expect_null(z$l4)
-  
+
   y <- 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
@@ -595,7 +594,7 @@ test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> +Inf", {
 })
 
 test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
-  g <- log(.Machine$double.xmax) / 2  
+  g <- log(.Machine$double.xmax) / 2
   eta <- 0
   th0 <- log(0.5)
   y <- 5
@@ -605,7 +604,7 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
 
   expect_false(is.null(z$l1))
   # y>0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂⁴ℓ/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈²,
-  #       ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  #      ∂⁴ℓ/∂𝛄∂𝛈³, ∂⁴ℓ/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(round(z$l2[1, 5], 5), -703.46197)
   expect_equal(z$l3[1, 6], -2.0)
   expect_equal(z$l4[1, 1], 0)
@@ -622,7 +621,7 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
   expect_false(is.null(z$l1))
 
   # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂⁴ℓ/∂𝛄³∂𝛈, ∂⁴ℓ/∂𝛄²∂𝛈², ∂⁴ℓ/∂𝛄∂𝛈³,
-  # ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
+  #       ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(z$l2[, 5], 0)
   expect_equal(z$l3[, 6], 0)
   expect_equal(z$l4[, 1], 0)
@@ -637,11 +636,11 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
 
 test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
   g1 <- c(
-  1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
-  1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
-  0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
+    1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
+    1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
+    0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
   )
-  g <- log(.Machine$double.eps) - g1 -1 # sufficiently small γ
+  g <- log(.Machine$double.eps) - g1 - 1 # sufficiently small γ
   y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
   n <- length(y)
   eta <- -2 + exp(0.3) * g
@@ -660,7 +659,7 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
   expect_null(z$l3)
   expect_null(z$l4)
 
-  y <- rep(0, n)                  # all entries in y are 0
+  y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   # y==0: ℓ.
@@ -691,10 +690,12 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   level <- 1
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
 
-  l_e <- rep(1, n)  # all ones
-  l_t0 <- c(13.58616, 0.88080, 58.39607, 4.71517, 5.69311, 13.58616,
-            16.56093, 0, 76.36037, 2.77425, 4.71517, 2.77425,
-            28.49070, 5.69311, 52.41042, 0, 19.53968, 65.38105)
+  l_e <- rep(1, n) # all ones
+  l_t0 <- c(
+    13.58616, 0.88080, 58.39607, 4.71517, 5.69311, 13.58616,
+    16.56093, 0, 76.36037, 2.77425, 4.71517, 2.77425,
+    28.49070, 5.69311, 52.41042, 0, 19.53968, 65.38105
+  )
 
   l_gg <- rep(0, n)
   l_ee <- c(
@@ -706,7 +707,7 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   )
   l_gt0 <- rep(0, n)
   l_ggg <- rep(0, n)
-  l_eee <- l_ee  
+  l_eee <- l_ee
   l_ggt0 <- rep(0, n)
   El_gg <- rep(0, n)
   El_ee <- c(
@@ -717,8 +718,8 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
     -6.068506e-24, -1.220703e-23
   )
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
-  # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
-  expect_equal(round(z$l1[, 1], 5), y-1)
+  #      ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(round(z$l1[, 1], 5), y - 1)
   expect_equal(round(z$l1[, 2], 5), l_e)
   expect_equal(round(z$l1[, 3], 5), l_t0)
   expect_equal(round(z$l2[, 1], 5), l_gg)
@@ -745,9 +746,9 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
 
   y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
- 
-  # y==0: ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³,
-  # ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+
+  # y==0: ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀,
+  #       ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
   expect_equal(z$l, -exp(eta))
   expect_equal(z$l1[, 1], rep(0, n))
   expect_equal(z$l1[, 2], -exp(eta))
@@ -814,7 +815,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> -Inf", {
   expect_equal(z$l4[, 3], rep(0, n))
   expect_equal(z$l4[, 4], rep(0, n))
 
-  y <- rep(0, n)                  # all entries in y are 0
+  y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
@@ -828,11 +829,11 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> -Inf", {
 
 test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
   g1 <- c(
-  1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
-  1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
-  0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
+    1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
+    1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
+    0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
   )
-  g <- log(.Machine$double.xmax) / 2 + g1 +1 # sufficiently large γ
+  g <- log(.Machine$double.xmax) / 2 + g1 + 1 # sufficiently large γ
   y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
   n <- length(y)
   eta <- -2 + exp(0.3) * g
@@ -842,12 +843,12 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   l <- c(
-    -22.894552, -47.160436,  65.851303, -40.070660, -38.173063, -22.881756,
+    -22.894552, -47.160436, 65.851303, -40.070660, -38.173063, -22.881756,
     -17.060332, -48.588559, 101.591375, -43.683081, -40.040203, -43.734589,
-      6.562801, -38.305285,  54.064258, -48.629508, -11.152556,  79.916284
+    6.562801, -38.305285, 54.064258, -48.629508, -11.152556, 79.916284
   )
   # all entries in y>0: ℓ.
-  expect_equal(round(z$l, 5), round(l,5)) # log-likelihood should go to Inf
+  expect_equal(round(z$l, 5), round(l, 5)) # log-likelihood should go to Inf
 
   # ∂ℓ, ∂²ℓ, 𝔼[∂²ℓ], ∂³ℓ, ∂⁴ℓ.
   expect_null(z$l1)
@@ -856,7 +857,7 @@ test_that("hurdleNB_ll works for vector y at level 0 as gamma -> +Inf", {
   expect_null(z$l3)
   expect_null(z$l4)
 
-  y <- rep(0, n)                  # all entries in y are 0
+  y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   # y==0: ℓ.
@@ -879,7 +880,7 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
     1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
     0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
   )
-  g <- log(.Machine$double.xmax) / 2 + g1 +1 # sufficiently large γ
+  g <- log(.Machine$double.xmax) / 2 + g1 + 1 # sufficiently large γ
   y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
   n <- length(y)
   eta <- -2 + exp(0.3) * g
@@ -888,7 +889,7 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
   level <- 1
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
 
-  l_e <- rep(0, n)  
+  l_e <- rep(0, n)
   l_t0 <- c(
     47.06386, 47.33968, 46.93218, 47.15525, 47.10375, 47.05106,
     47.04742, 47.45322, 46.92978, 47.17223, 47.12479, 47.22374,
@@ -914,9 +915,10 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
     2.378416e+139, 1.417191e+139
   )
   El_ee <- rep(0, n)
+
   # y>0: ∂ℓ/∂𝛄, ∂ℓ/∂𝛈, ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀²,
-  # ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
-  expect_equal(round(z$l1[, 1], 5), rep(round(-1/alpha,5),n))
+  #      ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+  expect_equal(round(z$l1[, 1], 5), rep(round(-1 / alpha, 5), n))
   expect_equal(round(z$l1[, 2], 5), l_e)
   expect_equal(round(z$l1[, 3], 5), l_t0)
   expect_equal(round(z$l2[, 1], 5), l_gg)
@@ -941,11 +943,11 @@ test_that("hurdleNB_ll works for vector y at level 1 as gamma -> +Inf", {
   # ∂⁴ℓ.
   expect_null(z$l4)
 
-  y <- rep(0, n)                  # all entries in y are 0
+  y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-  
-  # y==0: # ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀, ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³,
-  # ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
+
+  # y==0: ℓ = -exp(η), ∂ℓ/∂𝛄, ∂ℓ/∂𝛈,  ∂ℓ/∂ϑ₀, ∂²ℓ/∂𝛄², ∂²ℓ/∂𝛈², ∂²ℓ/∂𝛄∂ϑ₀,
+  #       ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄³, ∂³ℓ/∂𝛈³, ∂³ℓ/∂𝛄²ϑ₀, ∂³ℓ/∂𝛄ϑ₀².
   expect_equal(z$l, -exp(eta))
   expect_equal(z$l1[, 1], rep(0, n))
   expect_equal(z$l1[, 2], -exp(eta))
@@ -974,7 +976,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
     1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
     0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
   )
-  g <- log(.Machine$double.xmax) / 2 + g1 +1 # sufficiently large γ
+  g <- log(.Machine$double.xmax) / 2 + g1 + 1 # sufficiently large γ
   y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
   n <- length(y)
   eta <- -2 + exp(0.3) * g
@@ -982,7 +984,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
   th0 <- log(alpha)
   level <- 2
   z <- hurdleNB_ll(y, g, eta, th0, level = level)
- 
+
   l_t0t0 <- c(
     -46.63106, -46.32724, -46.87863, -46.46642, -46.45855, -46.61826,
     -46.66486, -46.21659, -46.94755, -46.36701, -46.43596, -46.41851,
@@ -996,7 +998,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
 
   # y>0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
   expect_equal(round(z$l2[, 5], 5), l_t0t0, tolerance = 1e-5)
-  expect_equal(round(z$l3[, 6], 5), round(l_gt0t0,5))
+  expect_equal(round(z$l3[, 6], 5), round(l_gt0t0, 5))
   expect_equal(round(z$l4[, 1], 5), l_gggg)
   expect_equal(round(z$l4[, 5], 5), l_eeee)
   expect_equal(round(z$l4[, 6], 5), l_gt0t0t0)
@@ -1007,7 +1009,7 @@ test_that("hurdleNB_ll works for vector y at level 2 as gamma -> +Inf", {
   expect_equal(z$l4[, 3], rep(0, n))
   expect_equal(z$l4[, 4], rep(0, n))
 
-  y <- rep(0, n)                  # all entries in y are 0
+  y <- rep(0, n) # all entries in y are 0
   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
 
   # y==0: ∂²ℓ/∂ϑ₀², ∂³ℓ/∂𝛄ϑ₀², ∂ℓ⁴/∂𝛄⁴, ∂ℓ⁴/∂𝛈⁴, ∂⁴ℓ/∂𝛄³∂ϑ₀, ∂⁴ℓ/∂𝛄²∂ϑ₀².
