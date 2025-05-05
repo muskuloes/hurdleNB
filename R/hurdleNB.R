@@ -297,9 +297,9 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
     if (any(y < 0)) {
       stop("negative values not allowed for the hurdleNB family")
     }
-    if (all.equal(y, round(y)) != TRUE) {
-      stop("Non-integer response variables are not allowed with hurdleNB")
-    }
+    # if (all.equal(y, round(y)) != TRUE) {
+    #   stop("Non-integer response variables are not allowed with hurdleNB")
+    # }
     if ((min(y) == 0 && max(y) == 1)) {
       stop("using hurdleNB for binary data makes no sense")
     }
