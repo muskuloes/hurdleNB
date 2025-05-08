@@ -157,7 +157,7 @@ l11aea <- function(g, th0) {
 #' }
 ktlg <- function(g, a, what = c("k", "tau")) {
   ind <- g < log(.Machine$double.eps)
-  ii <- g > log(.Machine$double.xmax) / 2
+  ii <- g > log(.Machine$double.xmax)
   eg <- exp(g)
 
   k <- tau <- lg <- NULL

@@ -161,6 +161,20 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
     oo$Dmu <- -2 * wt * (z$l1[, 1] + z$l1[, 2] * lin$eta_g)
     oo$Dmu2 <- -2 * wt * (z$l2[, 1] + z$l2[, 3] * (lin$eta_g^2) +
       z$l1[, 2] * lin$eta_gg)
+    # print("z$l2[, 1][20291]")
+    # print(z$l2[, 1][20291])
+    # print("z$l2[, 3][20291]")
+    # print(z$l2[, 3][20291])
+    # print("lin$eta_g^2")
+    # print((lin$eta_g^2))
+    # print("(z$l2[, 3] * (lin$eta_g^2))[20291]")
+    # print((z$l2[, 3] * (lin$eta_g^2))[20291])
+    # print("z$l1[, 2][20291]")
+    # print(z$l1[, 2][20291])
+    # print("(lin$eta_gg)")
+    # print((lin$eta_gg))
+    # print("(z$l1[, 2] * lin$eta_gg)[20291]")
+    # print((z$l1[, 2] * lin$eta_gg)[20291])
     oo$EDmu2 <- -2 * wt * (z$El2[, 1] + z$El2[, 3] * (lin$eta_g^2))
 
     # quasi-Newton
@@ -346,21 +360,84 @@ hurdleNB <- function(theta = NULL, link = "identity", b = 0) {
     lmax <- max(abs(l))
     ucov <- abs(r$Dmu) > lmax * 1e-7
     k <- 0
+    
+    # eta = theta[1] + exp(theta[2])*g
+    
+    # print("Initial values")
+    print("y[20291]")
+    print(y[20291])
+    # print("g")
+    # print(g)
+    # print("eta")
+    # print(eta)
+    # print("lmax")
+    # print(lmax)
+    print("l[20291]")
+    print(l[20291])
+    # print("theta")
+    # print(theta)
+    # print("g[20291]")
+    # print(g[20291])
+    # print("r$Dmu[20291]")
+    # print(r$Dmu[20291])
+    # print("r$Dmu2[20291]")
+    # print(r$Dmu2[20291])
 
     while (keep_on) {
-      step <- -r$Dmu / r$Dmu2
+      print(k)
+      step <- -r$Dmu / (r$Dmu2+1e-8)
       step[!ucov] <- 0
       g1 <- g + step
       l1 <- family$dev.resids(y, g1, wt, theta)
       ind <- l1 > l & ucov
       kk <- 0
 
+      print("Loop")
+      print("very small y")
+      print(y[which(r$Dmu2 == 0)])
+      # print("y[20291]")
+      # print(y[20291])
+      # print("step[20291]")
+      # print(step[20291])
+      # print("g1[20291]")
+      # print(g1[20291])
+      print("l1[20291]")
+      print(l1[20291])
+      # print("ind[20291]")
+      # print(ind[20291])
+      # print("r$Dmu[20291]")
+      # print(r$Dmu[20291])
+      # print("r$Dmu2[20291]")
+      # print(r$Dmu2[20291])
+      # print("kk")
+      # print(kk)
+      # print("where NA")
+      # print(which(is.na(ind)))
+      
       while (sum(ind) > 0 && kk < 50) {
         step[ind] <- step[ind] / 2
         g1 <- g + step
         l1 <- family$dev.resids(y, g1, wt, theta)
         ind <- l1 > l & ucov
         kk <- kk + 1
+        
+        # print("inner")
+        # eta = theta[1] + exp(theta[2])*g1
+        
+        # print("inner\n")
+        # print("eta\n")
+        # print(eta[which(is.na(ind))])
+        # print("theta\n")
+        # print(theta)
+        # print("l1\n")
+        # print(l1[which(is.na(ind))])
+        # print("l\n")
+        # print(l[which(is.na(ind))])
+        # print("y\n")
+        # print(y[which(is.na(ind))])
+        # print("g1\n")
+        # print(g1[which(is.na(ind))])
+        # print("theta\n")
       }
 
       g <- g1
