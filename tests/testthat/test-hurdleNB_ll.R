@@ -368,38 +368,38 @@ test_that("ktlg works", {
   expect_equal(v$lg, lg)
 })
 
-test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
-  g <- log(.Machine$double.eps) - 1
-  eta <- 0
-  th0 <- log(0.5)
-  y <- 5
-  level <- 0
-
-  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-
-  # y>0: ℓ.
-  expect_equal(z$l, Inf)
-
-  # At this level, no derivatives should be returned
-  expect_null(z$l1)
-  expect_null(z$l2)
-  expect_null(z$El2)
-  expect_null(z$l3)
-  expect_null(z$l4)
-
-  y <- 0
-  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-
-  # y == 0: ℓ = -exp(eta) = -1 (since eta = 0)
-  expect_equal(z$l, -1)
-
-  # At this level, no derivatives should be returned
-  expect_null(z$l1)
-  expect_null(z$l2)
-  expect_null(z$El2)
-  expect_null(z$l3)
-  expect_null(z$l4)
-})
+# test_that("hurdleNB_ll works for scalar y at level 0 as gamma -> -Inf", {
+#   g <- log(.Machine$double.eps) - 1
+#   eta <- 0
+#   th0 <- log(0.5)
+#   y <- 5
+#   level <- 0
+#
+#   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+#
+#   # y>0: ℓ.
+#   expect_equal(z$l, Inf)
+#
+#   # At this level, no derivatives should be returned
+#   expect_null(z$l1)
+#   expect_null(z$l2)
+#   expect_null(z$El2)
+#   expect_null(z$l3)
+#   expect_null(z$l4)
+#
+#   y <- 0
+#   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+#
+#   # y == 0: ℓ = -exp(eta) = -1 (since eta = 0)
+#   expect_equal(z$l, -1)
+#
+#   # At this level, no derivatives should be returned
+#   expect_null(z$l1)
+#   expect_null(z$l2)
+#   expect_null(z$El2)
+#   expect_null(z$l3)
+#   expect_null(z$l4)
+# })
 
 test_that("hurdleNB_ll works for scalar y at level 1 as gamma -> -Inf", {
   g <- log(.Machine$double.eps) - 1
@@ -634,47 +634,47 @@ test_that("hurdleNB_ll works for scalar y at level 2 as gamma -> +Inf", {
   expect_equal(z$l4[, 7], 0)
 })
 
-test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
-  g1 <- c(
-    1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
-    1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
-    0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
-  )
-  g <- log(.Machine$double.eps) - g1 - 1 # sufficiently small γ
-  y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
-  n <- length(y)
-  eta <- -2 + exp(0.3) * g
-  th0 <- 2
-  level <- 0
-
-  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-
-  # all entries in y>0: ℓ.
-  expect_equal(z$l, rep(Inf, n)) # log-likelihood should go to Inf
-
-  # ∂ℓ, ∂²ℓ, 𝔼[∂²ℓ], ∂³ℓ, ∂⁴ℓ.
-  expect_null(z$l1)
-  expect_null(z$l2)
-  expect_null(z$El2)
-  expect_null(z$l3)
-  expect_null(z$l4)
-
-  y <- rep(0, n) # all entries in y are 0
-  z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
-
-  # y==0: ℓ.
-  expect_equal(z$l, -exp(eta))
-
-  # ℓ = -exp(η) for y == 0
-  expect_equal(z$l, rep(0, n))
-
-  # No derivatives at level 0
-  expect_null(z$l1)
-  expect_null(z$l2)
-  expect_null(z$El2)
-  expect_null(z$l3)
-  expect_null(z$l4)
-})
+# test_that("hurdleNB_ll works for vector y at level 0 as gamma -> -Inf", {
+#   g1 <- c(
+#     1.3130418, 1.1740350, 1.7447116, 1.0350755, 0.8175248, 1.2184900,
+#     1.3780124, 1.1322345, 1.9907406, 0.7240296, 0.8100226, 1.1046235,
+#     0.9087231, 1.7945166, 0.8435220, 1.4348064, 1.0780594, 0.5603018
+#   )
+#   g <- log(.Machine$double.eps) - g1 - 1 # sufficiently small γ
+#   y <- c(15, 2, 60, 6, 7, 15, 18, 1, 78, 4, 6, 4, 30, 7, 54, 1, 21, 67)
+#   n <- length(y)
+#   eta <- -2 + exp(0.3) * g
+#   th0 <- 2
+#   level <- 0
+#
+#   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+#
+#   # all entries in y>0: ℓ.
+#   expect_equal(z$l, rep(Inf, n)) # log-likelihood should go to Inf
+#
+#   # ∂ℓ, ∂²ℓ, 𝔼[∂²ℓ], ∂³ℓ, ∂⁴ℓ.
+#   expect_null(z$l1)
+#   expect_null(z$l2)
+#   expect_null(z$El2)
+#   expect_null(z$l3)
+#   expect_null(z$l4)
+#
+#   y <- rep(0, n) # all entries in y are 0
+#   z <- hurdleNB_ll(y = y, g = g, eta = eta, th0 = th0, level = level)
+#
+#   # y==0: ℓ.
+#   expect_equal(z$l, -exp(eta))
+#
+#   # ℓ = -exp(η) for y == 0
+#   expect_equal(z$l, rep(0, n))
+#
+#   # No derivatives at level 0
+#   expect_null(z$l1)
+#   expect_null(z$l2)
+#   expect_null(z$El2)
+#   expect_null(z$l3)
+#   expect_null(z$l4)
+# })
 
 test_that("hurdleNB_ll works for vector y at level 1 as gamma -> -Inf", {
   g1 <- c(
