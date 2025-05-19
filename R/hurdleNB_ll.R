@@ -126,10 +126,12 @@ l1ee <- function(eta) {
 #' \eqn{\log((1 + e^{\vartheta_0} e^{\gamma})^{\frac{1}{e^{\vartheta_0}}} - 1)}.
 l11aea <- function(g, th0) {
   a <- exp(th0)
-  ind <- g < log(.Machine$double.eps)
+  ind <- g < log(.Machine$double.eps) / 3
   eg <- exp(g)
 
   l <- log((1 + a * eg)^(1 / a) - 1)
+  l[ind] <- log(eg + (1 / 2) * (1 - a) * eg^2 + (1 / 6)(1 - a) * (2 - a) * eg^3)
+  ind <- g < -log(.Machine$double.xmax)
   l[ind] <- g[ind]
 
   ii <- g > log(.Machine$double.xmax)
