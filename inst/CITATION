@@ -4,5 +4,5 @@ bibentry(
   author   = "Victor Tuekam",
   year     = "2025",
   url      = "https://github.com/muskuloes/hurdleNB",
-  note     = "R package version 0.0.3"
+  note     = "R package version 0.0.4"
 )
