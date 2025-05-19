@@ -130,7 +130,8 @@ l11aea <- function(g, th0) {
   eg <- exp(g)
 
   l <- log((1 + a * eg)^(1 / a) - 1)
-  l[ind] <- log(eg + (1 / 2) * (1 - a) * eg^2 + (1 / 6) * (1 - a) * (2 - a) * eg^3)
+  l[ind] <- log(eg[ind] + (1 / 2) * (1 - a) * eg[ind]^2 +
+    (1 / 6) * (1 - a) * (2 - a) * eg[ind]^3)
   ind <- g < -log(.Machine$double.xmax)
   l[ind] <- g[ind]
 

@@ -1,6 +1,6 @@
 Package: hurdleNB
 Title: Hurdle negative binomial family for mgcv
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
     person("Victor", "Tuekam", , "tuekam@lmu.de", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-0973-3492"))
